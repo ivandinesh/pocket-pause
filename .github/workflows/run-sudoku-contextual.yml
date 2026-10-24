@@ -1,0 +1,32 @@
+name: Apply Sudoku contextual UI
+
+on:
+  push:
+    paths:
+      - 'scripts/patch_sudoku_contextual.py'
+      - '.github/workflows/run-sudoku-contextual.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Sudoku UI
+        run: python3 scripts/patch_sudoku_contextual.py
+      - name: Validate
+        run: |
+          grep -q "Sudoku: full-screen contextual number palette" index.html
+          grep -q "function positionSudokuPad" index.html
+          grep -q "sudokuPad.append" index.html
+          grep -q "Tap a cell to choose a number" index.html
+      - name: Commit patched app
+        run: |
+          git config user.name "Dinesh"
+          git config user.email "din.frndxp@gmail.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Redesign Sudoku with contextual number palette"
+          git push
