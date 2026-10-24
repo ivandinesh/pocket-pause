@@ -6,6 +6,7 @@ steps=[
  'scripts/patch_zip_fidget_tune.py',
  'scripts/patch_zip_drag_fix.py',
  'scripts/patch_zip_live_drag.py',
+ 'scripts/patch_zip_touch_canvas.py',
 ]
 for step in steps:
     subprocess.run(['python3',step],check=True)
