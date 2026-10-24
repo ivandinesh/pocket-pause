@@ -39,6 +39,33 @@
 @media(max-height:700px) and (orientation:portrait){#wordsPage{padding-top:8px;gap:3px}#wordsPage .word-targets{--tile:clamp(24px,4.8dvh,34px);gap:4px;padding:2px 0}#wordsPage .word-wheel-wrap{--wheel:min(24dvh,calc(100vw - 110px))}#wordsPage .game-heading h1{font-size:21px}#wordsPage .word-status{font-size:10px}#wordsPage .word-selection-row{min-height:32px}#wordsPage .word-selection-row button{min-height:32px}#wordsPage .word-gesture-hint{font-size:8px;min-height:14px;margin:0}}
 @media(min-width:900px),(max-height:500px) and (orientation:landscape){#wordsPage.active{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto auto auto;gap:7px 50px;padding-left:max(24px,calc((100% - 840px)/2));padding-right:max(24px,calc((100% - 840px)/2))}#wordsPage .game-heading{grid-column:1/-1}#wordsPage .word-targets{grid-column:1;grid-row:2/6;--tile:clamp(28px,7dvh,60px)}#wordsPage .word-status{grid-column:2;align-self:end}#wordsPage .word-selection-row{grid-column:2}#wordsPage .word-wheel-wrap{grid-column:2;--wheel:min(300px,40dvh)}#wordsPage .word-gesture-hint,#wordsPage #nextWord{grid-column:2}}
 
+/* Words-only full-screen layout, matching Snake game-page treatment */
+body:has(#wordsPage.active) .topbar{display:none}
+body:has(#wordsPage.active) #app{min-height:100dvh}
+#wordsPage{height:100dvh;min-height:0;max-width:none;padding:max(10px,env(safe-area-inset-top)) 14px max(8px,env(safe-area-inset-bottom));overflow:hidden;background:#fff radial-gradient(circle,#d6e0fb 1.15px,transparent 1.45px);background-size:28px 28px}
+#wordsPage.active{display:flex;flex-direction:column;gap:5px}
+#wordsPage .game-heading{flex:0 0 auto;width:100%;margin:0;padding:2px 0 4px;grid-template-columns:44px minmax(0,1fr) auto;gap:12px}
+#wordsPage .word-label-row{display:flex;align-items:center;gap:9px;min-height:22px}
+#wordsPage .word-label-row .eyebrow{margin:0}
+#wordsPage .word-sound{width:30px;height:30px;border:0;background:#f3f6fc;border-radius:50%;display:grid;place-items:center;font-size:14px;cursor:pointer;padding:0}
+#wordsPage .word-head-stats{display:flex;gap:13px;align-items:center;text-align:right}
+#wordsPage .word-head-stats span{display:flex;flex-direction:column;align-items:flex-end;min-width:48px}
+#wordsPage .word-head-stats b{font-size:18px;color:#3568ee;line-height:1.05}
+#wordsPage .word-head-stats small{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9aa5b8}
+#wordsPage .word-targets{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.2dvh,14px);margin:0;padding:8px 0;--tile:clamp(40px,6.3dvh,58px)}
+#wordsPage .word-target{gap:clamp(7px,1vw,10px)}
+#wordsPage .word-status{flex:0 0 auto;display:flex;flex-direction:row;justify-content:center;gap:14px;padding:2px 8px;background:rgba(255,255,255,.84);min-height:24px}
+#wordsPage .word-selection-row{flex:0 0 auto;min-height:42px;margin:0}
+#wordsPage .word-wheel-wrap{flex:0 0 auto;--wheel:min(360px,38dvh,calc(100vw - 76px));height:var(--wheel);margin:2px auto 0}
+#wordsPage .word-wheel,#wordsPage .word-lines{width:var(--wheel);height:var(--wheel)}
+#wordsPage .letter{min-width:50px;min-height:50px;font-size:clamp(29px,4.6dvh,42px)}
+#wordsPage .round-tool{top:50%;width:54px;height:66px}
+#wordsPage .word-gesture-hint{flex:0 0 auto;margin:2px 0 0;min-height:17px}
+#wordsPage #nextWord{margin:8px auto 8px}
+@media(max-width:760px){#wordsPage{height:100dvh;padding:max(7px,env(safe-area-inset-top)) 12px max(5px,env(safe-area-inset-bottom))}#wordsPage .game-heading h1{font-size:25px}#wordsPage .word-targets{--tile:clamp(38px,5.8dvh,54px)}#wordsPage .word-wheel-wrap{--wheel:min(350px,37dvh,calc(100vw - 68px))}#wordsPage .word-head-stats{gap:9px}#wordsPage .word-head-stats span{min-width:42px}}
+@media(max-height:700px) and (orientation:portrait){#wordsPage .word-targets{--tile:clamp(30px,4.8dvh,40px);gap:5px;padding:3px 0}#wordsPage .word-wheel-wrap{--wheel:min(280px,31dvh,calc(100vw - 78px))}#wordsPage .word-selection-row{min-height:34px}#wordsPage .word-status{min-height:20px;font-size:9px}#wordsPage .word-gesture-hint{display:none}}
+@media(min-width:900px),(max-height:500px) and (orientation:landscape){#wordsPage.active{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,460px);grid-template-rows:auto 1fr auto auto;gap:6px 42px;padding-left:max(20px,calc((100% - 920px)/2));padding-right:max(20px,calc((100% - 920px)/2))}#wordsPage .game-heading{grid-column:1/-1}#wordsPage .word-targets{grid-column:1;grid-row:2/5;--tile:clamp(32px,7dvh,58px)}#wordsPage .word-status{grid-column:2;grid-row:2;align-self:end}#wordsPage .word-selection-row{grid-column:2;grid-row:3}#wordsPage .word-wheel-wrap{grid-column:2;grid-row:4;--wheel:min(360px,48dvh)}#wordsPage .word-gesture-hint,#wordsPage #nextWord{grid-column:2}}
+
 
 /* Snake-only true full-screen playfield */
 body:has(#snakePage.active) .topbar{display:none}
@@ -106,8 +133,8 @@ body:has(#snakePage.active) #app{min-height:100dvh}
     <section id="wordsPage" class="page game-page" aria-label="Words game">
       <div class="game-heading">
         <button class="back-button" data-home>←</button>
-        <div><p class="eyebrow">WORDS</p><h1>Level <span id="wordLevel">1</span> <small>/ 1000</small></h1></div>
-        <div class="heading-stat"><b id="wordFoundCount">0/4</b><span>found</span></div>
+        <div><div class="word-label-row"><p class="eyebrow">WORDS</p><button id="wordSoundButton" class="word-sound" aria-label="Toggle sound">♪</button></div><h1>Level <span id="wordLevel">1</span> <small>/ 1000</small></h1></div>
+        <div class="word-head-stats"><span><b id="wordFoundCount">0/4</b><small>found</small></span><span><b id="wordPoints">100</b><small>pts</small></span></div>
       </div>
       <div id="wordTargets" class="word-targets"></div>
       <div class="word-status"><span id="wordMessage">Connect the letters.</span><span id="bonusCount">0 bonus words</span></div>
@@ -214,7 +241,7 @@ class WordGame{
   restore(s){if(!s||typeof s!=='object')return;if(Number.isInteger(s.levelIndex)&&s.levelIndex>=0)this.levelIndex=s.levelIndex%1000;if(Number.isFinite(s.score)&&s.score>=0)this.score=Math.floor(s.score);this.found=(s.found||[]).filter(w=>this.level.targets.includes(w));this.extras=(s.extras||[]).filter(w=>this.level.bonus.includes(w));this.revealed=s.revealed&&typeof s.revealed==='object'?s.revealed:{};this.hintsUsed=Number.isInteger(s.hintsUsed)?s.hintsUsed:0;this.status=this.found.length===this.level.targets.length?'won':'playing'}
   snapshot(){return {levelIndex:this.levelIndex,score:this.score,found:this.found,extras:this.extras,revealed:this.revealed,hintsUsed:this.hintsUsed}}
   submit(raw){const word=String(raw).trim().toUpperCase();if(word.length<3)return{type:'short',word};if(!canSpell(word,this.level.letters))return{type:'invalid',word};if(this.found.includes(word)||this.extras.includes(word))return{type:'duplicate',word};if(this.level.targets.includes(word)){this.found.push(word);if(!this.revealed[word])this.score+=wordBonus(word.length);this.check();return{type:'found',word,points:this.revealed[word]?0:wordBonus(word.length),complete:this.status==='won'}}if(this.level.bonus.includes(word)){const points=wordBonus(word.length);this.extras.push(word);this.score+=points;return{type:'bonus',word,points}}return{type:'invalid',word}}
-  hint(){if(this.status!=='playing')return{type:'none'};const cost=hintCost(this.hintsUsed);if(this.score<cost)return{type:'points',cost};const word=this.level.targets.find(w=>!this.found.includes(w));if(!word)return{type:'none'};const n=this.revealed[word]||0;this.score-=cost;this.hintsUsed++;this.revealed[word]=Math.min(word.length,n+1);if(this.revealed[word]>=word.length){this.found.push(word);this.check()}return{type:'hint',word,index:n,letter:word[n],cost,nextCost:hintCost(this.hintsUsed)}}
+  hint(){if(this.status!=='playing')return{type:'none'};const word=this.level.targets.find(w=>!this.found.includes(w));if(!word)return{type:'none'};const n=this.revealed[word]||0,cost=hintCost(n);if(this.score<cost)return{type:'points',cost};this.score-=cost;this.revealed[word]=Math.min(word.length,n+1);if(this.revealed[word]>=word.length){this.found.push(word);this.check()}const nextWord=this.level.targets.find(w=>!this.found.includes(w));const nextStep=nextWord?(this.revealed[nextWord]||0):0;return{type:'hint',word,index:n,letter:word[n],cost,nextCost:hintCost(nextStep)}}
   check(){if(this.found.length===this.level.targets.length)this.status='won'}
   next(){this.levelIndex=(this.levelIndex+1)%1000;this.found=[];this.extras=[];this.revealed={};this.hintsUsed=0;this.status='playing'}
 }
@@ -263,8 +290,8 @@ const parse=(v,f=null)=>{try{return JSON.parse(v)}catch{return f}};
 let currentPage='home',sound=storage.get('sound','false')==='true',audio;
 const toast=msg=>{const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1600)};
 function beep(freq=520,dur=.05){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.value=.025;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch{}}
-function syncSoundButtons(){$('soundButton').textContent=sound?'♫':'♪';const sb=$('snakeSoundButton');if(sb)sb.textContent=sound?'♫':'♪'}
-syncSoundButtons();$('soundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});$('snakeSoundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});
+function syncSoundButtons(){$('soundButton').textContent=sound?'♫':'♪';const sb=$('snakeSoundButton');if(sb)sb.textContent=sound?'♫':'♪';const wb=$('wordSoundButton');if(wb)wb.textContent=sound?'♫':'♪'}
+syncSoundButtons();$('soundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});$('snakeSoundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});$('wordSoundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});
 
 function showPage(name){currentPage=name;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===name+'Page'));$('pointsChip').hidden=name!=='words';if(name==='words')renderWords();if(name==='sudoku')renderSudoku();if(name==='snake')resizeSnake();if(name==='tetris')resizeTetris();window.scrollTo(0,0)}
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.open)));
@@ -276,7 +303,7 @@ function saveWords(){storage.set('words.progress',JSON.stringify(wordGame.snapsh
 function scrambleLetters(){let tries=0;do{letterOrder=shuffle([...wordGame.level.letters])}while(letterOrder.join('')===wordGame.level.letters&&tries++<10);selection=[];renderWheel();updateWordSelection()}
 function targetMask(word){if(wordGame.found.includes(word))return word;const n=wordGame.revealed[word]||0;return [...word].map((c,i)=>i<n?c:'•').join(' ')}
 function renderWords(){
-  $('wordLevel').textContent=wordGame.levelIndex+1;$('globalPoints').textContent=wordGame.score;$('wordFoundCount').textContent=wordGame.found.length+'/'+wordGame.level.targets.length;$('bonusCount').textContent=wordGame.extras.length+' bonus word'+(wordGame.extras.length===1?'':'s');$('hintCost').textContent='−'+hintCost(wordGame.hintsUsed);
+  $('wordLevel').textContent=wordGame.levelIndex+1;$('globalPoints').textContent=wordGame.score;$('wordPoints').textContent=wordGame.score;$('wordFoundCount').textContent=wordGame.found.length+'/'+wordGame.level.targets.length;$('bonusCount').textContent=wordGame.extras.length+' bonus word'+(wordGame.extras.length===1?'':'s');const currentHintWord=wordGame.level.targets.find(w=>!wordGame.found.includes(w));const currentHintStep=currentHintWord?(wordGame.revealed[currentHintWord]||0):0;$('hintCost').textContent='−'+hintCost(currentHintStep);
   $('wordsPage').classList.toggle('won',wordGame.status==='won');
   $('wordTargets').innerHTML=wordGame.level.targets.map(w=>`<div class="word-target ${wordGame.found.includes(w)?'found':''}" aria-label="${wordGame.found.includes(w)?w:w.length+' letter word'}">${[...w].map((c,i)=>`<span class="word-dot-tile ${!wordGame.found.includes(w)&&i<(wordGame.revealed[w]||0)?'revealed':''}" aria-hidden="true">${wordGame.found.includes(w)||i<(wordGame.revealed[w]||0)?c:''}</span>`).join('')}</div>`).join('');
   $('nextWord').hidden=wordGame.status!=='won';$('hintWord').disabled=wordGame.status==='won';
