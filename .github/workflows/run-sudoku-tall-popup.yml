@@ -1,0 +1,32 @@
+name: Apply Sudoku tall board and popup
+
+on:
+  push:
+    paths:
+      - 'scripts/patch_sudoku_tall_popup.py'
+      - '.github/workflows/run-sudoku-tall-popup.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Sudoku
+        run: python3 scripts/patch_sudoku_tall_popup.py
+      - name: Validate
+        run: |
+          grep -Fq 'Sudoku: equal popup + tall board' index.html
+          grep -Fq 'grid-template-columns:repeat(3,minmax(0,1fr))' index.html
+          grep -Fq 'aria-label="Erase">⌫</button>' index.html
+          grep -Fq 'max-height:none' index.html
+      - name: Commit patched app
+        run: |
+          git config user.name "Dinesh"
+          git config user.email "din.frndxp@gmail.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Refine Sudoku popup and stretch board"
+          git push
