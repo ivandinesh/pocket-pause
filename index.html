@@ -40,13 +40,26 @@
 @media(min-width:900px),(max-height:500px) and (orientation:landscape){#wordsPage.active{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto auto auto;gap:7px 50px;padding-left:max(24px,calc((100% - 840px)/2));padding-right:max(24px,calc((100% - 840px)/2))}#wordsPage .game-heading{grid-column:1/-1}#wordsPage .word-targets{grid-column:1;grid-row:2/6;--tile:clamp(28px,7dvh,60px)}#wordsPage .word-status{grid-column:2;align-self:end}#wordsPage .word-selection-row{grid-column:2}#wordsPage .word-wheel-wrap{grid-column:2;--wheel:min(300px,40dvh)}#wordsPage .word-gesture-hint,#wordsPage #nextWord{grid-column:2}}
 
 
-/* Snake-only responsive full-device playfield */
-#snakePage.active{display:flex;flex-direction:column;max-width:none;width:100%;height:calc(100dvh - 72px);min-height:0;padding:8px 0 max(0px,env(safe-area-inset-bottom));overflow:hidden}
-#snakePage .game-heading{flex:0 0 auto;width:min(820px,100%);margin:0 auto 8px;padding:0 18px}
+/* Snake-only true full-screen playfield */
+body:has(#snakePage.active) .topbar{display:none}
+body:has(#snakePage.active) #app{min-height:100dvh}
+#snakePage.active{display:flex;flex-direction:column;max-width:none;width:100%;height:100dvh;min-height:0;padding:max(10px,env(safe-area-inset-top)) 0 max(0px,env(safe-area-inset-bottom));overflow:hidden;background:#fff}
+#snakePage .game-heading{flex:0 0 auto;width:100%;margin:0;padding:4px 18px 6px;grid-template-columns:44px minmax(0,1fr) auto;gap:12px}
+#snakePage .snake-label-row{display:flex;align-items:center;gap:9px;min-height:22px}
+#snakePage .snake-label-row .eyebrow{margin:0}
+#snakePage .snake-sound{width:30px;height:30px;border:0;background:#f3f6fc;border-radius:50%;display:grid;place-items:center;font-size:14px;cursor:pointer;padding:0}
+#snakePage .heading-stat{min-width:56px}
+#snakePage .snake-options{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:12px;padding:2px 16px 8px;min-height:42px}
+#snakePage .snake-palette,#snakePage .snake-shapes{display:flex;align-items:center;gap:6px;padding:4px 6px;border:1px solid #e8edf7;border-radius:999px;background:#fff}
+#snakePage .snake-color{width:26px;height:26px;border:0;border-radius:50%;padding:4px;background:transparent;cursor:pointer;position:relative}
+#snakePage .snake-color:before{content:'';display:block;width:18px;height:18px;border-radius:50%;background:var(--swatch)}
+#snakePage .snake-color[aria-pressed='true']{box-shadow:0 0 0 2px #cdd9f6 inset}
+#snakePage .snake-shape{height:28px;min-width:52px;border:0;border-radius:999px;background:transparent;color:#7d879b;font-size:11px;font-weight:700;padding:0 9px;cursor:pointer}
+#snakePage .snake-shape[aria-pressed='true']{background:#eef3ff;color:#3568ee}
 #snakePage .canvas-shell{flex:1 1 auto;width:100%;height:auto;min-height:0;border:0;border-radius:0;box-shadow:none;background:#fff}
 #snakePage .canvas-shell canvas{width:100%;height:100%}
-@media(max-width:760px){#snakePage.active{height:calc(100dvh - 64px);padding-top:4px}#snakePage .game-heading{margin-bottom:4px;padding:0 14px}#snakePage .canvas-shell{height:auto;min-height:0;border-radius:0}}
-@media(orientation:landscape) and (max-height:600px){#snakePage .game-heading{margin-bottom:2px}#snakePage .game-heading .eyebrow{display:none}#snakePage .game-heading h1{font-size:22px}}
+@media(max-width:760px){#snakePage.active{height:100dvh;padding-top:max(6px,env(safe-area-inset-top))}#snakePage .game-heading{padding:2px 12px 4px;margin:0}#snakePage .game-heading h1{font-size:26px}#snakePage .snake-options{padding-bottom:6px;gap:8px}#snakePage .snake-palette,#snakePage .snake-shapes{gap:4px;padding:3px 5px}#snakePage .snake-color{width:24px;height:24px}#snakePage .snake-color:before{width:16px;height:16px}#snakePage .snake-shape{min-width:46px;height:26px;padding:0 7px}}
+@media(orientation:landscape) and (max-height:600px){#snakePage .game-heading{padding-bottom:2px}#snakePage .game-heading h1{font-size:21px}#snakePage .snake-options{padding:0 12px 3px;min-height:32px}}
 
 </style>
 </head>
@@ -134,8 +147,20 @@
     <section id="snakePage" class="page game-page canvas-page" aria-label="Snake game">
       <div class="game-heading canvas-heading">
         <button class="back-button" data-home>←</button>
-        <div><p class="eyebrow">SNAKE</p><h1>One more dot.</h1></div>
+        <div><div class="snake-label-row"><p class="eyebrow">SNAKE</p><button id="snakeSoundButton" class="snake-sound" aria-label="Toggle sound">♪</button></div><h1>One more dot.</h1></div>
         <div class="heading-stat"><b id="snakeScore">0</b><span>score</span></div>
+      </div>
+      <div class="snake-options" aria-label="Snake appearance">
+        <div class="snake-palette" aria-label="Snake color">
+          <button class="snake-color" data-snake-color="blue" style="--swatch:#4f78ec" aria-label="Blue" aria-pressed="true"></button>
+          <button class="snake-color" data-snake-color="green" style="--swatch:#3e9b70" aria-label="Green" aria-pressed="false"></button>
+          <button class="snake-color" data-snake-color="amber" style="--swatch:#d8942f" aria-label="Amber" aria-pressed="false"></button>
+          <button class="snake-color" data-snake-color="graphite" style="--swatch:#596171" aria-label="Graphite" aria-pressed="false"></button>
+        </div>
+        <div class="snake-shapes" aria-label="Snake shape">
+          <button class="snake-shape" data-snake-shape="round" aria-pressed="true">● Round</button>
+          <button class="snake-shape" data-snake-shape="square" aria-pressed="false">■ Nokia</button>
+        </div>
       </div>
       <div class="canvas-shell"><canvas id="snakeCanvas"></canvas><div id="snakeOverlay" class="canvas-overlay"><h2 id="snakeOverlayTitle">Find your flow.</h2><p>Swipe or use the arrows.</p><button id="snakeStart" class="primary-button">Play</button></div></div>
       <div class="dpad" aria-label="Snake controls"><button data-dir="up">↑</button><button data-dir="left">←</button><span>•</span><button data-dir="right">→</button><button data-dir="down">↓</button></div>
@@ -238,7 +263,8 @@ const parse=(v,f=null)=>{try{return JSON.parse(v)}catch{return f}};
 let currentPage='home',sound=storage.get('sound','false')==='true',audio;
 const toast=msg=>{const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1600)};
 function beep(freq=520,dur=.05){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.value=.025;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch{}}
-$('soundButton').textContent=sound?'♫':'♪';$('soundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);$('soundButton').textContent=sound?'♫':'♪';beep()});
+function syncSoundButtons(){$('soundButton').textContent=sound?'♫':'♪';const sb=$('snakeSoundButton');if(sb)sb.textContent=sound?'♫':'♪'}
+syncSoundButtons();$('soundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});$('snakeSoundButton').addEventListener('click',()=>{sound=!sound;storage.set('sound',sound);syncSoundButtons();beep()});
 
 function showPage(name){currentPage=name;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===name+'Page'));$('pointsChip').hidden=name!=='words';if(name==='words')renderWords();if(name==='sudoku')renderSudoku();if(name==='snake')resizeSnake();if(name==='tetris')resizeTetris();window.scrollTo(0,0)}
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.open)));
@@ -284,13 +310,28 @@ $('sudokuPencil').addEventListener('click',()=>{pencil=!pencil;$('sudokuPencil')
 
 // SNAKE
 const snake=new SnakeGame();const sc=$('snakeCanvas'),sctx=sc.getContext('2d');let sW=0,sH=0,sDpr=1,sLast=0,sGesture=null;
+const SNAKE_COLORS={blue:{head:'#2f62e8',body:'#4f78ec',food:'#7696ef'},green:{head:'#26845c',body:'#3e9b70',food:'#75c5a2'},amber:{head:'#c17b18',body:'#d8942f',food:'#efbb69'},graphite:{head:'#3f4652',body:'#596171',food:'#9299a5'}};
+let snakeColor=storage.get('snake.color','blue'),snakeShape=storage.get('snake.shape','round'),snakeBooster=null,snakeEffect=null,snakeNextBoosterAt=0;
+if(!SNAKE_COLORS[snakeColor])snakeColor='blue';if(!['round','square'].includes(snakeShape))snakeShape='round';
+function snakePalette(){return SNAKE_COLORS[snakeColor]}
+function snakeSizeFactor(t=performance.now()){return snakeEffect&&snakeEffect.type==='small'&&t<snakeEffect.until ? .8 : 1}
+function snakeSpeedFactor(t=performance.now()){if(!snakeEffect||t>=snakeEffect.until)return 1;return snakeEffect.type==='fast'?1.45:snakeEffect.type==='slow' ? .68 : 1}
+function snakeMark(ctx,x,y,r,color,alpha=1){ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=color;if(snakeShape==='square')ctx.fillRect(x-r,y-r,r*2,r*2);else{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}ctx.restore()}
+function setSnakeColor(name){if(!SNAKE_COLORS[name])return;snakeColor=name;storage.set('snake.color',name);document.querySelectorAll('[data-snake-color]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.snakeColor===name)))}
+function setSnakeShape(name){if(!['round','square'].includes(name))return;snakeShape=name;storage.set('snake.shape',name);document.querySelectorAll('[data-snake-shape]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.snakeShape===name)))}
+document.querySelectorAll('[data-snake-color]').forEach(b=>b.addEventListener('click',()=>setSnakeColor(b.dataset.snakeColor)));document.querySelectorAll('[data-snake-shape]').forEach(b=>b.addEventListener('click',()=>setSnakeShape(b.dataset.snakeShape)));setSnakeColor(snakeColor);setSnakeShape(snakeShape);
 function resizeSnake(){const rect=sc.parentElement.getBoundingClientRect();if(rect.width<1||rect.height<1)return;sW=rect.width;sH=rect.height;sDpr=Math.min(2,devicePixelRatio||1);sc.width=Math.round(sW*sDpr);sc.height=Math.round(sH*sDpr);sctx.setTransform(sDpr,0,0,sDpr,0,0);const targetCell=clamp(Math.min(sW/17,sH/28),16,28),cols=Math.max(14,Math.round(sW/targetCell)),rows=Math.max(18,Math.round(sH/targetCell));if(snake.status==='ready'&&(cols!==snake.cols||rows!==snake.rows))snake.reset(cols,rows)}
 function snakeGeom(){const cell=Math.min(sW/snake.cols,sH/snake.rows),gridW=snake.cols*cell,gridH=snake.rows*cell,ox=(sW-gridW)/2,oy=(sH-gridH)/2;return{cell,ox,oy}}
 function dot(ctx,x,y,r,color,alpha=1){ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.restore()}
 function snakeRenderPoint(p,q,a){let dx=p.x-q.x,dy=p.y-q.y;if(dx>snake.cols/2)dx-=snake.cols;if(dx<-snake.cols/2)dx+=snake.cols;if(dy>snake.rows/2)dy-=snake.rows;if(dy<-snake.rows/2)dy+=snake.rows;return{x:(q.x+dx*a+snake.cols)%snake.cols,y:(q.y+dy*a+snake.rows)%snake.rows}}
-function drawSnakeHead(x,y,cell){const r=cell*.32;dot(sctx,x,y,r,'#2f62e8');const d=snake.dir,side={x:-d.y,y:d.x},forward=.075*cell,spread=.075*cell,eyeR=Math.max(1.4,cell*.034);for(const sign of [-1,1]){const ex=x+d.x*forward+side.x*spread*sign,ey=y+d.y*forward+side.y*spread*sign;dot(sctx,ex,ey,eyeR,'#fff');dot(sctx,ex+d.x*eyeR*.28,ey+d.y*eyeR*.28,eyeR*.42,'#24345b')}}
-function drawSnake(){if(!sW)return;const{cell,ox,oy}=snakeGeom();sctx.clearRect(0,0,sW,sH);for(let y=0;y<snake.rows;y++)for(let x=0;x<snake.cols;x++)dot(sctx,ox+(x+.5)*cell,oy+(y+.5)*cell,Math.max(1.15,cell*.065),'#dfe6f5',.72);if(snake.food){const fx=ox+(snake.food.x+.5)*cell,fy=oy+(snake.food.y+.5)*cell;dot(sctx,fx,fy,cell*.27,'#7696ef');dot(sctx,fx,fy,cell*.07,'#fff',.92)}const a=snake.status==='playing'?Math.min(1,snake.elapsed/snake.speed()):1;const points=snake.snake.map((p,i)=>snakeRenderPoint(p,snake.prev[i]||p,a));for(let i=points.length-1;i>=1;i--){const p=points[i],fade=1-Math.min(.22,i/Math.max(1,points.length-1)*.22);dot(sctx,ox+(p.x+.5)*cell,oy+(p.y+.5)*cell,cell*.255,'#4f78ec',fade)}if(points[0])drawSnakeHead(ox+(points[0].x+.5)*cell,oy+(points[0].y+.5)*cell,cell);$('snakeScore').textContent=snake.score;if(snake.status==='over'||snake.status==='won'){const ov=$('snakeOverlay');ov.hidden=false;$('snakeOverlayTitle').textContent=snake.status==='won'?'Every dot.':'One more?';$('snakeStart').textContent='Play again'}}
-function startSnake(){snake.reset(snake.cols,snake.rows);snake.start();$('snakeOverlay').hidden=true;$('snakeStart').textContent='Play';beep(480)}
+function drawSnakeHead(x,y,cell){const r=cell*.32*snakeSizeFactor(),c=snakePalette();snakeMark(sctx,x,y,r,c.head);const d=snake.dir,side={x:-d.y,y:d.x},forward=.075*cell,spread=.075*cell,eyeR=Math.max(1.35,cell*.034);for(const sign of [-1,1]){const ex=x+d.x*forward+side.x*spread*sign,ey=y+d.y*forward+side.y*spread*sign;dot(sctx,ex,ey,eyeR,'#fff');dot(sctx,ex+d.x*eyeR*.28,ey+d.y*eyeR*.28,eyeR*.42,'#24345b')}}
+function drawSnakeBooster(cell,ox,oy,t){if(!snakeBooster)return;const x=ox+(snakeBooster.x+.5)*cell,y=oy+(snakeBooster.y+.5)*cell,pulse=1+.12*Math.sin(t/180),colors={small:'#8f6fe8',fast:'#ef6a55',slow:'#49a9c7',bonus:'#e0ab2f'},c=colors[snakeBooster.type];dot(sctx,x,y,cell*.27*pulse,c,.22);dot(sctx,x,y,cell*.16,c,.98);dot(sctx,x,y,cell*.045,'#fff',.95)}
+function scheduleSnakeBooster(t=performance.now()){snakeNextBoosterAt=t+6500+Math.random()*7500}
+function spawnSnakeBooster(t){const used=new Set(snake.snake.map(p=>p.x+','+p.y));if(snake.food)used.add(snake.food.x+','+snake.food.y);const free=[];for(let y=0;y<snake.rows;y++)for(let x=0;x<snake.cols;x++)if(!used.has(x+','+y))free.push({x,y});if(!free.length)return scheduleSnakeBooster(t);const spot=free[Math.floor(Math.random()*free.length)],types=['small','fast','slow','bonus'];snakeBooster={...spot,type:types[Math.floor(Math.random()*types.length)],until:t+6500};scheduleSnakeBooster(t)}
+function collectSnakeBooster(t){if(!snakeBooster)return;const h=snake.snake[0];if(!h||h.x!==snakeBooster.x||h.y!==snakeBooster.y)return;const type=snakeBooster.type;snakeBooster=null;if(type==='bonus'){snake.score+=3;toast('Surprise +3');beep(850,.08)}else{snakeEffect={type,until:t+7000};toast(type==='small'?'Tiny mode':type==='fast'?'Speed boost':'Slow motion');beep(type==='fast'?760:type==='slow'?360:620,.07)}}
+function updateSnakeBoosters(t){if(snake.status!=='playing')return;if(snakeEffect&&t>=snakeEffect.until)snakeEffect=null;if(snakeBooster&&t>=snakeBooster.until)snakeBooster=null;if(!snakeBooster&&t>=snakeNextBoosterAt)spawnSnakeBooster(t);collectSnakeBooster(t)}
+function drawSnake(){if(!sW)return;const{cell,ox,oy}=snakeGeom(),c=snakePalette(),size=snakeSizeFactor(),now=performance.now();sctx.clearRect(0,0,sW,sH);for(let y=0;y<snake.rows;y++)for(let x=0;x<snake.cols;x++)dot(sctx,ox+(x+.5)*cell,oy+(y+.5)*cell,Math.max(1.15,cell*.065),'#dfe6f5',.72);if(snake.food){const fx=ox+(snake.food.x+.5)*cell,fy=oy+(snake.food.y+.5)*cell;snakeMark(sctx,fx,fy,cell*.27,c.food);dot(sctx,fx,fy,cell*.07,'#fff',.92)}drawSnakeBooster(cell,ox,oy,now);const a=snake.status==='playing'?Math.min(1,snake.elapsed/snake.speed()):1;const points=snake.snake.map((p,i)=>snakeRenderPoint(p,snake.prev[i]||p,a));for(let i=points.length-1;i>=1;i--){const p=points[i],fade=1-Math.min(.22,i/Math.max(1,points.length-1)*.22);snakeMark(sctx,ox+(p.x+.5)*cell,oy+(p.y+.5)*cell,cell*.255*size,c.body,fade)}if(points[0])drawSnakeHead(ox+(points[0].x+.5)*cell,oy+(points[0].y+.5)*cell,cell);$('snakeScore').textContent=snake.score;if(snake.status==='over'||snake.status==='won'){const ov=$('snakeOverlay');ov.hidden=false;$('snakeOverlayTitle').textContent=snake.status==='won'?'Every dot.':'One more?';$('snakeStart').textContent='Play again'}}
+function startSnake(){snake.reset(snake.cols,snake.rows);snake.start();snakeBooster=null;snakeEffect=null;scheduleSnakeBooster();$('snakeOverlay').hidden=true;$('snakeStart').textContent='Play';beep(480)}
 function steerSnake(dir){if(snake.status==='ready'||snake.status==='over'||snake.status==='won')startSnake();snake.turn(dir)}$('snakeStart').addEventListener('click',startSnake);document.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>steerSnake(b.dataset.dir)));
 function snakeGestureDir(dx,dy){return Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up')}
 function handleSnakeGestureMove(x,y){if(!sGesture)return;const dx=x-sGesture.x,dy=y-sGesture.y,dist=Math.max(Math.abs(dx),Math.abs(dy));if(dist<8)return;const dir=snakeGestureDir(dx,dy),next=DIRS[dir],current=snake.queue.at(-1)||snake.dir;if(next&&!(next.x===-current.x&&next.y===-current.y)&&(next.x!==current.x||next.y!==current.y))steerSnake(dir);sGesture.x=x;sGesture.y=y}
@@ -312,7 +353,7 @@ $('tetrisStart').addEventListener('click',startTetris);document.querySelectorAll
 
 document.addEventListener('keydown',e=>{if(currentPage==='words'&&/^[a-z]$/i.test(e.key)){const ch=e.key.toUpperCase(),idx=letterOrder.findIndex((c,i)=>c===ch&&!selection.includes(i));if(idx>=0)addLetter(idx);return}if(currentPage==='words'&&e.key==='Enter'){submitSelected();return}if(currentPage==='words'&&e.key==='Escape'){clearSelection();return}if(currentPage==='snake'){const m={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};if(m[e.key]){e.preventDefault();steerSnake(m[e.key])}}if(currentPage==='tetris'){const m={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'down',ArrowUp:'rotate',' ':'drop'};if(m[e.key]){e.preventDefault();tAction(m[e.key])}}});
 
-function frame(t){const ds=sLast?Math.min(50,t-sLast):0,dt=tLast?Math.min(50,t-tLast):0;sLast=t;tLast=t;if(currentPage==='snake'&&snake.status==='playing')snake.tick(ds);if(currentPage==='tetris'&&tetris.status==='playing')tetris.tick(dt);if(currentPage==='snake')drawSnake();if(currentPage==='tetris')drawTetris();requestAnimationFrame(frame)}
+function frame(t){const ds=sLast?Math.min(50,t-sLast):0,dt=tLast?Math.min(50,t-tLast):0;sLast=t;tLast=t;if(currentPage==='snake'&&snake.status==='playing'){snake.tick(ds*snakeSpeedFactor(t));updateSnakeBoosters(t)}if(currentPage==='tetris'&&tetris.status==='playing')tetris.tick(dt);if(currentPage==='snake')drawSnake();if(currentPage==='tetris')drawTetris();requestAnimationFrame(frame)}
 new ResizeObserver(()=>{if(currentPage==='snake')resizeSnake();if(currentPage==='tetris')resizeTetris()}).observe(document.body);
 window.addEventListener('pagehide',()=>{saveWords();saveSudoku()});
 renderWords();ensureSudoku();requestAnimationFrame(frame);
