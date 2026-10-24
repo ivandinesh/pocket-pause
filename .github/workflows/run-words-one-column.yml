@@ -1,0 +1,31 @@
+name: Apply Words one column
+
+on:
+  push:
+    paths:
+      - 'scripts/patch_words_one_column.py'
+      - '.github/workflows/run-words-one-column.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Words layout
+        run: python3 scripts/patch_words_one_column.py
+      - name: Validate
+        run: |
+          grep -q "one-column target list with bottom-pinned wheel" index.html
+          grep -q "grid-template-columns:1fr!important" index.html
+          grep -q "display:grid!important" index.html
+      - name: Commit patched app
+        run: |
+          git config user.name "Dinesh"
+          git config user.email "din.frndxp@gmail.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Keep Words targets in one column"
+          git push
