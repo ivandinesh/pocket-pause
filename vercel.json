@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "cleanUrls": true,
-  "buildCommand": "python3 scripts/patch_tetris_appearance.py && python3 scripts/patch_new_games.py && python3 scripts/patch_zip_fidget_tune.py && python3 scripts/patch_zip_drag_fix.py && mkdir -p dist && cp index.html dist/index.html",
+  "buildCommand": "python3 scripts/patch_tetris_appearance.py && python3 scripts/patch_new_games.py && python3 scripts/patch_zip_fidget_tune.py && python3 scripts/patch_zip_drag_fix.py && python3 scripts/patch_zip_live_drag.py && mkdir -p dist && cp index.html dist/index.html",
   "outputDirectory": "dist"
 }
