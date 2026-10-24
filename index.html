@@ -86,6 +86,15 @@ body:has(#wordsPage.active) #app{min-height:100dvh}
 #wordsPage .word-wheel-wrap{flex:0 0 auto;margin:0 auto}
 @media(max-height:760px) and (orientation:portrait){#wordsPage .word-targets{margin:3px 0 2px;--tile:clamp(28px,4dvh,36px);gap:5px 9px}}
 
+/* Words: one-column target list with bottom-pinned wheel */
+#wordsPage .word-targets{display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:max-content!important;justify-items:center!important;align-content:start!important;align-items:start!important;flex:0 1 auto!important;width:100%;overflow-y:auto;overflow-x:visible;margin:6px 0 4px!important;padding:0 0 4px!important;gap:clamp(6px,.9dvh,10px)!important;scrollbar-width:none}
+#wordsPage .word-targets::-webkit-scrollbar{display:none}
+#wordsPage .word-target{width:max-content;max-width:100%;justify-content:center}
+#wordsPage .word-status{margin-top:auto!important;flex:0 0 auto}
+#wordsPage .word-selection-row{flex:0 0 auto}
+#wordsPage .word-wheel-wrap{flex:0 0 auto;margin:0 auto!important}
+@media(max-height:760px) and (orientation:portrait){#wordsPage .word-targets{gap:5px!important;--tile:clamp(27px,3.8dvh,34px)}}
+
 /* Snake-only true full-screen playfield */
 body:has(#snakePage.active) .topbar{display:none}
 body:has(#snakePage.active) #app{min-height:100dvh}
