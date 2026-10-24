@@ -138,6 +138,39 @@ body:has(#wordsPage.active) #app{min-height:100dvh}
 #wordsPage #bonusCount{font-size:15px!important;font-weight:600;letter-spacing:.01em}
 #wordsPage .round-tool.hint small{font-size:12px!important;font-weight:700;letter-spacing:.02em;margin-top:3px}
 
+/* Sudoku: full-screen contextual number palette */
+body:has(#sudokuPage.active) .topbar{display:none}
+body:has(#sudokuPage.active) #app{min-height:100dvh}
+#sudokuPage{height:100dvh;min-height:0;max-width:none;padding:max(8px,env(safe-area-inset-top)) 12px max(8px,env(safe-area-inset-bottom));overflow:hidden;background:#fff radial-gradient(circle,#dce5f8 1px,transparent 1.35px);background-size:28px 28px}
+#sudokuPage.active{display:flex;flex-direction:column;gap:8px}
+#sudokuPage .game-heading{flex:0 0 auto;width:min(620px,100%);margin:0 auto;padding:2px 0 3px;grid-template-columns:44px minmax(0,1fr) auto;gap:11px}
+#sudokuPage .game-heading h1{font-size:25px;font-weight:550}
+#sudokuPage .eyebrow{margin:0 0 3px;font-size:9px;font-weight:600;color:#8d9ab8}
+#sudokuPage .back-button{border:0;box-shadow:none;background:#ffffffd9;color:#8495b7}
+#sudokuPage .heading-stat b{font-size:18px;color:#3568ee;font-weight:600}
+#sudokuPage .heading-stat span{font-size:9px}
+#sudokuPage .sudoku-toolbar{flex:0 0 auto;width:min(620px,100%);margin:0 auto 2px;display:flex;justify-content:center;gap:9px}
+#sudokuPage .sudoku-toolbar label{font-size:11px;background:#ffffffd9;border:1px solid #e4eaf7;border-radius:999px;padding:3px 4px 3px 10px}
+#sudokuPage .sudoku-toolbar select{border:0;background:transparent;padding:6px 24px 6px 5px;color:#53627e}
+#sudokuPage #newSudoku{border-radius:999px;padding:8px 13px;box-shadow:none;background:#ffffffd9}
+#sudokuPage .sudoku-board{flex:0 0 auto;width:min(620px,calc(100vw - 24px),calc(100dvh - 205px));max-width:100%;margin:2px auto 0;border:1.5px solid #8c99b2;border-radius:16px;box-shadow:none;background:#fff}
+#sudokuPage .sudoku-cell{font-size:clamp(18px,5.2vw,30px);background:#fffffff0;transition:background .12s ease,transform .08s ease}
+#sudokuPage .sudoku-cell.selected{background:#e9f0ff;box-shadow:inset 0 0 0 2px #7598ef}
+#sudokuPage .sudoku-cell.peer{background:#f7f9fe}
+#sudokuPage .sudoku-cell.same{background:#edf3ff;color:#3568ee}
+#sudokuPage .sudoku-tools{flex:0 0 auto;width:min(240px,100%);grid-template-columns:repeat(2,1fr);gap:8px;margin:4px auto 0}
+#sudokuPage .sudoku-tools .soft-button{height:42px;border-radius:999px;background:#ffffffde;box-shadow:none}
+#sudokuPage #sudokuMessage{flex:0 0 auto;margin:0 auto;min-height:18px;font-size:11px;color:#8997b2}
+#sudokuNumbers{position:fixed;z-index:120;display:none;width:194px;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px;background:rgba(255,255,255,.97);border:1px solid #dfe7f7;border-radius:22px;box-shadow:0 18px 50px rgba(35,52,88,.18);backdrop-filter:blur(12px);margin:0}
+#sudokuNumbers.open{display:grid}
+#sudokuNumbers button{width:100%;height:50px;aspect-ratio:auto;border:0;border-radius:14px;background:#f5f8ff;color:#3568ee;font-size:21px;font-weight:650;box-shadow:none}
+#sudokuNumbers button:active{transform:scale(.95);background:#e9f0ff}
+#sudokuNumbers button:disabled{opacity:.22}
+#sudokuNumbers #sudokuPencil{grid-column:span 2;font-size:12px;color:#667796;background:#f7f9fd}
+#sudokuNumbers #sudokuPencil[aria-pressed="true"]{background:#3568ee;color:#fff}
+#sudokuNumbers #sudokuErase{font-size:16px;color:#667796;background:#f7f9fd}
+@media(max-height:700px) and (orientation:portrait){#sudokuPage{gap:4px}#sudokuPage .game-heading h1{font-size:22px}#sudokuPage .sudoku-toolbar{margin:0}#sudokuPage .sudoku-board{width:min(calc(100vw - 24px),calc(100dvh - 178px))}#sudokuPage .sudoku-tools .soft-button{height:36px}#sudokuPage #sudokuMessage{display:none}}
+
 /* Snake-only true full-screen playfield */
 body:has(#snakePage.active) .topbar{display:none}
 body:has(#snakePage.active) #app{min-height:100dvh}
@@ -239,7 +272,7 @@ body:has(#snakePage.active) #app{min-height:100dvh}
         <button id="sudokuHint" class="soft-button">✦ Hint</button>
       </div>
       <div id="sudokuNumbers" class="sudoku-numbers" aria-label="Number pad"></div>
-      <p id="sudokuMessage" class="center-note">Tap an empty cell, then a number.</p>
+      <p id="sudokuMessage" class="center-note">Tap a cell to choose a number.</p>
     </section>
 
     <section id="snakePage" class="page game-page canvas-page" aria-label="Snake game">
@@ -400,11 +433,14 @@ function saveSudoku(){if(sudoku)storage.set('sudoku.progress',JSON.stringify(sud
 function ensureSudoku(){if(!sudoku||!sudoku.puzzle||!sudoku.solution)freshSudoku('easy')}
 function renderSudoku(){ensureSudoku();$('sudokuDifficulty').value=sudoku.difficulty||'easy';const board=$('sudokuBoard');board.innerHTML='';for(let i=0;i<81;i++){const r=Math.floor(i/9),c=i%9,v=sudoku.board[r][c],given=!!sudoku.puzzle[r][c];const b=document.createElement('button');b.className='sudoku-cell'+(given?' given':v?' user':'')+((c===2||c===5)?' box-right':'')+((r===2||r===5)?' box-bottom':'');b.dataset.i=i;b.setAttribute('role','gridcell');if(v)b.textContent=v;else if(sudoku.notes[i]?.length){const ns=document.createElement('span');ns.className='notes';for(let n=1;n<=9;n++){const s=document.createElement('span');s.textContent=sudoku.notes[i].includes(n)?n:'';ns.appendChild(s)}b.appendChild(ns)}b.addEventListener('click',()=>selectSudoku(i));board.appendChild(b)}selectSudoku(sudoku.selected,false);updateSudokuTime();if(!sudokuTick)sudokuTick=setInterval(()=>{if(currentPage==='sudoku'&&!sudoku.solved){sudoku.elapsed++;updateSudokuTime();if(sudoku.elapsed%10===0)saveSudoku()}},1000)}
 function updateSudokuTime(){const s=sudoku?.elapsed||0;$('sudokuTime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function selectSudoku(i,rerender=true){if(!sudoku)return;sudoku.selected=i;const r=Math.floor(i/9),c=i%9,val=sudoku.board[r][c];document.querySelectorAll('.sudoku-cell').forEach((el,j)=>{const rr=Math.floor(j/9),cc=j%9,same=val&&sudoku.board[rr][cc]===val;el.classList.toggle('selected',j===i);el.classList.toggle('peer',j!==i&&(rr===r||cc===c||(Math.floor(rr/3)===Math.floor(r/3)&&Math.floor(cc/3)===Math.floor(c/3))));el.classList.toggle('same',j!==i&&!!same);el.classList.toggle('error',!!sudoku.board[rr][cc]&&sudoku.board[rr][cc]!==sudoku.solution[rr][cc]&&!sudoku.puzzle[rr][cc])});if(rerender)saveSudoku()}
-function sudokuAction(num){const i=sudoku.selected;if(i==null)return;const r=Math.floor(i/9),c=i%9;if(sudoku.puzzle[r][c]||sudoku.solved)return;const prev=sudoku.board[r][c],prevNotes=[...(sudoku.notes[i]||[])];sudoku.history.push({i,prev,prevNotes});if(pencil&&num){if(prev)return sudoku.history.pop();const set=new Set(prevNotes);set.has(num)?set.delete(num):set.add(num);sudoku.notes[i]=[...set].sort();}else{sudoku.board[r][c]=num||0;sudoku.notes[i]=[]}checkSudoku();saveSudoku();renderSudoku();selectSudoku(i,false)}
+function closeSudokuPad(){const pad=$('sudokuNumbers');if(pad)pad.classList.remove('open')}
+function positionSudokuPad(i){const pad=$('sudokuNumbers'),cell=document.querySelector(`.sudoku-cell[data-i="${i}"]`);if(!pad||!cell)return;const r=Math.floor(i/9),c=i%9;if(sudoku.solved||sudoku.puzzle[r][c]){closeSudokuPad();return}pad.classList.add('open');[...pad.querySelectorAll('button')].slice(0,9).forEach((b,n)=>{b.disabled=sudoku.board.flat().filter(v=>v===n+1).length>=9});requestAnimationFrame(()=>{const cr=cell.getBoundingClientRect(),w=pad.offsetWidth,h=pad.offsetHeight,margin=8;let left=cr.left+cr.width/2-w/2;left=Math.max(margin,Math.min(window.innerWidth-w-margin,left));let top=cr.bottom+8;if(top+h>window.innerHeight-margin)top=cr.top-h-8;top=Math.max(margin,Math.min(window.innerHeight-h-margin,top));pad.style.left=left+'px';pad.style.top=top+'px'})}
+function selectSudoku(i,rerender=true){if(!sudoku)return;if(i==null){sudoku.selected=null;closeSudokuPad();return}sudoku.selected=i;const r=Math.floor(i/9),c=i%9,val=sudoku.board[r][c];document.querySelectorAll('.sudoku-cell').forEach((el,j)=>{const rr=Math.floor(j/9),cc=j%9,same=val&&sudoku.board[rr][cc]===val;el.classList.toggle('selected',j===i);el.classList.toggle('peer',j!==i&&(rr===r||cc===c||(Math.floor(rr/3)===Math.floor(r/3)&&Math.floor(cc/3)===Math.floor(c/3))));el.classList.toggle('same',j!==i&&!!same);el.classList.toggle('error',!!sudoku.board[rr][cc]&&sudoku.board[rr][cc]!==sudoku.solution[rr][cc]&&!sudoku.puzzle[rr][cc])});if(rerender){saveSudoku();positionSudokuPad(i)}}
+function sudokuAction(num){const i=sudoku.selected;if(i==null)return;const r=Math.floor(i/9),c=i%9;if(sudoku.puzzle[r][c]||sudoku.solved)return;const prev=sudoku.board[r][c],prevNotes=[...(sudoku.notes[i]||[])];sudoku.history.push({i,prev,prevNotes});if(pencil&&num){if(prev)return sudoku.history.pop();const set=new Set(prevNotes);set.has(num)?set.delete(num):set.add(num);sudoku.notes[i]=[...set].sort();}else{sudoku.board[r][c]=num||0;sudoku.notes[i]=[]}checkSudoku();saveSudoku();renderSudoku();selectSudoku(i,false);if(pencil&&num)positionSudokuPad(i);else closeSudokuPad()}
 function checkSudoku(){const complete=sudoku.board.every((row,r)=>row.every((v,c)=>v===sudoku.solution[r][c]));if(complete){sudoku.solved=true;$('sudokuMessage').textContent='Solved. Nicely done.';toast('Sudoku solved ✦');beep(800,.12)}}
-for(let n=1;n<=9;n++){const b=document.createElement('button');b.textContent=n;b.addEventListener('click',()=>sudokuAction(n));$('sudokuNumbers').appendChild(b)}
-$('sudokuPencil').addEventListener('click',()=>{pencil=!pencil;$('sudokuPencil').setAttribute('aria-pressed',String(pencil));$('sudokuMessage').textContent=pencil?'Notes mode on.':'Notes mode off.'});$('sudokuErase').addEventListener('click',()=>sudokuAction(0));$('sudokuUndo').addEventListener('click',()=>{const h=sudoku.history.pop();if(!h)return;const r=Math.floor(h.i/9),c=h.i%9;sudoku.board[r][c]=h.prev;sudoku.notes[h.i]=h.prevNotes;sudoku.solved=false;sudoku.selected=h.i;saveSudoku();renderSudoku()});$('sudokuHint').addEventListener('click',()=>{let i=sudoku.selected;if(i==null||sudoku.puzzle[Math.floor(i/9)][i%9]||sudoku.board[Math.floor(i/9)][i%9])i=sudoku.board.flat().findIndex((v,j)=>!v&&!sudoku.puzzle[Math.floor(j/9)][j%9]);if(i<0)return;sudoku.selected=i;const r=Math.floor(i/9),c=i%9;sudoku.history.push({i,prev:sudoku.board[r][c],prevNotes:[...(sudoku.notes[i]||[])]});sudoku.board[r][c]=sudoku.solution[r][c];sudoku.notes[i]=[];checkSudoku();saveSudoku();renderSudoku();toast('One cell revealed')});$('newSudoku').addEventListener('click',()=>freshSudoku($('sudokuDifficulty').value));$('sudokuDifficulty').addEventListener('change',()=>freshSudoku($('sudokuDifficulty').value));
+for(let n=1;n<=9;n++){const b=document.createElement('button');b.textContent=n;b.setAttribute('aria-label','Enter '+n);b.addEventListener('click',()=>sudokuAction(n));$('sudokuNumbers').appendChild(b)}
+const sudokuPad=$('sudokuNumbers');sudokuPad.append($('sudokuPencil'),$('sudokuErase'));document.addEventListener('pointerdown',e=>{if(currentPage!=='sudoku'||!sudokuPad.classList.contains('open'))return;if(!sudokuPad.contains(e.target)&&!e.target.closest('.sudoku-cell'))closeSudokuPad()});window.addEventListener('resize',()=>{if(currentPage==='sudoku')closeSudokuPad()})
+$('sudokuPencil').addEventListener('click',()=>{pencil=!pencil;$('sudokuPencil').setAttribute('aria-pressed',String(pencil));$('sudokuMessage').textContent=pencil?'Notes mode · choose candidates.':'Tap a cell, then choose a number.';if(sudoku.selected!=null)positionSudokuPad(sudoku.selected)});$('sudokuErase').addEventListener('click',()=>sudokuAction(0));$('sudokuUndo').addEventListener('click',()=>{const h=sudoku.history.pop();if(!h)return;const r=Math.floor(h.i/9),c=h.i%9;sudoku.board[r][c]=h.prev;sudoku.notes[h.i]=h.prevNotes;sudoku.solved=false;sudoku.selected=h.i;saveSudoku();renderSudoku()});$('sudokuHint').addEventListener('click',()=>{let i=sudoku.selected;if(i==null||sudoku.puzzle[Math.floor(i/9)][i%9]||sudoku.board[Math.floor(i/9)][i%9])i=sudoku.board.flat().findIndex((v,j)=>!v&&!sudoku.puzzle[Math.floor(j/9)][j%9]);if(i<0)return;sudoku.selected=i;const r=Math.floor(i/9),c=i%9;sudoku.history.push({i,prev:sudoku.board[r][c],prevNotes:[...(sudoku.notes[i]||[])]});sudoku.board[r][c]=sudoku.solution[r][c];sudoku.notes[i]=[];checkSudoku();saveSudoku();renderSudoku();toast('One cell revealed')});$('newSudoku').addEventListener('click',()=>freshSudoku($('sudokuDifficulty').value));$('sudokuDifficulty').addEventListener('change',()=>freshSudoku($('sudokuDifficulty').value));
 
 // SNAKE
 const snake=new SnakeGame();const sc=$('snakeCanvas'),sctx=sc.getContext('2d');let sW=0,sH=0,sDpr=1,sLast=0,sGesture=null;
