@@ -1,0 +1,31 @@
+name: Apply Words spacing
+
+on:
+  push:
+    paths:
+      - 'scripts/patch_words_spacing.py'
+      - '.github/workflows/run-words-spacing.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Words layout
+        run: python3 scripts/patch_words_spacing.py
+      - name: Validate
+        run: |
+          grep -q "tuned one-column spacing and size" index.html
+          grep -q "align-content:space-evenly!important" index.html
+          grep -q -- "--tile:clamp(46px,5.3dvh,54px)!important" index.html
+      - name: Commit patched app
+        run: |
+          git config user.name "Dinesh"
+          git config user.email "din.frndxp@gmail.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Tune Words answer spacing and size"
+          git push
