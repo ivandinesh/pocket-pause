@@ -52,18 +52,18 @@ body:has(#wordsPage.active) #app{min-height:100dvh}
 #wordsPage .word-head-stats span{display:flex;flex-direction:column;align-items:flex-end;min-width:48px}
 #wordsPage .word-head-stats b{font-size:18px;color:#3568ee;line-height:1.05}
 #wordsPage .word-head-stats small{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9aa5b8}
-#wordsPage .word-targets{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.2dvh,14px);margin:0;padding:8px 0;--tile:clamp(40px,6.3dvh,58px)}
+#wordsPage .word-targets{flex:0 0 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:clamp(7px,1dvh,12px);margin:clamp(10px,2.2dvh,22px) 0 clamp(8px,1.4dvh,14px);padding:0;--tile:clamp(40px,5.8dvh,56px)}
 #wordsPage .word-target{gap:clamp(7px,1vw,10px)}
-#wordsPage .word-status{flex:0 0 auto;display:flex;flex-direction:row;justify-content:center;gap:14px;padding:2px 8px;background:rgba(255,255,255,.84);min-height:24px}
+#wordsPage .word-status{flex:0 0 auto;display:flex;flex-direction:row;justify-content:center;gap:14px;padding:2px 8px;background:rgba(255,255,255,.84);min-height:24px;margin-top:auto}
 #wordsPage .word-selection-row{flex:0 0 auto;min-height:42px;margin:0}
-#wordsPage .word-wheel-wrap{flex:0 0 auto;--wheel:min(360px,38dvh,calc(100vw - 76px));height:var(--wheel);margin:2px auto 0}
+#wordsPage .word-wheel-wrap{flex:0 0 auto;--wheel:min(370px,39dvh,calc(100vw - 68px));height:var(--wheel);margin:0 auto 2px}
 #wordsPage .word-wheel,#wordsPage .word-lines{width:var(--wheel);height:var(--wheel)}
 #wordsPage .letter{min-width:50px;min-height:50px;font-size:clamp(29px,4.6dvh,42px)}
 #wordsPage .round-tool{top:50%;width:54px;height:66px}
 #wordsPage .word-gesture-hint{flex:0 0 auto;margin:2px 0 0;min-height:17px}
 #wordsPage #nextWord{margin:8px auto 8px}
-@media(max-width:760px){#wordsPage{height:100dvh;padding:max(7px,env(safe-area-inset-top)) 12px max(5px,env(safe-area-inset-bottom))}#wordsPage .game-heading h1{font-size:25px}#wordsPage .word-targets{--tile:clamp(38px,5.8dvh,54px)}#wordsPage .word-wheel-wrap{--wheel:min(350px,37dvh,calc(100vw - 68px))}#wordsPage .word-head-stats{gap:9px}#wordsPage .word-head-stats span{min-width:42px}}
-@media(max-height:700px) and (orientation:portrait){#wordsPage .word-targets{--tile:clamp(30px,4.8dvh,40px);gap:5px;padding:3px 0}#wordsPage .word-wheel-wrap{--wheel:min(280px,31dvh,calc(100vw - 78px))}#wordsPage .word-selection-row{min-height:34px}#wordsPage .word-status{min-height:20px;font-size:9px}#wordsPage .word-gesture-hint{display:none}}
+@media(max-width:760px){#wordsPage{height:100dvh;padding:max(7px,env(safe-area-inset-top)) 12px max(5px,env(safe-area-inset-bottom))}#wordsPage .game-heading h1{font-size:25px}#wordsPage .word-targets{--tile:clamp(38px,5.4dvh,52px);margin:clamp(8px,1.8dvh,18px) 0 clamp(7px,1.2dvh,12px)}#wordsPage .word-wheel-wrap{--wheel:min(365px,39dvh,calc(100vw - 60px))}#wordsPage .word-head-stats{gap:9px}#wordsPage .word-head-stats span{min-width:42px}}
+@media(max-height:700px) and (orientation:portrait){#wordsPage .word-targets{--tile:clamp(30px,4.5dvh,39px);gap:5px;margin:5px 0 6px;padding:0}#wordsPage .word-wheel-wrap{--wheel:min(300px,33dvh,calc(100vw - 72px))}#wordsPage .word-selection-row{min-height:34px}#wordsPage .word-status{min-height:20px;font-size:9px}#wordsPage .word-gesture-hint{display:none}}
 @media(min-width:900px),(max-height:500px) and (orientation:landscape){#wordsPage.active{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,460px);grid-template-rows:auto 1fr auto auto;gap:6px 42px;padding-left:max(20px,calc((100% - 920px)/2));padding-right:max(20px,calc((100% - 920px)/2))}#wordsPage .game-heading{grid-column:1/-1}#wordsPage .word-targets{grid-column:1;grid-row:2/5;--tile:clamp(32px,7dvh,58px)}#wordsPage .word-status{grid-column:2;grid-row:2;align-self:end}#wordsPage .word-selection-row{grid-column:2;grid-row:3}#wordsPage .word-wheel-wrap{grid-column:2;grid-row:4;--wheel:min(360px,48dvh)}#wordsPage .word-gesture-hint,#wordsPage #nextWord{grid-column:2}}
 
 
@@ -305,7 +305,7 @@ function targetMask(word){if(wordGame.found.includes(word))return word;const n=w
 function renderWords(){
   $('wordLevel').textContent=wordGame.levelIndex+1;$('globalPoints').textContent=wordGame.score;$('wordPoints').textContent=wordGame.score;$('wordFoundCount').textContent=wordGame.found.length+'/'+wordGame.level.targets.length;$('bonusCount').textContent=wordGame.extras.length+' bonus word'+(wordGame.extras.length===1?'':'s');const currentHintWord=wordGame.level.targets.find(w=>!wordGame.found.includes(w));const currentHintStep=currentHintWord?(wordGame.revealed[currentHintWord]||0):0;$('hintCost').textContent='−'+hintCost(currentHintStep);
   $('wordsPage').classList.toggle('won',wordGame.status==='won');
-  $('wordTargets').innerHTML=wordGame.level.targets.map(w=>`<div class="word-target ${wordGame.found.includes(w)?'found':''}" aria-label="${wordGame.found.includes(w)?w:w.length+' letter word'}">${[...w].map((c,i)=>`<span class="word-dot-tile ${!wordGame.found.includes(w)&&i<(wordGame.revealed[w]||0)?'revealed':''}" aria-hidden="true">${wordGame.found.includes(w)||i<(wordGame.revealed[w]||0)?c:''}</span>`).join('')}</div>`).join('');
+  $('wordTargets').style.setProperty('--target-count',wordGame.level.targets.length);$('wordTargets').innerHTML=wordGame.level.targets.map(w=>`<div class="word-target ${wordGame.found.includes(w)?'found':''}" aria-label="${wordGame.found.includes(w)?w:w.length+' letter word'}">${[...w].map((c,i)=>`<span class="word-dot-tile ${!wordGame.found.includes(w)&&i<(wordGame.revealed[w]||0)?'revealed':''}" aria-hidden="true">${wordGame.found.includes(w)||i<(wordGame.revealed[w]||0)?c:''}</span>`).join('')}</div>`).join('');
   $('nextWord').hidden=wordGame.status!=='won';$('hintWord').disabled=wordGame.status==='won';
   if(wordGame.status==='won')$('wordMessage').textContent='Every word found. Nice.';
   if(!letterOrder.length||letterOrder.length!==wordGame.level.letters.length||[...letterOrder].sort().join('')!==[...wordGame.level.letters].sort().join(''))scrambleLetters();else renderWheel();updateWordSelection();saveWords();
