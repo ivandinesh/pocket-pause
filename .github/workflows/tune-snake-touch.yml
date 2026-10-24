@@ -1,0 +1,39 @@
+name: Tune Snake touch
+
+on:
+  push:
+    paths:
+      - '.github/workflows/tune-snake-touch.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tune Snake only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          replacements={
+            "function drawSnakeHead(x,y,cell){const r=cell*.29;":"function drawSnakeHead(x,y,cell){const r=cell*.32;",
+            "dot(sctx,fx,fy,cell*.255,'#7696ef');":"dot(sctx,fx,fy,cell*.27,'#7696ef');",
+            "dot(sctx,ox+(p.x+.5)*cell,oy+(p.y+.5)*cell,cell*.235,'#4f78ec',fade)":"dot(sctx,ox+(p.x+.5)*cell,oy+(p.y+.5)*cell,cell*.255,'#4f78ec',fade)",
+            "function handleSnakeGestureMove(x,y){if(!sGesture)return;const dx=x-sGesture.x,dy=y-sGesture.y,dist=Math.max(Math.abs(dx),Math.abs(dy));if(dist<14)return;const dir=snakeGestureDir(dx,dy);if(dir!==sGesture.lastDir){steerSnake(dir);sGesture.lastDir=dir}const step=Math.max(18,Math.min(34,snakeGeom().cell*1.05));if(dist>=step){sGesture.x=x;sGesture.y=y;sGesture.lastDir=null}}":"function handleSnakeGestureMove(x,y){if(!sGesture)return;const dx=x-sGesture.x,dy=y-sGesture.y,dist=Math.max(Math.abs(dx),Math.abs(dy));if(dist<8)return;const dir=snakeGestureDir(dx,dy),next=DIRS[dir],current=snake.queue.at(-1)||snake.dir;if(next&&dir!==sGesture.lastDir&&!(next.x===-current.x&&next.y===-current.y)){steerSnake(dir);sGesture.lastDir=dir}sGesture.x=x;sGesture.y=y;if(dir===sGesture.lastDir)sGesture.lastDir=null}"
+          }
+          for old,new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'Missing expected Snake source: {old[:80]}')
+              s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Match Snake size and one-finger steering feel'
+          git push
