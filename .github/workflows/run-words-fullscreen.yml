@@ -1,0 +1,32 @@
+name: Apply fullscreen Words
+
+on:
+  push:
+    paths:
+      - 'scripts/patch_words_fullscreen.py'
+      - '.github/workflows/run-words-fullscreen.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Words page
+        run: python3 scripts/patch_words_fullscreen.py
+      - name: Validate expected changes
+        run: |
+          grep -q "Words-only full-screen layout" index.html
+          grep -q "id=\"wordSoundButton\"" index.html
+          grep -q "id=\"wordPoints\"" index.html
+          grep -q "const n=this.revealed\[word\]||0,cost=hintCost(n)" index.html
+      - name: Commit patched app
+        run: |
+          git config user.name "Dinesh"
+          git config user.email "din.frndxp@gmail.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Make Words full screen and fix per-word hints"
+          git push
