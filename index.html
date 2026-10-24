@@ -95,6 +95,45 @@ body:has(#wordsPage.active) #app{min-height:100dvh}
 #wordsPage .word-wheel-wrap{flex:0 0 auto;margin:0 auto!important}
 @media(max-height:760px) and (orientation:portrait){#wordsPage .word-targets{gap:5px!important;--tile:clamp(27px,3.8dvh,34px)}}
 
+/* Words: tuned one-column spacing and size */
+#wordsPage .word-targets{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  grid-auto-rows:max-content!important;
+  justify-items:center!important;
+  align-content:space-evenly!important;
+  flex:0 0 auto!important;
+  width:100%;
+  min-height:calc(var(--target-count) * 58px)!important;
+  height:clamp(220px,calc(var(--target-count) * 64px),34dvh)!important;
+  max-height:34dvh!important;
+  overflow-y:auto;
+  overflow-x:visible;
+  margin:8px 0 4px!important;
+  padding:4px 0!important;
+  gap:0!important;
+  --tile:clamp(46px,5.3dvh,54px)!important;
+  scrollbar-width:none
+}
+#wordsPage .word-targets::-webkit-scrollbar{display:none}
+#wordsPage .word-target{
+  width:max-content;
+  max-width:100%;
+  justify-content:center;
+  gap:clamp(8px,1.4vw,11px)!important
+}
+#wordsPage .word-status{margin-top:auto!important;flex:0 0 auto}
+#wordsPage .word-selection-row{flex:0 0 auto}
+#wordsPage .word-wheel-wrap{flex:0 0 auto;margin:0 auto!important}
+@media(max-height:760px) and (orientation:portrait){
+  #wordsPage .word-targets{
+    min-height:calc(var(--target-count) * 46px)!important;
+    height:clamp(180px,calc(var(--target-count) * 52px),29dvh)!important;
+    max-height:29dvh!important;
+    --tile:clamp(38px,4.7dvh,46px)!important
+  }
+}
+
 /* Snake-only true full-screen playfield */
 body:has(#snakePage.active) .topbar{display:none}
 body:has(#snakePage.active) #app{min-height:100dvh}
