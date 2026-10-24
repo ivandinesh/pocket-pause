@@ -192,6 +192,34 @@ body:has(#snakePage.active) #app{min-height:100dvh}
 @media(max-width:760px){#snakePage.active{height:100dvh;padding-top:max(6px,env(safe-area-inset-top))}#snakePage .game-heading{padding:2px 12px 4px;margin:0}#snakePage .game-heading h1{font-size:26px}#snakePage .snake-options{padding-bottom:6px;gap:8px}#snakePage .snake-palette,#snakePage .snake-shapes{gap:4px;padding:3px 5px}#snakePage .snake-color{width:24px;height:24px}#snakePage .snake-color:before{width:16px;height:16px}#snakePage .snake-shape{min-width:46px;height:26px;padding:0 7px}}
 @media(orientation:landscape) and (max-height:600px){#snakePage .game-heading{padding-bottom:2px}#snakePage .game-heading h1{font-size:21px}#snakePage .snake-options{padding:0 12px 3px;min-height:32px}}
 
+
+
+/* Sudoku: use vertical space without over-stretching */
+#sudokuPage.active{display:flex;flex-direction:column;min-height:100dvh;height:100dvh}
+#sudokuPage .sudoku-board{
+  flex:1 1 auto;
+  width:min(620px,calc(100vw - 16px));
+  height:auto;
+  min-height:0;
+  max-height:min(calc((100vw - 16px)*1.18),calc(100dvh - 235px));
+  aspect-ratio:auto;
+  grid-template-columns:repeat(9,1fr);
+  grid-template-rows:repeat(9,1fr);
+  margin:2px auto 0;
+}
+#sudokuPage .sudoku-cell{min-height:0}
+#sudokuPage .sudoku-tools{margin-top:auto;margin-bottom:clamp(2px,1.2dvh,12px)}
+#sudokuPage #sudokuMessage{margin-top:0;margin-bottom:clamp(0px,.8dvh,8px)}
+@media(max-width:760px){
+  #sudokuPage{padding-left:8px;padding-right:8px}
+  #sudokuPage .game-heading,#sudokuPage .sudoku-toolbar{width:100%}
+  #sudokuPage .sudoku-board{width:100%;max-width:none;max-height:min(calc((100vw - 16px)*1.18),calc(100dvh - 225px))}
+  #sudokuPage .sudoku-tools{width:min(300px,78vw)}
+}
+@media(max-height:700px) and (orientation:portrait){
+  #sudokuPage .sudoku-board{max-height:min(calc((100vw - 16px)*1.10),calc(100dvh - 190px))}
+}
+
 </style>
 </head>
 <body>
