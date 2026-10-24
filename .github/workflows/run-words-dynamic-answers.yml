@@ -20,8 +20,8 @@ jobs:
       - name: Validate expected changes
         run: |
           grep -q "margin-top:auto" index.html
-          grep -q "--target-count" index.html
-          grep -q "--wheel:min(365px,39dvh" index.html
+          grep -q -- "--target-count" index.html
+          grep -q -- "--wheel:min(365px,39dvh" index.html
       - name: Commit patched app
         run: |
           git config user.name "Dinesh"
