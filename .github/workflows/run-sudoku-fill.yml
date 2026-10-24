@@ -19,9 +19,9 @@ jobs:
         run: python3 scripts/patch_sudoku_fill.py
       - name: Validate
         run: |
-          grep -q "Sudoku: use vertical space without over-stretching" index.html
-          grep -q "grid-template-rows:repeat(9,1fr)" index.html
-          grep -q "max-height:min(calc((100vw - 16px)*1.18),calc(100dvh - 225px))" index.html
+          grep -Fq "Sudoku: use vertical space without over-stretching" index.html
+          grep -Fq "grid-template-rows:repeat(9,1fr)" index.html
+          grep -Fq "max-height:min(calc((100vw - 16px)*1.18),calc(100dvh - 225px))" index.html
       - name: Commit patched app
         run: |
           git config user.name "Dinesh"
