@@ -391,13 +391,25 @@ s=s.replace("['tri','bar','ring','gear']","['tri','bar','ring','gear','gears']")
 s=s.replace('<button data-fidget-type="gear" aria-pressed="false">Gear</button>','<button data-fidget-type="gear" aria-pressed="false">Gear</button><button data-fidget-type="gears" aria-pressed="false">Connected</button>')
 s=s.replace('function drawFidget(){if(!fW)return;',"function drawFidget(){if(!fW)return;if(fidgetType==='gears'){drawConnectedGears();return;}")
 gears=r'''
-function gearLayout(){const columns=Math.max(3,Math.round(fW/110)),spacing=fW/columns,rows=Math.ceil(fH/spacing)+1;return{columns,rows,spacing};}
+function gearLayout(){
+ const sizes=[28,12,26,10,24,16,22,8,20,14],items=[];let y=0;
+ for(let row=0;row<5;row++){
+  const i=row*2,r=sizes[i];if(row)y+=sizes[i-2]+r;
+  const parent=row?items[i-2]:null,theta=Math.PI/2,phase=parent?theta+Math.PI-(parent.teeth*(theta-parent.phase)+Math.PI)/r:0;
+  const main={x:0,y,r,teeth:r,ratio:(row%2?-1:1)*28/r,phase};items.push(main);
+  const small=sizes[i+1],side=row%2?-1:1,bearing=side>0?0:Math.PI;
+  items.push({x:side*(r+small),y,r:small,teeth:small,ratio:-main.ratio*r/small,phase:bearing+Math.PI-(r*(bearing-phase)+Math.PI)/small});
+ }
+ const margin=1.1,minX=Math.min(...items.map(g=>g.x-g.r-margin)),maxX=Math.max(...items.map(g=>g.x+g.r+margin)),minY=Math.min(...items.map(g=>g.y-g.r-margin)),maxY=Math.max(...items.map(g=>g.y+g.r+margin));
+ const scale=Math.min((fW-24)/(maxX-minX),(fH-24)/(maxY-minY)),ox=(fW-(maxX-minX)*scale)/2-minX*scale,oy=(fH-(maxY-minY)*scale)/2-minY*scale;
+ return items.map(g=>({...g,x:g.x*scale+ox,y:g.y*scale+oy,r:g.r*scale,tooth:scale*.8}));
+}
 function drawConnectedGears(){
- const {columns,rows,spacing}=gearLayout(),c=FIDGET_COLORS[fidgetColor];fctx.clearRect(0,0,fW,fH);
- for(let y=0;y<rows;y++)for(let x=0;x<columns+1;x++){
-  const odd=(x+y)%2,r=spacing*(odd?1/3:2/3),teeth=odd?8:16,angle=(odd?-fAngle*2:fAngle)+(odd?Math.PI/teeth:0);
-  fctx.save();fctx.translate(x*spacing,y*spacing);fctx.rotate(angle);fctx.beginPath();
-  for(let i=0;i<teeth*4;i++){const a=i*Math.PI*2/(teeth*4),radius=r+spacing*([-.035,.035,.035,-.035][i%4]);const px=Math.cos(a)*radius,py=Math.sin(a)*radius;i?fctx.lineTo(px,py):fctx.moveTo(px,py)}
+ const layout=gearLayout(),c=FIDGET_COLORS[fidgetColor];fctx.clearRect(0,0,fW,fH);
+ for(const gear of layout){
+  const {x,y,r,teeth,tooth}=gear,odd=gear.ratio<0,angle=fAngle*gear.ratio+gear.phase;
+  fctx.save();fctx.translate(x,y);fctx.rotate(angle);fctx.beginPath();
+  for(let i=0;i<teeth*4;i++){const a=i*Math.PI*2/(teeth*4),radius=r+tooth*([-1,1,1,-1][i%4]);const px=Math.cos(a)*radius,py=Math.sin(a)*radius;i?fctx.lineTo(px,py):fctx.moveTo(px,py)}
   fctx.closePath();fctx.fillStyle=c;fctx.globalAlpha=odd?.72:.94;fctx.fill();fctx.globalAlpha=1;
   fctx.fillStyle='#fff';fctx.beginPath();fctx.arc(0,0,r*.65,0,Math.PI*2);fctx.fill();
   fctx.strokeStyle=c;fctx.lineWidth=r*.14;fctx.lineCap='round';for(let k=0;k<3;k++){const a=k*Math.PI*2/3;fctx.beginPath();fctx.moveTo(0,0);fctx.lineTo(Math.cos(a)*r*.57,Math.sin(a)*r*.57);fctx.stroke()}
@@ -405,7 +417,7 @@ function drawConnectedGears(){
  }$('fidgetSpeed').textContent=Math.round(Math.abs(fVel)*14);
 }
 let gearDrag=null;
-fc.addEventListener('pointerdown',e=>{if(fidgetType!=='gears')return;e.preventDefault();e.stopImmediatePropagation();const box=fc.getBoundingClientRect(),{spacing,columns,rows}=gearLayout(),px=e.clientX-box.left,py=e.clientY-box.top;let best=null;for(let y=0;y<rows;y++)for(let x=0;x<=columns;x++){const odd=(x+y)%2,r=spacing*(odd?1/3:2/3),distance=Math.hypot(px-x*spacing,py-y*spacing)/r;if(!best||distance<best.distance)best={x,y,odd,distance};}const {x,y,odd}=best;gearDrag={x:box.left+x*spacing,y:box.top+y*spacing,sign:odd?-.5:1,a:Math.atan2(py-y*spacing,px-x*spacing),time:performance.now()};fVel=0;fc.setPointerCapture(e.pointerId);},true);
+fc.addEventListener('pointerdown',e=>{if(fidgetType!=='gears')return;e.preventDefault();e.stopImmediatePropagation();const box=fc.getBoundingClientRect(),px=e.clientX-box.left,py=e.clientY-box.top;const best=gearLayout().reduce((a,b)=>Math.hypot(px-a.x,py-a.y)/a.r<Math.hypot(px-b.x,py-b.y)/b.r?a:b);gearDrag={x:box.left+best.x,y:box.top+best.y,sign:1/best.ratio,a:Math.atan2(py-best.y,px-best.x),time:performance.now()};fVel=0;fc.setPointerCapture(e.pointerId);},true);
 fc.addEventListener('pointermove',e=>{if(fidgetType!=='gears'||!gearDrag)return;e.preventDefault();e.stopImmediatePropagation();const g=gearDrag,a=Math.atan2(e.clientY-g.y,e.clientX-g.x),now=performance.now();let d=a-g.a;if(d>Math.PI)d-=Math.PI*2;if(d<-Math.PI)d+=Math.PI*2;fAngle+=d*g.sign;fVel=clamp(d*g.sign/Math.max(8,now-g.time)*1000,-18,18);g.a=a;g.time=now;drawFidget();},true);
 for(const type of ['pointerup','pointercancel','lostpointercapture'])fc.addEventListener(type,()=>{gearDrag=null;});
 '''
