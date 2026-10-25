@@ -451,3 +451,10 @@ connectedSpin.addEventListener('click',()=>{if(fidgetType!=='gears')return;gearD
 s=s.replace('</script>',button_js+'\n</script>',1)
 s=s.replace('</head>',"<style>#connectedSpin{display:none}#fidgetPage.connected-mode #connectedSpin{display:inline-flex;align-items:center;justify-content:center;min-width:112px;min-height:44px;border-radius:999px;color:#3568ee;background:#f3f6ff;border:1px solid #dfe7f8;font-weight:650}</style></head>")
 p.write_text(s)
+
+# Disable double-tap zoom site-wide without overriding game drag gestures.
+s=p.read_text()
+s=s.replace('</head>',"<style>html,body{touch-action:manipulation}button,a,input,select,textarea,[role=button]{touch-action:manipulation}</style></head>")
+p.write_text(s)
+s=p.read_text().replace(',user-scalable=no','')
+p.write_text(s)
