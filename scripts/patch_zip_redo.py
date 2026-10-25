@@ -40,7 +40,16 @@ css=r'''
 #zipLinePage .zip-cell.anchor::after{content:'';position:absolute;width:min(46%,31px);aspect-ratio:1;border-radius:50%;border:1.5px solid #9fb6ef;background:#fff;z-index:-1}
 #zipLinePage .zip-cell.anchor.used::after{background:#3568ee;border-color:#3568ee}
 #zipLinePage .zip-cell.anchor.used{color:#fff}
-#zipLinePage canvas.zip-path-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
+#zipLinePage canvas.zip-path-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#zipLinePage .zip-stage{background:#fff;border:1px solid #dce5f5;border-radius:22px;box-shadow:0 12px 40px #355fa509}
+#zipLinePage .zip-cell{z-index:2;background:transparent;border-color:#e8edf7}
+#zipLinePage .zip-cell.used,#zipLinePage .zip-cell.current{background:transparent}
+#zipLinePage .zip-cell.anchor{font-weight:600;font-size:clamp(16px,4.2vw,23px);color:#4770d6}
+#zipLinePage .zip-cell.anchor::after{width:min(65%,40px);border:1px solid #c6d5f5;background:#fff;box-shadow:0 2px 7px #315bb810}
+#zipLinePage .zip-cell.anchor.used::after{background:#4775e5;border-color:#4775e5}
+#zipLinePage .zip-cell.current::before{content:'';position:absolute;width:14px;height:14px;background:#fff;border:4px solid #6285ee;border-radius:50%;box-shadow:0 0 0 5px #6285ee18}
+#zipLinePage .zip-cell.anchor.current::before{display:none}
+#zipLinePage #zipMessage{color:#7d90b3;font-size:12px;line-height:1.6;text-align:center}
 '''
 s=s.replace('\n</style>','\n'+css+'\n</style>',1)
 
@@ -84,8 +93,8 @@ function zipDraw(liveX=null,liveY=null){
   const cw=r.width/zipCols,ch=r.height/zipRows;
   ctx.beginPath();
   zipPathCells.forEach(([x,y],i)=>{const px=(x+.5)*cw,py=(y+.5)*ch;i?ctx.lineTo(px,py):ctx.moveTo(px,py)});
-  if(liveX!=null&&liveY!=null)ctx.lineTo(liveX-r.left,liveY-r.top);
-  ctx.strokeStyle='#5d83ee';ctx.lineWidth=Math.max(6,Math.min(cw,ch)*.13);ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
+
+  ctx.strokeStyle='#6285ee';ctx.lineWidth=Math.max(8,Math.min(cw,ch)*.19);ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
 }
 function zipRefresh(liveX=null,liveY=null){
   const used=new Set(zipPathCells.map(([x,y])=>zipKey(x,y))),last=zipPathCells.at(-1);
@@ -111,7 +120,7 @@ function zipCanEnter(x,y){
   if(!zipPathCells.length)return zipAnchor(x,y)===1;
   const [px,py]=zipPathCells.at(-1);if(Math.abs(x-px)+Math.abs(y-py)!==1)return false;
   const existing=zipPathCells.findIndex(([xx,yy])=>xx===x&&yy===y);
-  if(existing===zipPathCells.length-2)return 'undo';
+  if(existing>=0&&existing===zipPathCells.length-2)return 'undo';
   if(existing>=0)return false;
   const a=zipAnchor(x,y);if(a&&a!==zipNextAnchor())return false;
   return true;
@@ -130,24 +139,22 @@ function zipCellFromClient(x,y){const r=zipStage.getBoundingClientRect();if(x<r.
 function zipStart(x,y,target,touchId=null){
   const el=target?.closest?.('.zip-cell'),c=el?{x:+el.dataset.x,y:+el.dataset.y}:zipCellFromClient(x,y);if(!c)return false;
   if(!zipPathCells.length&&zipAnchor(c.x,c.y)!==1){toast('Start at 1');return false}
-  if(!zipEnter(c.x,c.y))return false;
+  const tail=zipPathCells.at(-1);
+  if(!(tail&&tail[0]===c.x&&tail[1]===c.y)&&!zipEnter(c.x,c.y))return false;
   zipGesture={x,y,originX:x,originY:y,touchId,pointerId:null};zipRefresh(x,y);return true;
 }
 function zipMove(x,y){
   if(!zipGesture||!zipPathCells.length)return;
   const r=zipStage.getBoundingClientRect(),cw=r.width/zipCols,ch=r.height/zipRows;
-  zipGesture.x=x;zipGesture.y=y;
-  let dx=x-zipGesture.originX,dy=y-zipGesture.originY,guard=0;
-  while(guard++<12){
-    const nx=dx/cw,ny=dy/ch;if(Math.abs(nx)<.28&&Math.abs(ny)<.28)break;
-    const [cx,cy]=zipPathCells.at(-1);let sx=0,sy=0;
-    if(Math.abs(nx)>=Math.abs(ny))sx=Math.sign(nx);else sy=Math.sign(ny);
-    let moved=zipEnter(cx+sx,cy+sy);
-    if(!moved){if(sx){sx=0;sy=Math.sign(ny)}else{sy=0;sx=Math.sign(nx)}if((sx||sy))moved=zipEnter(cx+sx,cy+sy)}
-    if(!moved)break;
-    if(sx){zipGesture.originX+=sx*cw*.72;dx=x-zipGesture.originX}else{zipGesture.originY+=sy*ch*.72;dy=y-zipGesture.originY}
+  const fromX=zipGesture.x,fromY=zipGesture.y,steps=Math.max(1,Math.ceil(Math.hypot(x-fromX,y-fromY)/Math.min(cw,ch)*6));
+  for(let i=1;i<=steps;i++){
+    const px=fromX+(x-fromX)*i/steps,py=fromY+(y-fromY)*i/steps,c=zipCellFromClient(px,py);
+    if(!c)continue;
+    const tail=zipPathCells.at(-1);if(tail[0]===c.x&&tail[1]===c.y)continue;
+    if(Math.abs(px-(r.left+(c.x+.5)*cw))>cw*.42||Math.abs(py-(r.top+(c.y+.5)*ch))>ch*.42)continue;
+    zipEnter(c.x,c.y);
   }
-  zipRefresh(x,y);
+  zipGesture.x=x;zipGesture.y=y;zipRefresh();
 }
 function zipEnd(){if(!zipGesture)return;zipGesture=null;zipRefresh()}
 function zipTouch(list,id){for(const t of list)if(id==null||t.identifier===id)return t;return null}
@@ -157,9 +164,11 @@ zipStage.addEventListener('touchmove',zipTouchMove,{passive:false});
 document.addEventListener('touchmove',zipTouchMove,{passive:false,capture:true});
 document.addEventListener('touchend',e=>{if(!zipGesture||zipGesture.touchId==null)return;if(zipTouch(e.changedTouches,zipGesture.touchId)){e.preventDefault();zipEnd()}},{passive:false,capture:true});
 document.addEventListener('touchcancel',()=>{if(zipGesture&&zipGesture.touchId!=null)zipEnd()},{passive:false,capture:true});
-zipStage.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||zipGesture)return;if(zipStart(e.clientX,e.clientY,e.target)){zipGesture.pointerId=e.pointerId;e.preventDefault()}});
+zipStage.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0||zipGesture)return;if(zipStart(e.clientX,e.clientY,e.target)){zipGesture.pointerId=e.pointerId;e.preventDefault()}});
 document.addEventListener('pointermove',e=>{if(!zipGesture||zipGesture.pointerId!==e.pointerId)return;e.preventDefault();zipMove(e.clientX,e.clientY)});
 document.addEventListener('pointerup',e=>{if(zipGesture&&zipGesture.pointerId===e.pointerId)zipEnd()});
+document.addEventListener('pointercancel',()=>zipEnd());
+new ResizeObserver(()=>{if(currentPage==='zipLine')zipDraw()}).observe(zipStage);
 $('zipReset').addEventListener('click',()=>{zipPathCells=[];zipGesture=null;zipRefresh()});
 '''
 
