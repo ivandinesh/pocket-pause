@@ -425,3 +425,29 @@ s=p.read_text()
 s=s.replace("fidgetType=v;storage.set('fidget.type',v);","fidgetType=v;$('fidgetPage').classList.toggle('connected-mode',v==='gears');storage.set('fidget.type',v);")
 s=s.replace('</head>',"<style>#fidgetPage.connected-mode .fidget-stage{background:#fff}#fidgetPage.connected-mode .fidget-caption{position:absolute;bottom:8px;font-size:11px;opacity:.7}#fidgetPage.connected-mode .fidget-stage:before,#fidgetPage.connected-mode .fidget-stage:after{display:none}</style></head>")
 p.write_text(s)
+
+# Connected-only spin control and particles, using the existing particle lifecycle.
+s=p.read_text()
+particle_js=r'''
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(!reduced){
+  const now=performance.now();
+  if(Math.abs(fVel)>.25&&now-(drawConnectedGears.lastParticle||0)>90&&fSplashes.length<90){
+   drawConnectedGears.lastParticle=now;
+   for(let i=0;i<2;i++){const g=layout[Math.floor(Math.random()*layout.length)],a=Math.random()*Math.PI*2,sign=Math.sign(fVel*g.ratio)||1,velocity=18+Math.min(55,Math.abs(fVel)*8);fSplashes.push({x:g.x+Math.cos(a)*g.r*.85,y:g.y+Math.sin(a)*g.r*.85,vx:-Math.sin(a)*velocity*sign,vy:Math.cos(a)*velocity*sign,r:1.2+Math.random()*2,life:.75,c});}
+  }
+  for(const particle of fSplashes){fctx.save();fctx.globalAlpha=Math.max(0,particle.life)*.55;if(particle.ring){fctx.strokeStyle=particle.c;fctx.lineWidth=1.5;fctx.beginPath();fctx.arc(particle.x,particle.y,particle.r,0,Math.PI*2);fctx.stroke()}else{fctx.fillStyle=particle.c;fctx.beginPath();fctx.arc(particle.x,particle.y,particle.r,0,Math.PI*2);fctx.fill()}fctx.restore();}
+ }
+'''
+start=s.index('function drawConnectedGears(){');end=s.index('\nlet gearDrag=null;',start)
+section=s[start:end];needle="$('fidgetSpeed').textContent=Math.round(Math.abs(fVel)*14);";assert needle in section
+section=section.replace(needle,particle_js+'\n'+needle)
+s=s[:start]+section+s[end:]
+button_js=r'''
+const connectedSpin=document.createElement('button');connectedSpin.id='connectedSpin';connectedSpin.className='soft-button';connectedSpin.type='button';connectedSpin.textContent='↻ Spin';connectedSpin.setAttribute('aria-label','Spin connected gears');
+$('fidgetPage').querySelector('.game-footer').prepend(connectedSpin);
+connectedSpin.addEventListener('click',()=>{if(fidgetType!=='gears')return;gearDrag=null;fVel=(Math.sign(fVel)||1)*Math.min(9,Math.max(4,Math.abs(fVel)+2));if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)splashFidget(.6);drawFidget();});
+'''
+s=s.replace('</script>',button_js+'\n</script>',1)
+s=s.replace('</head>',"<style>#connectedSpin{display:none}#fidgetPage.connected-mode #connectedSpin{display:inline-flex;align-items:center;justify-content:center;min-width:112px;min-height:44px;border-radius:999px;color:#3568ee;background:#f3f6ff;border:1px solid #dfe7f8;font-weight:650}</style></head>")
+p.write_text(s)
