@@ -384,3 +384,32 @@ word_levels='[{"letters":"EIMT","targets":["ITEM","TIME","MET"],"bonus":["TIE"]}
 replacement="const UNIQUE_WORD_LEVELS="+word_levels+";\nfunction makeWordLevel(index){return UNIQUE_WORD_LEVELS[((index%1000)+1000)%1000]}\n"
 s=re.sub(r"function makeWordLevel\(index\)\{.*?\n\}\nclass WordGame",replacement+"class WordGame",s,count=1,flags=re.S)
 p.write_text(s)
+
+# Additive connected-gears mode; existing fidgets are unchanged.
+s=p.read_text()
+s=s.replace("['tri','bar','ring','gear']","['tri','bar','ring','gear','gears']")
+s=s.replace('<button data-fidget-type="gear" aria-pressed="false">Gear</button>','<button data-fidget-type="gear" aria-pressed="false">Gear</button><button data-fidget-type="gears" aria-pressed="false">Connected</button>')
+s=s.replace('function drawFidget(){if(!fW)return;',"function drawFidget(){if(!fW)return;if(fidgetType==='gears'){drawConnectedGears();return;}")
+gears=r'''
+function gearLayout(){const columns=Math.max(3,Math.round(fW/110)),spacing=fW/columns,rows=Math.ceil(fH/spacing)+1;return{columns,rows,spacing};}
+function drawConnectedGears(){
+ const {columns,rows,spacing}=gearLayout(),r=spacing/2,teeth=12,c=FIDGET_COLORS[fidgetColor];fctx.clearRect(0,0,fW,fH);
+ for(let y=0;y<rows;y++)for(let x=0;x<columns+1;x++){
+  const odd=(x+y)%2,angle=(odd?-fAngle:fAngle)+(odd?Math.PI/teeth:0);
+  fctx.save();fctx.translate(x*spacing,y*spacing);fctx.rotate(angle);fctx.beginPath();
+  for(let i=0;i<teeth*4;i++){const a=i*Math.PI*2/(teeth*4),radius=r*([.89,1.075,1.075,.89][i%4]);const px=Math.cos(a)*radius,py=Math.sin(a)*radius;i?fctx.lineTo(px,py):fctx.moveTo(px,py)}
+  fctx.closePath();fctx.fillStyle=c;fctx.globalAlpha=odd?.72:.94;fctx.fill();fctx.globalAlpha=1;
+  fctx.fillStyle='#fff';fctx.beginPath();fctx.arc(0,0,r*.65,0,Math.PI*2);fctx.fill();
+  fctx.strokeStyle=c;fctx.lineWidth=r*.14;fctx.lineCap='round';for(let k=0;k<3;k++){const a=k*Math.PI*2/3;fctx.beginPath();fctx.moveTo(0,0);fctx.lineTo(Math.cos(a)*r*.57,Math.sin(a)*r*.57);fctx.stroke()}
+  fctx.fillStyle=c;fctx.beginPath();fctx.arc(0,0,r*.22,0,Math.PI*2);fctx.fill();fctx.fillStyle='#fff';fctx.beginPath();fctx.arc(0,0,r*.085,0,Math.PI*2);fctx.fill();fctx.restore();
+ }$('fidgetSpeed').textContent=Math.round(Math.abs(fVel)*14);
+}
+let gearDrag=null;
+fc.addEventListener('pointerdown',e=>{if(fidgetType!=='gears')return;e.preventDefault();e.stopImmediatePropagation();const box=fc.getBoundingClientRect(),{spacing}=gearLayout(),x=Math.round((e.clientX-box.left)/spacing),y=Math.round((e.clientY-box.top)/spacing);gearDrag={x:box.left+x*spacing,y:box.top+y*spacing,sign:(x+y)%2?-1:1,a:Math.atan2(e.clientY-box.top-y*spacing,e.clientX-box.left-x*spacing),time:performance.now()};fVel=0;fc.setPointerCapture(e.pointerId);},true);
+fc.addEventListener('pointermove',e=>{if(fidgetType!=='gears'||!gearDrag)return;e.preventDefault();e.stopImmediatePropagation();const g=gearDrag,a=Math.atan2(e.clientY-g.y,e.clientX-g.x),now=performance.now();let d=a-g.a;if(d>Math.PI)d-=Math.PI*2;if(d<-Math.PI)d+=Math.PI*2;fAngle+=d*g.sign;fVel=clamp(d*g.sign/Math.max(8,now-g.time)*1000,-18,18);g.a=a;g.time=now;drawFidget();},true);
+for(const type of ['pointerup','pointercancel','lostpointercapture'])fc.addEventListener(type,()=>{gearDrag=null;});
+'''
+s=s.replace('</script>',gears+'\n</script>',1)
+# Prevent inertia from fighting the finger while dragging connected gears.
+s=s.replace('if(!fPointer&&Math.abs(fVel)>.001)',"if(!fPointer&&!(fidgetType==='gears'&&gearDrag)&&Math.abs(fVel)>.001)")
+p.write_text(s)
