@@ -322,3 +322,32 @@ for(const id of ['words','sudoku','snake','tetris','wordSearch','pac','fidget'])
 }
 """
 s=s.replace('</script>',ui+'\n</script>',1);p.write_text(s)
+
+# Consistent touch-safe chrome and centered appearance choices.
+s=p.read_text()
+polish=r'''<style>
+#app .game-page.active{background:#fff!important;background-image:none!important}
+#app .game-page,#app .game-page *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+#app .game-page input,#app .game-page textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+#app .game-heading,#app .game-footer,#app .game-footer>*{background-color:#fff;background-image:none}
+#pacOptions{display:flex;align-items:center;justify-content:center;gap:12px!important}
+.appearance-group{display:flex;align-items:center;gap:6px;padding:4px 6px;border:1px solid #e8edf7;border-radius:999px;background:#fff}
+#app #pacOptions .color-swatch,#app .tetris-color{box-sizing:border-box;display:grid;place-items:center;width:26px!important;height:26px!important;min-height:26px!important;padding:0!important;flex:0 0 26px;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;}
+#app #pacOptions .color-swatch:before,#app .tetris-color:after{position:static;display:block;width:18px!important;height:18px!important;margin:0!important;border-radius:50%;background:var(--swatch);transform:none!important}
+#app #pacOptions .color-swatch[aria-pressed=true],#app .tetris-color[aria-pressed=true]{box-shadow:inset 0 0 0 2px #cdd9f6!important}
+#app #pacOptions .shape-choice,#app .tetris-shape{min-width:52px;height:28px!important;padding:0 9px!important;border:0!important;border-radius:999px!important;font-size:11px!important;font-weight:700;background:transparent;color:#7d879b}
+#app #pacOptions .shape-choice[aria-pressed=true],#app .tetris-shape[aria-pressed=true]{background:#eef3ff;color:#3568ee}
+#app .tetris-palette,#app .tetris-shapes{display:flex;align-items:center;gap:6px;padding:4px 6px;border:1px solid #e8edf7;border-radius:999px;background:#fff}
+</style>'''
+s=s.replace('</head>',polish+'</head>')
+polish_js=r'''
+const pacOptions=$('pacOptions');for(const selector of ['.color-swatch','.shape-choice']){const group=document.createElement('div');group.className='appearance-group';group.setAttribute('role','group');group.setAttribute('aria-label',selector==='.color-swatch'?'Color':'Shape');for(const button of [...pacOptions.querySelectorAll(selector)])group.append(button);pacOptions.append(group);}
+for(const pg of document.querySelectorAll('.game-page')){
+ const editable=target=>target instanceof Element&&!!target.closest('input,textarea,select,[contenteditable=true]');
+ pg.addEventListener('selectstart',e=>{if(!editable(e.target))e.preventDefault()});
+ pg.addEventListener('contextmenu',e=>{if(!editable(e.target))e.preventDefault()});
+ pg.addEventListener('dragstart',e=>{if(!editable(e.target))e.preventDefault()});
+ pg.addEventListener('pointerdown',e=>{if(!editable(e.target))window.getSelection()?.removeAllRanges()});
+}
+'''
+s=s.replace('</script>',polish_js+'\n</script>',1);p.write_text(s)
