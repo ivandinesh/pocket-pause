@@ -392,16 +392,10 @@ s=s.replace('<button data-fidget-type="gear" aria-pressed="false">Gear</button>'
 s=s.replace('function drawFidget(){if(!fW)return;',"function drawFidget(){if(!fW)return;if(fidgetType==='gears'){drawConnectedGears();return;}")
 gears=r'''
 function gearLayout(){
- const sizes=[28,12,26,10,24,16,22,8,20,14],items=[];let y=0;
- for(let row=0;row<5;row++){
-  const i=row*2,r=sizes[i];if(row)y+=sizes[i-2]+r;
-  const parent=row?items[i-2]:null,theta=Math.PI/2,phase=parent?theta+Math.PI-(parent.teeth*(theta-parent.phase)+Math.PI)/r:0;
-  const main={x:0,y,r,teeth:r,ratio:(row%2?-1:1)*28/r,phase};items.push(main);
-  const small=sizes[i+1],side=row%2?-1:1,bearing=side>0?0:Math.PI;
-  items.push({x:side*(r+small),y,r:small,teeth:small,ratio:-main.ratio*r/small,phase:bearing+Math.PI-(r*(bearing-phase)+Math.PI)/small});
- }
+ const design=[[0, 0, 28, -1, 0], [-8.450062914116736e-15, -46.0, 18, 0, 4.71238898038469], [-1.6165337748745062e-14, -88.0, 24, 1, 4.71238898038469], [28.284271247461895, -28.28427124746191, 12, 0, 5.497787143782138], [39.83716857408417, -65.0, 22, 2, 0.5235987755982988], [39.83716857408416, -97.0, 10, 4, 4.71238898038469], [46.76537180435969, 26.999999999999996, 26, 0, 0.5235987755982988], [2.6942229581241772e-15, 44.0, 16, 0, 1.5707963267948966], [59.193897688712084, -20.002061804181245, 20, 3, 0.2617993877991494], [65.29301269679988, -90.45584412271572, 14, 4, 5.497787143782138]],items=[];
+ for(const [x,y,r,parent,bearing] of design){const p=items[parent];items.push({x,y,r,teeth:r,ratio:p?-p.ratio*p.r/r:1,phase:p?bearing+Math.PI-(p.teeth*(bearing-p.phase)+Math.PI)/r:0});}
  const margin=1.1,minX=Math.min(...items.map(g=>g.x-g.r-margin)),maxX=Math.max(...items.map(g=>g.x+g.r+margin)),minY=Math.min(...items.map(g=>g.y-g.r-margin)),maxY=Math.max(...items.map(g=>g.y+g.r+margin));
- const scale=Math.min((fW-24)/(maxX-minX),(fH-24)/(maxY-minY)),ox=(fW-(maxX-minX)*scale)/2-minX*scale,oy=(fH-(maxY-minY)*scale)/2-minY*scale;
+ const scale=Math.min((fW-24)/(maxX-minX),(fH-60)/(maxY-minY)),ox=(fW-(maxX-minX)*scale)/2-minX*scale,oy=(fH-28-(maxY-minY)*scale)/2-minY*scale;
  return items.map(g=>({...g,x:g.x*scale+ox,y:g.y*scale+oy,r:g.r*scale,tooth:scale*.8}));
 }
 function drawConnectedGears(){
@@ -410,10 +404,10 @@ function drawConnectedGears(){
   const {x,y,r,teeth,tooth}=gear,odd=gear.ratio<0,angle=fAngle*gear.ratio+gear.phase;
   fctx.save();fctx.translate(x,y);fctx.rotate(angle);fctx.beginPath();
   for(let i=0;i<teeth*4;i++){const a=i*Math.PI*2/(teeth*4),radius=r+tooth*([-1,1,1,-1][i%4]);const px=Math.cos(a)*radius,py=Math.sin(a)*radius;i?fctx.lineTo(px,py):fctx.moveTo(px,py)}
-  fctx.closePath();fctx.fillStyle=c;fctx.globalAlpha=odd?.72:.94;fctx.fill();fctx.globalAlpha=1;
+  fctx.closePath();fctx.shadowColor=c+'25';fctx.shadowBlur=8;fctx.shadowOffsetY=3;fctx.fillStyle='#fff';fctx.fill();fctx.shadowBlur=0;fctx.shadowOffsetY=0;fctx.fillStyle=c;fctx.globalAlpha=odd?.17:.27;fctx.fill();fctx.globalAlpha=1;fctx.strokeStyle=c;fctx.lineWidth=1.4;fctx.lineJoin='round';fctx.stroke();
   fctx.fillStyle='#fff';fctx.beginPath();fctx.arc(0,0,r*.65,0,Math.PI*2);fctx.fill();
-  fctx.strokeStyle=c;fctx.lineWidth=r*.14;fctx.lineCap='round';for(let k=0;k<3;k++){const a=k*Math.PI*2/3;fctx.beginPath();fctx.moveTo(0,0);fctx.lineTo(Math.cos(a)*r*.57,Math.sin(a)*r*.57);fctx.stroke()}
-  fctx.fillStyle=c;fctx.beginPath();fctx.arc(0,0,r*.22,0,Math.PI*2);fctx.fill();fctx.fillStyle='#fff';fctx.beginPath();fctx.arc(0,0,r*.085,0,Math.PI*2);fctx.fill();fctx.restore();
+  fctx.strokeStyle=c;fctx.lineWidth=Math.max(2,r*.065);fctx.lineCap='round';const spokes=teeth>22?5:teeth>16?4:3;for(let k=0;k<spokes;k++){const a=k*Math.PI*2/spokes;fctx.beginPath();fctx.moveTo(0,0);fctx.lineTo(Math.cos(a)*r*.57,Math.sin(a)*r*.57);fctx.stroke()}
+  fctx.fillStyle=c;fctx.beginPath();fctx.arc(r*.79,0,Math.max(2,r*.045),0,Math.PI*2);fctx.fill();fctx.beginPath();fctx.arc(0,0,r*.22,0,Math.PI*2);fctx.fill();fctx.fillStyle='#fff';fctx.beginPath();fctx.arc(0,0,r*.085,0,Math.PI*2);fctx.fill();fctx.restore();
  }$('fidgetSpeed').textContent=Math.round(Math.abs(fVel)*14);
 }
 let gearDrag=null;
@@ -424,4 +418,10 @@ for(const type of ['pointerup','pointercancel','lostpointercapture'])fc.addEvent
 s=s.replace('</script>',gears+'\n</script>',1)
 # Prevent inertia from fighting the finger while dragging connected gears.
 s=s.replace('if(!fPointer&&Math.abs(fVel)>.001)',"if(!fPointer&&!(fidgetType==='gears'&&gearDrag)&&Math.abs(fVel)>.001)")
+p.write_text(s)
+
+# Mode-scoped stage treatment; all other fidgets retain their original layout.
+s=p.read_text()
+s=s.replace("fidgetType=v;storage.set('fidget.type',v);","fidgetType=v;$('fidgetPage').classList.toggle('connected-mode',v==='gears');storage.set('fidget.type',v);")
+s=s.replace('</head>',"<style>#fidgetPage.connected-mode .fidget-stage{background:#fff}#fidgetPage.connected-mode .fidget-caption{position:absolute;bottom:8px;font-size:11px;opacity:.7}#fidgetPage.connected-mode .fidget-stage:before,#fidgetPage.connected-mode .fidget-stage:after{display:none}</style></head>")
 p.write_text(s)
