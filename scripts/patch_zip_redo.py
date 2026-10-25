@@ -351,3 +351,29 @@ for(const pg of document.querySelectorAll('.game-page')){
 }
 '''
 s=s.replace('</script>',polish_js+'\n</script>',1);p.write_text(s)
+
+# Completion-driven progression and live level controls.
+s=p.read_text()
+s=s.replace("setTimeout(()=>{searchPuzzle++;makeSearch();renderSearch()},650)","/* shared guarded progression below */")
+s=s.replace('searchPuzzle++;makeSearch();renderSearch()', 'searchPuzzle=(searchPuzzle+1)%1000;makeSearch();renderSearch()')
+progress=r'''
+let completionPending=null;
+function syncLevelControl(id,n){const pg=$(id+'Page');if(!pg)return;const button=pg.querySelector('.level-launch');if(button)button.textContent=(id==='snake'?'Speed ':id==='tetris'?'Level ':'Level ')+n;const dialog=pg.querySelector('.level-dialog');if(dialog&&!dialog.open){const input=dialog.querySelector('input');if(input)input.value=n;}}
+function completionState(){
+ if(currentPage==='words'&&wordGame.status==='won')return {id:'words',key:wordGame.levelIndex,object:wordGame.found};
+ if(currentPage==='wordSearch'&&searchPlaced.length&&searchFoundSet.size===searchPlaced.length)return{id:'wordSearch',key:searchPuzzle,object:searchGrid};
+ if(currentPage==='sudoku'&&sudoku?.solved)return{id:'sudoku',key:+storage.get('sudoku.level',1),object:sudoku};
+ return null;
+}
+setInterval(()=>{
+ syncLevelControl('words',wordGame.levelIndex+1);syncLevelControl('wordSearch',searchPuzzle+1);syncLevelControl('sudoku',+storage.get('sudoku.level',1));syncLevelControl('snake',+storage.get('snake.level',1));syncLevelControl('tetris',tetris.level);syncLevelControl('pac',+$('pacLevel').value);
+ const state=completionState();const dialogOpen=document.querySelector('.game-page.active dialog[open]');
+ if(!state||dialogOpen||document.hidden){completionPending=null;return;}
+ if(!completionPending||completionPending.id!==state.id||completionPending.key!==state.key||completionPending.object!==state.object){completionPending={...state,at:performance.now()};return;}
+ if(performance.now()-completionPending.at<1100)return;completionPending=null;
+ if(state.id==='words'){$('nextWord').click();}
+ if(state.id==='wordSearch'){searchPuzzle=(searchPuzzle+1)%1000;makeSearch();renderSearch();}
+ if(state.id==='sudoku'){const n=state.key%1000+1;storage.set('sudoku.level',n);const made=makeSudoku(sudoku.difficulty||'easy',19007+n*97);sudoku={...made,board:made.puzzle.map(r=>[...r]),notes:Array.from({length:81},()=>[]),selected:null,history:[],elapsed:0,solved:false};saveSudoku();renderSudoku();}
+},150);
+'''
+s=s.replace('</script>',progress+'\n</script>',1);p.write_text(s)
