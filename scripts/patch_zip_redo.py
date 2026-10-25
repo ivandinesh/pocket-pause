@@ -42,7 +42,7 @@ css=r'''
 #zipLinePage .zip-cell.anchor.used{color:#fff}
 #zipLinePage canvas.zip-path-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 #zipLinePage .zip-stage{background:#fff;border:1px solid #dce5f5;border-radius:22px;box-shadow:0 12px 40px #355fa509}
-#zipLinePage .zip-cell{z-index:2;background:transparent;border-color:#e8edf7}
+#zipLinePage .zip-cell{z-index:2;background:transparent;border:0}
 #zipLinePage .zip-cell.used,#zipLinePage .zip-cell.current{background:transparent}
 #zipLinePage .zip-cell.anchor{font-weight:600;font-size:clamp(16px,4.2vw,23px);color:#4770d6}
 #zipLinePage .zip-cell.anchor::after{width:min(65%,40px);border:1px solid #c6d5f5;background:#fff;box-shadow:0 2px 7px #315bb810}
@@ -100,13 +100,25 @@ function zipDraw(liveX=null,liveY=null){
   const cv=zipEnsureCanvas(),r=zipStage.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1),ctx=cv.getContext('2d');
   ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,r.width,r.height);
   const cw=r.width/zipCols,ch=r.height/zipRows;
+  // Draw grid first so neither grid seams nor walls cut across the route.
+  ctx.strokeStyle='#e8edf7';ctx.lineWidth=1;ctx.beginPath();
+  for(let x=1;x<zipCols;x++){ctx.moveTo(x*cw,0);ctx.lineTo(x*cw,r.height)}
+  for(let y=1;y<zipRows;y++){ctx.moveTo(0,y*ch);ctx.lineTo(r.width,y*ch)}ctx.stroke();
   ctx.strokeStyle='#61728f';ctx.lineWidth=4;ctx.lineCap='round';
   for(const edge of zipWalls){const [a,b]=edge.split('|').map(v=>v.split(',').map(Number));ctx.beginPath();if(a[0]!==b[0]){const x=Math.max(a[0],b[0])*cw;ctx.moveTo(x,a[1]*ch+3);ctx.lineTo(x,(a[1]+1)*ch-3)}else{const y=Math.max(a[1],b[1])*ch;ctx.moveTo(a[0]*cw+3,y);ctx.lineTo((a[0]+1)*cw-3,y)}ctx.stroke()}
   if(!zipPathCells.length)return;
   ctx.beginPath();
-  zipPathCells.forEach(([x,y],i)=>{const px=(x+.5)*cw,py=(y+.5)*ch;i?ctx.lineTo(px,py):ctx.moveTo(px,py)});
+  const points=zipPathCells.map(([x,y])=>[(x+.5)*cw,(y+.5)*ch]),radius=Math.min(cw,ch)*.20;
+  ctx.moveTo(...points[0]);
+  for(let i=1;i<points.length;i++){
+    const p=points[i],prev=points[i-1],next=points[i+1];
+    if(!next){ctx.lineTo(...p);continue}
+    const before=Math.hypot(p[0]-prev[0],p[1]-prev[1]),after=Math.hypot(next[0]-p[0],next[1]-p[1]);
+    ctx.lineTo(p[0]-(p[0]-prev[0])*radius/before,p[1]-(p[1]-prev[1])*radius/before);
+    ctx.quadraticCurveTo(p[0],p[1],p[0]+(next[0]-p[0])*radius/after,p[1]+(next[1]-p[1])*radius/after);
+  }
 
-  ctx.strokeStyle='#6285ee';ctx.lineWidth=Math.max(8,Math.min(cw,ch)*.19);ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
+  ctx.strokeStyle='#6285ee';ctx.lineWidth=Math.max(12,Math.min(32,Math.min(cw,ch)*.29));ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
 }
 function zipRefresh(liveX=null,liveY=null){
   const used=new Set(zipPathCells.map(([x,y])=>zipKey(x,y))),last=zipPathCells.at(-1);
