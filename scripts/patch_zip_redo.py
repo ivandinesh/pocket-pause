@@ -96,6 +96,27 @@ function zipEnsureCanvas(){
   if(zipCanvas.width!==w||zipCanvas.height!==h){zipCanvas.width=w;zipCanvas.height=h}
   return zipCanvas;
 }
+let zipFlowFrame=0;
+const zipReducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+function zipScheduleFlow(){
+  if(zipFlowFrame||zipReducedMotion.matches||document.hidden||currentPage!=='zipLine'||zipPathCells.length<2)return;
+  zipFlowFrame=requestAnimationFrame(()=>{zipFlowFrame=0;if(document.hidden||currentPage!=='zipLine'||zipReducedMotion.matches)return;zipDraw();zipScheduleFlow()});
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)zipScheduleFlow()});
+zipReducedMotion.addEventListener('change',()=>{if(currentPage==='zipLine'){zipDraw();zipScheduleFlow()}});
+function zipFlowTrack(points,radius){
+  const samples=[points[0]],add=p=>samples.push(p);
+  for(let i=1;i<points.length;i++){
+    const p=points[i],a=points[i-1],b=points[i+1];
+    if(!b){add(p);continue}
+    const ab=Math.hypot(p[0]-a[0],p[1]-a[1]),bc=Math.hypot(b[0]-p[0],b[1]-p[1]);
+    const start=[p[0]-(p[0]-a[0])*radius/ab,p[1]-(p[1]-a[1])*radius/ab],end=[p[0]+(b[0]-p[0])*radius/bc,p[1]+(b[1]-p[1])*radius/bc];
+    add(start);for(let j=1;j<=8;j++){const t=j/8,u=1-t;add([u*u*start[0]+2*u*t*p[0]+t*t*end[0],u*u*start[1]+2*u*t*p[1]+t*t*end[1]])}
+  }
+  let length=0;const segments=[];
+  for(let i=1;i<samples.length;i++){const a=samples[i-1],b=samples[i],n=Math.hypot(b[0]-a[0],b[1]-a[1]);if(n){segments.push({a,b,start:length,n});length+=n}}
+  return{length,at(d){const s=segments.find(s=>d<=s.start+s.n)||segments.at(-1);const t=Math.max(0,Math.min(1,(d-s.start)/s.n));return[s.a[0]+(s.b[0]-s.a[0])*t,s.a[1]+(s.b[1]-s.a[1])*t]}};
+}
 function zipDraw(liveX=null,liveY=null){
   const cv=zipEnsureCanvas(),r=zipStage.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1),ctx=cv.getContext('2d');
   ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,r.width,r.height);
@@ -119,11 +140,21 @@ function zipDraw(liveX=null,liveY=null){
   }
 
   ctx.strokeStyle='#6285ee';ctx.lineWidth=Math.max(12,Math.min(32,Math.min(cw,ch)*.29));ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
+  if(!zipReducedMotion.matches&&points.length>1){
+    const track=zipFlowTrack(points,radius),cell=Math.min(cw,ch),spacing=cell*1.5,phase=(performance.now()/1000*cell*.85)%spacing;
+    ctx.save();
+    for(let distance=phase;distance<track.length;distance+=spacing){
+      const fade=Math.min(1,distance/(cell*.35),(track.length-distance)/(cell*.35));
+      for(let tail=3;tail>=0;tail--){const d=distance-tail*cell*.055;if(d<0)continue;const [x,y]=track.at(d);ctx.beginPath();ctx.arc(x,y,Math.max(1.1,cell*(tail===0?.032:.02)),0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(fade*(tail===0?.75:.20)*(zipGesture?1:.7))+')';ctx.fill()}
+    }
+    if(zipGesture){const [x,y]=points.at(-1),pulse=.5+.5*Math.sin(performance.now()/260);ctx.beginPath();ctx.arc(x,y,ctx.lineWidth*.6+pulse*2,0,Math.PI*2);ctx.fillStyle='rgba(205,225,255,.22)';ctx.fill()}
+    ctx.restore();
+  }
 }
 function zipRefresh(liveX=null,liveY=null){
   const used=new Set(zipPathCells.map(([x,y])=>zipKey(x,y))),last=zipPathCells.at(-1);
   zipStage.querySelectorAll('.zip-cell').forEach(el=>{const x=+el.dataset.x,y=+el.dataset.y;el.classList.toggle('used',used.has(zipKey(x,y)));el.classList.toggle('current',!!last&&last[0]===x&&last[1]===y)});
-  zipDraw(liveX,liveY);
+  zipDraw(liveX,liveY);zipScheduleFlow();
   $('zipLevel').textContent=zipLevel;
   if(!zipPathCells.length)$('zipMessage').textContent='Start at 1 · fill every cell · avoid walls.';
   else if(zipPathCells.length===zipCols*zipRows)$('zipMessage').textContent='Complete — every box used.';
