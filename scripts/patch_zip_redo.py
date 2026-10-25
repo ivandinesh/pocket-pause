@@ -458,3 +458,30 @@ s=s.replace('</head>',"<style>html,body{touch-action:manipulation}button,a,input
 p.write_text(s)
 s=p.read_text().replace(',user-scalable=no','')
 p.write_text(s)
+
+# Safari fallback: cancel repeated single-finger tap zoom, preserve button actions.
+s=p.read_text()
+safari_taps=r'''
+(()=>{
+ let start=null,last=null,suppress=null;
+ const editable=el=>el instanceof Element&&!!el.closest('input,textarea,select,[contenteditable=true]');
+ document.addEventListener('touchstart',e=>{if(e.touches.length!==1){start=null;last=null;return;}const t=e.touches[0];start={x:t.clientX,y:t.clientY,time:performance.now(),moved:false};},{passive:true,capture:true});
+ document.addEventListener('touchmove',e=>{if(!start)return;if(e.touches.length!==1){start=null;last=null;return;}const t=e.touches[0];if(Math.hypot(t.clientX-start.x,t.clientY-start.y)>12)start.moved=true;},{passive:true,capture:true});
+ document.addEventListener('touchcancel',()=>{start=null;last=null;},{passive:true,capture:true});
+ document.addEventListener('touchend',e=>{
+  const s=start;start=null;const t=e.changedTouches[0],now=performance.now();
+  if(!s||s.moved||e.touches.length||!t||now-s.time>450||editable(e.target)){last=null;return;}
+  const repeated=last&&now-last.time<400&&Math.hypot(t.clientX-last.x,t.clientY-last.y)<36;
+  last={x:t.clientX,y:t.clientY,time:now};
+  if(!repeated||!e.cancelable)return;
+  e.preventDefault();
+  const button=e.target instanceof Element?e.target.closest('button,a[href],[role=button]'):null;
+  if(button&&!button.disabled){suppress={button,until:now+500};button.click();}
+ },{passive:false,capture:true});
+ document.addEventListener('click',e=>{if(e.isTrusted&&suppress&&performance.now()<suppress.until&&suppress.button.contains(e.target)){e.preventDefault();e.stopImmediatePropagation();suppress=null;}},{capture:true});
+ document.addEventListener('dblclick',e=>{if(!editable(e.target)&&e.cancelable)e.preventDefault();},{passive:false,capture:true});
+})();
+'''
+s=s.replace('</script>',safari_taps+'\n</script>',1)
+s=s.replace('</head>',"<style>#tetrisPage .tetris-controls,#tetrisPage .tetris-controls button{touch-action:none!important}</style></head>")
+p.write_text(s)
