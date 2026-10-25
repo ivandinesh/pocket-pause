@@ -377,3 +377,10 @@ setInterval(()=>{
 },150);
 '''
 s=s.replace('</script>',progress+'\n</script>',1);p.write_text(s)
+
+# Validated distinct word puzzles, ordered by letter count and answer count.
+s=p.read_text()
+word_levels='[]'
+replacement="const UNIQUE_WORD_LEVELS="+word_levels+";\nfunction makeWordLevel(index){return UNIQUE_WORD_LEVELS[((index%1000)+1000)%1000]}\n"
+s=re.sub(r"function makeWordLevel\(index\)\{.*?\n\}\nclass WordGame",replacement+"class WordGame",s,count=1,flags=re.S)
+p.write_text(s)
