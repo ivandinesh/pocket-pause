@@ -51,3 +51,11 @@
 #wordGuessPage .wg-actions button{min-width:0;padding:8px 6px;font-size:12px}
 #wordGuessPage .wg-actions button[hidden]{display:none}
 @media(max-height:650px) and (orientation:portrait){#wordGuessPage{min-height:0!important;padding-top:6px!important;gap:3px!important}#wordGuessPage .wg-board{width:195px}#wordGuessPage .game-heading{min-height:44px!important}#wordGuessPage .wg-cell{font-size:21px}#wordGuessPage .wg-key-row button{height:42px}#wordGuessPage .wg-note{min-height:18px;margin-bottom:4px}#wordGuessPage .wg-actions{margin-top:6px}}
+
+/* Keep generic dialog button padding from displacing the color dots. */
+.wg-dialog .new-swatch{display:grid;place-items:center;box-sizing:border-box;flex:0 0 40px;width:40px;height:40px;min-width:40px;min-height:40px;margin:0;padding:0;border:0;border-radius:50%;background:transparent;appearance:none;-webkit-appearance:none}
+.wg-dialog .new-swatch::before{display:block;width:22px;height:22px;margin:0;border-radius:50%;background:var(--swatch)}
+.wg-dialog .new-swatch[aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--swatch)}
+.wg-dialog .new-shape{min-height:40px;padding:0 14px;border:0;border-radius:999px;background:transparent}
+.wg-dialog .new-shape[aria-pressed=true]{background:#eef3ff;color:#3568ee}
+

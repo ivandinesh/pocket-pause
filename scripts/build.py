@@ -11,6 +11,7 @@ steps=[
  'scripts/patch_dots_2048.py',
  'scripts/patch_calm_trio.py',
  'scripts/patch_word_guess.py',
+ 'scripts/patch_logic_trio.py',
 ]
 subprocess.run(['node','scripts/test_word_guess.cjs'],check=True)
 for step in steps:
@@ -21,5 +22,5 @@ print('Pocket Pause build complete')
 
 subprocess.run(['python3','scripts/build_offline.py'],check=True)
 
-for test in ['scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
+for test in ['scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
     subprocess.run(['node',test],check=True)
