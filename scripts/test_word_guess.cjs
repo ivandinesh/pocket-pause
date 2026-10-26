@@ -48,5 +48,5 @@ assert(C.validRound(saved,'APPLE',dict));assert.equal(saved.input,'APP');
 assert(!C.validRound({guesses:['<script>'],input:'',hard:false},'APPLE',dict));
 const client=fs.readFileSync('pwa/client.js','utf8');
 assert(client.includes("k.startsWith('pocketpause.v1.')"));
-assert(client.includes('all 14 games'));
+assert(client.includes('all 17 games'));
 console.log('Word Guess passed: 1000 unique levels, duplicate counts, hard constraints, win/loss, daily schedule, statistics, save validation, backup namespace.');
