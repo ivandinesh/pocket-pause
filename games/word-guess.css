@@ -1,0 +1,53 @@
+#wordGuessPage{--wg-accent:#4f78ec;--wg-green:#40845c;--wg-amber:#986c19;--wg-gray:#657083;background:#fff;max-width:680px;box-sizing:border-box;padding:14px 14px max(10px,env(safe-area-inset-bottom));height:100dvh;min-height:610px;overflow:auto;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#wordGuessPage.active{display:flex;flex-direction:column;gap:6px}
+#wordGuessPage .game-heading{flex-shrink:0;margin:0;gap:12px;padding:0;min-height:52px}
+#wordGuessPage .game-heading h1{font-size:clamp(20px,5vw,28px)}
+#wordGuessPage .eyebrow{margin:0 0 4px;font-size:10px}
+#wordGuessPage button,.wg-dialog button{cursor:pointer;touch-action:manipulation;font:inherit}
+.wg-icon-button{border:1px solid #e1e7ef;background:#fff;border-radius:50%;width:42px;height:42px;margin-left:auto;color:#66758c}
+.wg-icon-button[aria-pressed=true]{background:#eef3ff;color:#345cc1}
+.wg-meta{text-align:center;color:#66758c;font-size:12px;flex-shrink:0}
+.wg-middle{display:flex;align-items:center;justify-content:center;flex:1;min-height:240px}
+.wg-board{width:min(100%,300px);display:grid;gap:6px}
+.wg-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.wg-cell{position:relative;aspect-ratio:1;border:2px solid #e5eaf2;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:clamp(22px,5vw,29px);font-weight:750;color:#26364d;background:#f9fbff}
+.wg-cell[data-filled=true][data-mark=empty]{border-color:var(--wg-accent)}
+#wordGuessPage[data-shape=square] .wg-cell{border-radius:3px}
+.wg-cell small{position:absolute;bottom:1px;right:4px;font-size:11px;line-height:1}
+#wordGuessPage [data-mark="2"]{background:var(--wg-green);border-color:var(--wg-green);color:white}
+#wordGuessPage [data-mark="1"]{background:var(--wg-amber);border-color:var(--wg-amber);color:white}
+#wordGuessPage [data-mark="0"]{background:var(--wg-gray);border-color:var(--wg-gray);color:white}
+.wg-footer{flex-shrink:0;width:100%;max-width:520px;margin:0 auto}
+.wg-note{min-height:28px;margin:0 0 6px;text-align:center;font-size:12px;color:#5e6d83}
+.wg-keyboard{display:grid;gap:6px}
+.wg-key-row{display:flex;justify-content:center;gap:5px}
+.wg-key-row button{padding:0;flex:1;min-width:0;max-width:46px;height:48px;border:0;border-radius:8px;background:#eaf0f8;color:#26364d;font-size:15px;font-weight:700}
+.wg-key-row button.wg-key-wide{flex:1.65;max-width:70px;font-size:12px}
+.wg-key-row button:disabled{opacity:.85}
+.wg-actions{display:flex;justify-content:center;gap:5px;margin-top:12px;flex-wrap:wrap}
+.wg-actions button,.wg-result button,.wg-dialog button{border:1px solid #dfe7f3;background:#f6f8fc;border-radius:12px;min-height:42px;padding:8px 12px;color:#37475f;font-weight:650}
+.wg-actions button[aria-pressed=true]{background:var(--wg-accent);border-color:var(--wg-accent);color:#fff}
+.wg-result{text-align:center;flex-shrink:0;font-size:14px}
+.wg-result[hidden]{display:none}.wg-result p{margin:2px 0 6px}.wg-result button{margin:0 4px}
+.wg-dialog{width:min(90vw,440px);max-height:85dvh;overflow:auto;box-sizing:border-box;border:1px solid #e0e7f0;border-radius:22px;padding:24px;color:#34445d;background:#fff;line-height:1.6}
+.wg-dialog::backdrop{background:#26384e55}.wg-dialog h2{line-height:1.2;margin-top:0;font-size:23px}
+.wg-dialog input[type=number]{width:90px;padding:9px;font-size:16px;border:1px solid #c7d2e3;border-radius:8px;user-select:text;-webkit-user-select:text}
+.wg-dialog label{display:flex;align-items:center;gap:8px}.wg-dialog input[type=checkbox]{width:20px;height:20px}
+.wg-dialog form{margin-top:16px}.wg-small{font-size:12px;color:#64748b}
+.wg-settings .new-appearance{flex-wrap:wrap;gap:12px}.wg-settings p{font-size:13px}
+.wg-stats{display:flex;justify-content:space-around;gap:10px;text-align:center;font-size:12px}.wg-stats b{display:block;font-size:25px}
+.wg-dist{display:flex;gap:12px;align-items:center;margin:5px 0}.wg-dist div{background:#40845c;color:white;text-align:right;padding:0 8px;min-width:16px;border-radius:4px}
+.wg-reveal .wg-cell{animation:wg-reveal .4s ease-out}
+@keyframes wg-reveal{0%{transform:scaleY(.15)}100%{transform:scaleY(1)}}
+#wordGuessPage button:focus-visible,.wg-dialog button:focus-visible{outline:3px solid #243f82;outline-offset:2px}
+@media(max-height:740px){#wordGuessPage{gap:4px;padding-top:8px}.wg-board{width:240px;gap:4px}.wg-row{gap:4px}.wg-key-row button{height:44px}.wg-actions{margin-top:8px}.wg-cell{border-radius:11px;font-size:23px}}
+@media(max-width:350px){#wordGuessPage{padding-left:8px;padding-right:8px}.wg-key-row{gap:3px}.wg-actions button{padding:8px}.wg-key-row button{font-size:13px}}
+@media(orientation:landscape) and (max-height:600px){#wordGuessPage{height:auto;min-height:100dvh;max-width:600px}.wg-middle{padding:12px 0}.wg-board{width:230px}}
+@media(prefers-reduced-motion:reduce){.wg-reveal .wg-cell{animation:none}}
+/* Override inherited shared-page rules only within Word Guess. */
+#wordGuessPage .game-heading h1{font-size:clamp(19px,5vw,28px)!important;line-height:1.15!important}
+#wordGuessPage .wg-middle{flex:1 0 auto;min-height:0;padding:6px 0}
+#wordGuessPage .wg-actions{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px}
+#wordGuessPage .wg-actions button{min-width:0;padding:8px 6px;font-size:12px}
+#wordGuessPage .wg-actions button[hidden]{display:none}
+@media(max-height:650px) and (orientation:portrait){#wordGuessPage{min-height:0!important;padding-top:6px!important;gap:3px!important}#wordGuessPage .wg-board{width:195px}#wordGuessPage .game-heading{min-height:44px!important}#wordGuessPage .wg-cell{font-size:21px}#wordGuessPage .wg-key-row button{height:42px}#wordGuessPage .wg-note{min-height:18px;margin-bottom:4px}#wordGuessPage .wg-actions{margin-top:6px}}
