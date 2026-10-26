@@ -16,3 +16,5 @@ for step in steps:
 Path('dist').mkdir(exist_ok=True)
 Path('dist/index.html').write_text(Path('index.html').read_text())
 print('Pocket Pause build complete')
+
+subprocess.run(['python3','scripts/build_offline.py'],check=True)
