@@ -8,6 +8,7 @@ steps=[
  'scripts/patch_zip_live_drag.py',
  'scripts/patch_zip_touch_canvas.py',
  'scripts/patch_zip_redo.py',
+ 'scripts/patch_dots_2048.py',
 ]
 for step in steps:
     subprocess.run(['python3',step],check=True)
