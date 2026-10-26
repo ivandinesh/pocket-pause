@@ -10,7 +10,9 @@ steps=[
  'scripts/patch_zip_redo.py',
  'scripts/patch_dots_2048.py',
  'scripts/patch_calm_trio.py',
+ 'scripts/patch_word_guess.py',
 ]
+subprocess.run(['node','scripts/test_word_guess.cjs'],check=True)
 for step in steps:
     subprocess.run(['python3',step],check=True)
 Path('dist').mkdir(exist_ok=True)
@@ -18,3 +20,6 @@ Path('dist/index.html').write_text(Path('index.html').read_text())
 print('Pocket Pause build complete')
 
 subprocess.run(['python3','scripts/build_offline.py'],check=True)
+
+for test in ['scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
+    subprocess.run(['node',test],check=True)
