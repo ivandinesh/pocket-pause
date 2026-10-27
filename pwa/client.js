@@ -5,7 +5,7 @@
  const status=document.getElementById('offlineStatus'),update=document.getElementById('offlineUpdate');
  let savesAvailable=true;try{localStorage.setItem('dopop.storage-check','1');localStorage.removeItem('dopop.storage-check');}catch{savesAvailable=false;}
  const atHome=()=>home.classList.contains('active');
- let applyingUpdate=false,pendingReload=false;
+ let applyingUpdate=false,pendingReload=false,updateLockTimer=null;
  let registration=null,installPrompt=null,ready=false,lastCheck=0,updateLocked=false,controller=navigator.serviceWorker?.controller;
  function showStatus(){status.textContent=ready?(navigator.onLine?'Ready for offline play · all 17 games':'Offline · all 17 games available'):(navigator.onLine?'Offline files not ready yet. Open Offline & saves to retry.':'Connect once to download offline games.');if(!savesAvailable)status.textContent+=' · Progress cannot be saved in this browser.';}
  function message(worker,type,timeout=6000){return new Promise((resolve,reject)=>{if(!worker){reject(Error('No offline worker'));return;}const ch=new MessageChannel(),timer=setTimeout(()=>{ch.port1.close();reject(Error('Offline check timed out'));},timeout);ch.port1.onmessage=e=>{clearTimeout(timer);ch.port1.close();resolve(e.data);};worker.postMessage({type},[ch.port2]);});}
@@ -15,7 +15,7 @@
  const watch=worker=>{worker?.addEventListener('statechange',()=>{if(worker.state==='installed'||worker.state==='activated')check();if(worker.state==='redundant'&&!ready){status.textContent='Download interrupted. Your existing saves are safe. Retry in Offline & saves.';}});};
  watch(registration.installing);registration.addEventListener('updatefound',()=>watch(registration.installing));await check();
  }catch{ready=false;status.textContent='Offline download unavailable. Your games still work while this page is open.';}}
- if('serviceWorker'in navigator){navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='DOPOP_SAFE_TO_UPDATE'){const safe=atHome()&&!document.querySelector('dialog[open]');if(safe){updateLocked=true;home.inert=true;setTimeout(()=>{updateLocked=false;home.inert=false;},8000);}e.ports[0]?.postMessage({safe});}});
+ if('serviceWorker'in navigator){navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='DOPOP_UPDATE_CANCEL'){clearTimeout(updateLockTimer);updateLocked=false;home.inert=false;return;}if(e.data?.type==='DOPOP_SAFE_TO_UPDATE'){const safe=atHome()&&!document.querySelector('dialog[open]');if(safe){updateLocked=true;home.inert=true;clearTimeout(updateLockTimer);updateLockTimer=setTimeout(()=>{updateLocked=false;home.inert=false;},8000);}e.ports[0]?.postMessage({safe});}});
  navigator.serviceWorker.addEventListener('controllerchange',()=>{const changed=!!controller;controller=navigator.serviceWorker.controller;if(changed){pendingReload=true;if(atHome()&&!document.querySelector('dialog[open]')){location.reload();return;}}check();});}
  const safeHere=()=>atHome()&&!document.hidden&&!document.querySelector('dialog[open]');
  async function applyUpdate(manual=false){

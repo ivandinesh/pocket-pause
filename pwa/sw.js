@@ -32,15 +32,23 @@ self.addEventListener('fetch',e=>{
  catch{if(path==='/')return new Response('<!doctype html><meta name="viewport" content="width=device-width"><title>dopop</title><body style="font:18px system-ui;padding:32px;color:#33415e"><h1>Let’s reconnect.</h1><p>The offline download is missing. Open dopop once with internet to download your games again.</p><button onclick="location.reload()">Try again</button>',{status:503,headers:{'Content-Type':'text/html'}});return Response.error();}
  })());
 });
+let updateInFlight=false;
 async function safeClient(client){return new Promise(resolve=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();resolve(false);},2500);channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data?.safe===true);};client.postMessage({type:'DOPOP_SAFE_TO_UPDATE'},[channel.port2]);});}
 self.addEventListener('message',e=>{
  const reply=data=>e.ports[0]?.postMessage(data);
  if(e.data?.type==='DOPOP_STATUS')e.waitUntil((async()=>{try{const c=await caches.open(CACHE);const ready=(await Promise.all(ASSETS.map(a=>c.match(a.url)))).every(Boolean);reply({ready,release:RELEASE,files:ASSETS.length});}catch{reply({ready:false});}})());
  if(e.data?.type==='DOPOP_REPAIR')e.waitUntil((async()=>{try{const c=await caches.open(CACHE);for(const a of ASSETS)if(!await c.match(a.url)){const r=await verified(await fetch(new Request(a.url,{cache:'reload',credentials:'same-origin'})),a);await c.put(a.url,r);}reply({ok:true});}catch{reply({ok:false});}})());
  if(e.data?.type==='DOPOP_UPDATE')e.waitUntil((async()=>{
- const clients=await self.clients.matchAll({type:'window',includeUncontrolled:true});
- const safe=clients.length>0&&(await Promise.all(clients.map(safeClient))).every(Boolean);
- if(!safe){reply({ok:false,reason:'Return to the home screen in every open dopop tab, then try again.'});return;}
- reply({ok:true});await self.skipWaiting();
+ if(updateInFlight){reply({ok:false,reason:'Another update check is in progress.'});return;}
+ updateInFlight=true;let participants=[],activated=false;
+ try{
+ participants=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+ const safe=participants.length>0&&(await Promise.all(participants.map(safeClient))).every(Boolean);
+ const latest=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+ const same=latest.length===participants.length&&latest.every(c=>participants.some(p=>p.id===c.id));
+ if(!safe||!same){reply({ok:false,reason:'Return to the home screen in every open dopop tab, then try again.'});return;}
+ await self.skipWaiting();activated=true;reply({ok:true});
+ }catch{reply({ok:false,reason:'Update interrupted. Your current games are unchanged.'});}
+ finally{if(!activated)for(const client of participants){try{client.postMessage({type:'DOPOP_UPDATE_CANCEL'});}catch{}}updateInFlight=false;}
  })());
 });
