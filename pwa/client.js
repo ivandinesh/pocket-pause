@@ -5,20 +5,44 @@
  const status=document.getElementById('offlineStatus'),update=document.getElementById('offlineUpdate');
  let savesAvailable=true;try{localStorage.setItem('dopop.storage-check','1');localStorage.removeItem('dopop.storage-check');}catch{savesAvailable=false;}
  const atHome=()=>home.classList.contains('active');
+ let applyingUpdate=false,pendingReload=false;
  let registration=null,installPrompt=null,ready=false,lastCheck=0,updateLocked=false,controller=navigator.serviceWorker?.controller;
  function showStatus(){status.textContent=ready?(navigator.onLine?'Ready for offline play · all 17 games':'Offline · all 17 games available'):(navigator.onLine?'Offline files not ready yet. Open Offline & saves to retry.':'Connect once to download offline games.');if(!savesAvailable)status.textContent+=' · Progress cannot be saved in this browser.';}
  function message(worker,type,timeout=6000){return new Promise((resolve,reject)=>{if(!worker){reject(Error('No offline worker'));return;}const ch=new MessageChannel(),timer=setTimeout(()=>{ch.port1.close();reject(Error('Offline check timed out'));},timeout);ch.port1.onmessage=e=>{clearTimeout(timer);ch.port1.close();resolve(e.data);};worker.postMessage({type},[ch.port2]);});}
- async function check(){try{const response=await message(navigator.serviceWorker.controller||registration?.active,'DOPOP_STATUS');ready=response.ready===true;}catch{ready=false;}showStatus();update.hidden=!registration?.waiting;}
+ async function check(){try{const response=await message(navigator.serviceWorker.controller||registration?.active,'DOPOP_STATUS');ready=response.ready===true;}catch{ready=false;}showStatus();update.hidden=!registration?.waiting;maybeUpdate();}
  async function register(){if(!('serviceWorker'in navigator)||!isSecureContext){status.textContent='Offline play needs a supported browser and a secure connection.';return;}
  try{registration=await navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'});
  const watch=worker=>{worker?.addEventListener('statechange',()=>{if(worker.state==='installed'||worker.state==='activated')check();if(worker.state==='redundant'&&!ready){status.textContent='Download interrupted. Your existing saves are safe. Retry in Offline & saves.';}});};
  watch(registration.installing);registration.addEventListener('updatefound',()=>watch(registration.installing));await check();
  }catch{ready=false;status.textContent='Offline download unavailable. Your games still work while this page is open.';}}
  if('serviceWorker'in navigator){navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='DOPOP_SAFE_TO_UPDATE'){const safe=atHome()&&!document.querySelector('dialog[open]');if(safe){updateLocked=true;home.inert=true;setTimeout(()=>{updateLocked=false;home.inert=false;},8000);}e.ports[0]?.postMessage({safe});}});
- navigator.serviceWorker.addEventListener('controllerchange',()=>{const changed=!!controller;controller=navigator.serviceWorker.controller;if(changed&&atHome()){location.reload();return;}check();});}
- update.onclick=async()=>{if(!atHome())return;update.disabled=true;try{const answer=await message(registration.waiting,'DOPOP_UPDATE');if(!answer.ok){status.textContent=answer.reason;home.inert=false;updateLocked=false;}}catch{status.textContent='Update could not be applied. Try again after closing other dopop tabs.';}finally{update.disabled=false;}};
- window.addEventListener('online',()=>{check();if(registration)registration.update().catch(()=>{});else register();});window.addEventListener('offline',showStatus);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){check();if(navigator.onLine&&registration&&Date.now()-lastCheck>3600000){lastCheck=Date.now();registration.update().catch(()=>{});}}});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{const changed=!!controller;controller=navigator.serviceWorker.controller;if(changed){pendingReload=true;if(atHome()&&!document.querySelector('dialog[open]')){location.reload();return;}}check();});}
+ const safeHere=()=>atHome()&&!document.hidden&&!document.querySelector('dialog[open]');
+ async function applyUpdate(manual=false){
+  if(applyingUpdate||!safeHere()||!registration?.waiting)return;
+  applyingUpdate=true;update.disabled=true;
+  try{const answer=await message(registration.waiting,'DOPOP_UPDATE');
+   if(!answer.ok){if(manual)status.textContent=answer.reason;home.inert=false;updateLocked=false;}
+  }catch{if(manual)status.textContent='Update could not be applied. Try again after closing other dopop tabs.';home.inert=false;updateLocked=false;}
+  finally{applyingUpdate=false;update.disabled=false;}
+ }
+ function maybeUpdate(){
+  if(!safeHere()||updateLocked)return;
+  if(pendingReload){location.reload();return;}
+  if(navigator.onLine)applyUpdate();
+ }
+ function refreshRelease(){
+  if(document.hidden||!navigator.onLine)return;
+  if(registration){if(Date.now()-lastCheck>60000){lastCheck=Date.now();registration.update().catch(()=>{});}check();}
+  else register();
+ }
+ update.onclick=()=>applyUpdate(true);
+ window.addEventListener('online',refreshRelease);window.addEventListener('offline',showStatus);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshRelease();});
+ window.addEventListener('focus',refreshRelease);
+ new MutationObserver(maybeUpdate).observe(home,{attributes:true,attributeFilter:['class']});
+ document.addEventListener('close',maybeUpdate,true);
+ setInterval(()=>{if(!document.hidden){maybeUpdate();refreshRelease();}},30000);
  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;});
  window.addEventListener('appinstalled',()=>{installPrompt=null;document.getElementById('offlineInstall').textContent='App installed';});
  function dialog(title,body){const d=document.createElement('dialog');d.className='offline-dialog';d.innerHTML='<h2>'+title+'</h2>'+body+'<form method="dialog"><button>Done</button></form>';document.body.append(d);d.addEventListener('close',()=>d.remove());d.showModal();return d;}

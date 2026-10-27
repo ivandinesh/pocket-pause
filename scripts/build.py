@@ -23,5 +23,5 @@ print('Pocket Pause build complete')
 
 subprocess.run(['python3','scripts/build_offline.py'],check=True)
 
-for test in ['scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
+for test in ['scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
     subprocess.run(['node',test],check=True)

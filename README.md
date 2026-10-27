@@ -146,3 +146,14 @@ return home, reopen and reload. Verify first/middle/final levels, invalid picker
 values, completion with dialogs/backgrounding, theme persistence, touch dragging,
 keyboard focus, reduced motion, 200% zoom, and offline saves/update recovery.
 Physical-device results must be recorded separately from responsive browser checks.
+
+## Automatic release updates
+
+Online foreground sessions check for new releases on open, reconnect, focus and
+periodically (checks throttled to one minute). A downloaded release activates only
+when every open dopop window acknowledges the home screen with no open dialog.
+Playing or unresponsive windows defer activation; home controls are briefly locked
+during the handshake. No reload is requested during gameplay. Failed downloads
+retain the running release; progress storage is untouched. The manual Update ready
+button remains available. Older cached clients may need one final manual update
+to receive this automatic-update logic. Physical multi-device testing remains required.
