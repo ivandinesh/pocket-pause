@@ -12,6 +12,7 @@ steps=[
  'scripts/patch_calm_trio.py',
  'scripts/patch_word_guess.py',
  'scripts/patch_logic_trio.py',
+ 'scripts/patch_ui_polish.py',
 ]
 subprocess.run(['node','scripts/test_word_guess.cjs'],check=True)
 for step in steps:

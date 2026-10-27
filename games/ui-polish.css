@@ -1,0 +1,25 @@
+/* Shared spacing and responsive board constraints, applied after legacy styles. */
+#homePage{max-width:960px!important;padding-top:8px!important}
+#homePage .home-intro{padding:8px 0 20px!important}
+#homePage .home-intro .eyebrow{display:none}
+#homePage .home-intro h1{font-size:34px!important;margin:0}
+#homePage .home-intro>p:last-child{margin-top:6px!important;font-size:14px}
+#homePage .game-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:18px 12px!important}
+#homePage .game-card{gap:7px!important;min-height:88px!important}
+#homePage .mini-art{width:64px!important;height:64px!important;border-radius:18px!important;overflow:hidden}
+#homePage .home-foot{padding-top:18px}
+@media(max-width:800px){#homePage .game-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:480px){#homePage .game-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px 8px!important}}
+#app #sudokuPage #sudokuBoard{flex:0 0 auto!important;width:min(100%,54dvh)!important;height:auto!important;aspect-ratio:1!important;max-height:none!important;grid-template-rows:repeat(9,minmax(0,1fr))!important}
+#wordSearchPage .search-meta{display:flex!important;gap:12px!important;flex-wrap:wrap;justify-content:center;align-items:center}
+.game-footer,.logic-actions{flex-wrap:wrap;gap:8px!important}
+.logic-grid button{min-width:0;min-height:0}
+#slidePage .logic-grid button:disabled{background:transparent;border:2px dashed #ccd7e8;box-shadow:none}
+.bridge-hit{border:1px dashed #ccd7e8;border-radius:50%;background:#ffffff99}
+.bridge-hit:hover,.bridge-hit:focus-visible{background:#e8efff;border-color:#4f78ec}
+dialog{max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box}
+.level-dialog input,.logic-dialog input{font-size:16px!important}
+.level-dialog button,.logic-actions button{min-height:44px}
+#feedbackLink{display:inline-block;margin:8px;padding:10px;color:#4266bb;text-decoration:underline}
+#homePage .mini-art{width:82px!important;height:82px!important;zoom:.78;overflow:visible}
+#homePage .home-foot{margin-top:20px!important}

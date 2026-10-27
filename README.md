@@ -123,3 +123,26 @@ The Word Guess accepted dictionary comes from https://github.com/tabatkins/wordl
 ## Remaining roadmap
 
 Previously discussed but not implemented here: Loop, Color Code, Peg Solitaire and Rotate. Prioritize puzzle variety, accessible inputs and physical-device QA before increasing level counts. Accounts, analytics, advertising, purchases and cloud synchronization are outside the current design.
+
+## Compact layout and feedback setup
+
+The homepage uses 3 columns on phones, 4 on tablets and 6 on wide desktops.
+Sudoku retains square cells; Light Up uses equal grid tracks. Slide distinguishes
+its blank tile, and Bridges shows connection targets. Dialogs scroll on short screens.
+
+Feedback is intentionally disabled until `feedback-config.json` contains a real
+`formUrl` (`https://tally.so/r/...`). Create one Tally form with request type
+(Feedback, Bug, Game request), optional game name, required message and optional
+reply email. Enable owner email notifications and verify a test submission reaches
+the intended inbox before enabling the link. No backend or SMTP credentials are
+needed. Submission requires internet; games continue to work offline.
+
+### Release device checklist
+
+Test all 17 game pages at 320x568, 360x640, 390x844, 412x915, tablet portrait/
+landscape and desktop. Check Safari/iOS and Android Chrome both in browser and
+installed mode. For each game: launch, interact, undo/reset, select a level,
+return home, reopen and reload. Verify first/middle/final levels, invalid picker
+values, completion with dialogs/backgrounding, theme persistence, touch dragging,
+keyboard focus, reduced motion, 200% zoom, and offline saves/update recovery.
+Physical-device results must be recorded separately from responsive browser checks.
