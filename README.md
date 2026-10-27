@@ -130,12 +130,12 @@ The homepage uses 3 columns on phones, 4 on tablets and 6 on wide desktops.
 Sudoku retains square cells; Light Up uses equal grid tracks. Slide distinguishes
 its blank tile, and Bridges shows connection targets. Dialogs scroll on short screens.
 
-Feedback is intentionally disabled until `feedback-config.json` contains a real
-`formUrl` (`https://tally.so/r/...`). Create one Tally form with request type
-(Feedback, Bug, Game request), optional game name, required message and optional
-reply email. Enable owner email notifications and verify a test submission reaches
-the intended inbox before enabling the link. No backend or SMTP credentials are
-needed. Submission requires internet; games continue to work offline.
+Feedback uses Google Forms, configured in `feedback-config.json` with the public
+responder URL. The homepage link opens in a new tab. Google Forms and Tally HTTPS
+responder URLs are accepted; other destinations fail the build. Enable Responses →
+Get email notifications for new responses in Google Forms, and verify inbox delivery.
+No backend or SMTP credentials are needed. Submission requires internet; games
+continue to work offline.
 
 ### Release device checklist
 
