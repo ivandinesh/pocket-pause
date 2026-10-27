@@ -13,12 +13,13 @@ steps=[
  'scripts/patch_word_guess.py',
  'scripts/patch_logic_trio.py',
  'scripts/patch_ui_polish.py',
+ 'scripts/patch_game_session.py',
 ]
 # All patch scripts operate on a disposable copy, never tracked source.
 root=Path(__file__).resolve().parent.parent
 with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     stage=Path(temp)
-    for name in ('index.html','feedback-config.json','games','pwa','scripts'):
+    for name in ('index.html','feedback-config.json','games','pwa','scripts','app'):
         source=root/name
         if source.is_dir(): shutil.copytree(source,stage/name)
         else: shutil.copy2(source,stage/name)
@@ -33,7 +34,7 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     
     subprocess.run(['python3','scripts/build_offline.py'],check=True)
     
-    for test in ['scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
+    for test in ['scripts/test_game_session.cjs','scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_offline.cjs']:
         subprocess.run(['node',test],check=True)
     output=root/'dist'
     if output.exists(): shutil.rmtree(output)
