@@ -1,0 +1,23 @@
+from pathlib import Path
+p=Path('index.html');s=p.read_text()
+s=s.replace('user-scalable=no','user-scalable=yes')
+s=s.replace('<script type="module">','<script type="module">\n'+Path('app/game-session.js').read_text(),1)
+s=s.replace('function showPage(name){currentPage=name;',"function showPage(name){if(currentPage!==name)GameSession.pause(currentPage);currentPage=name;")
+s=s.replace("if(currentPage==='snake'&&snake.status==='playing'){","if(currentPage==='snake'&&snake.status==='playing'&&GameSession.canPlay('snake')){")
+s=s.replace("if(currentPage==='tetris'&&tetris.status==='playing')tetris.tick(dt)","if(currentPage==='tetris'&&tetris.status==='playing'&&GameSession.canPlay('tetris'))tetris.tick(dt)")
+s=s.replace("if(run&&currentPage==='pac'&&!document.hidden){","if(run&&currentPage==='pac'&&GameSession.canPlay('pac')){")
+s=s.replace("if(currentPage==='sudoku'&&!sudoku.solved){","if(currentPage==='sudoku'&&!sudoku.solved&&GameSession.canPlay('sudoku')){")
+# Numeric picker changes are staged until explicit confirmation.
+s=s.replace("$('pacLevel').onchange=e=>", "const applyPacLevel=e=>")
+# Pac-Man's apply handler is inside its closure: use an explicit custom commit event.
+s=s.replace("const applyPacLevel=e=>", "$('pacLevel').addEventListener('dopop-level-commit',e=>")
+s=s.replace("run=false;make()};for(const name", "run=false;make()});for(const name")
+s=s.replace("input.dispatchEvent(new Event('change'));", "if(!input.checkValidity()){input.reportValidity();return;}if(input.value!==dialog.dataset.original)input.dispatchEvent(new Event('dopop-level-commit'));")
+s=s.replace("dialog.append(label,done);pg.append(dialog);controls.prepend(launch);launch.onclick=()=>dialog.showModal();", "done.textContent='Play';const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.className='soft-button';cancel.onclick=()=>dialog.close();dialog.append(label,done,cancel);pg.append(dialog);controls.prepend(launch);launch.onclick=()=>{dialog.dataset.original=input.value;dialog.showModal();};dialog.addEventListener('close',()=>{input.value=launch.textContent.replace('Level ','');});")
+# Surface previously silent persistence failures without replacing stored progress.
+s=s.replace("set(k,v){try{localStorage.setItem('pocketpause.v1.'+k,String(v))}catch{}}", "set(k,v){try{localStorage.setItem('pocketpause.v1.'+k,String(v));return true}catch{queueMicrotask(()=>{let note=document.getElementById('saveWarning');if(!note){note=document.createElement('p');note.id='saveWarning';note.setAttribute('role','status');note.textContent='Progress could not be saved. Keep this tab open.';document.body.append(note);}});return false}}")
+s=s.replace("function syncLevelControl(id,n){const pg=$(id+'Page');if(!pg)return;", "function syncLevelControl(id,n){const pg=$(id+'Page');if(!pg||pg.querySelector('dialog[open]'))return;")
+s=s.replace("launch.textContent=(id==='snake'?'Speed ':'Level ')+input.value;dialog.close()};done.textContent", "launch.textContent='Level '+input.value;dialog.dataset.original=input.value;dialog.close()};done.textContent")
+s=s.replace("cancel.onclick=()=>dialog.close();dialog.append(label,done,cancel)", "cancel.onclick=()=>{input.value=dialog.dataset.original;dialog.close();};dialog.addEventListener('cancel',()=>{input.value=dialog.dataset.original;});dialog.append(label,done,cancel)")
+s=s.replace("input.value=launch.textContent.replace('Level ','');", "input.value=dialog.dataset.original;launch.textContent='Level '+input.value;")
+p.write_text(s)
