@@ -157,3 +157,35 @@ during the handshake. No reload is requested during gameplay. Failed downloads
 retain the running release; progress storage is untouched. The manual Update ready
 button remains available. Older cached clients may need one final manual update
 to receive this automatic-update logic. Physical multi-device testing remains required.
+
+## Consistency and reliability update — 27 October 2026
+
+Changes were staged in four branches: repeatable build, game lifecycle, update
+coordination, and puzzle progress/controls. Each stage was checked before the next.
+
+- Builds patch a disposable source copy, leaving tracked `index.html` unchanged.
+- `app/game-session.js` pauses Snake, Tetris and Pac-Man when leaving play,
+  opening dialogs or hiding the document. Resume is explicit. Editable controls
+  and dialogs do not leak keyboard input into games; Sudoku timing also stops
+  while hidden or a dialog is open.
+- `app/level-picker.js` provides validated integer selection, Play/Cancel and
+  focus restoration. It is used by the five original form-based games, Word
+  Guess, and the logic/calm trios. Choosing the current level leaves it intact.
+  Pac-Man retains an adapter that applies changes only on Play; Cancel restores
+  the label and value immediately. Zip Line and Dot Connect retain their pickers.
+- Light Up, Bridges, Slide, Flow, Untangle and Flood retain attempts and undo
+  history per level. Version 2 saves preserve the existing storage keys and read
+  older current-attempt saves. Explicit Reset/Play again starts fresh.
+- Numeric dialogs share spacing, focus styles and minimum control sizing.
+  Browser zoom is enabled. Failed storage writes display a save warning.
+- Update checks are serialized. A changed set of open clients rejects activation;
+  rejected checks release the temporary home-screen locks immediately.
+
+Validation: repeated builds were deterministic; the final build passed lifecycle,
+update deferral, puzzle generation/rules, save backup and mocked offline/cache
+checks. Browser checks covered all 17 launch/back routes, Pac-Man Play/Cancel,
+and Light Up/Flood attempt restoration (including Light Up reload persistence).
+The HTTP preview cannot exercise real service workers. Physical iOS/Android,
+installed-app updates and real HTTPS multi-tab update timing remain release QA
+items. This is an incremental shared-control migration, not a complete rewrite
+of the legacy game engines or all settings panels.
