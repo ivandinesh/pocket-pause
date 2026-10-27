@@ -1,7 +1,7 @@
 from pathlib import Path
 p=Path('index.html');s=p.read_text()
 s=s.replace('user-scalable=no','user-scalable=yes')
-s=s.replace('<script type="module">','<script type="module">\n'+Path('app/game-session.js').read_text(),1)
+s=s.replace('<script type="module">','<script type="module">\n'+Path('app/game-session.js').read_text()+Path('app/level-picker.js').read_text(),1)
 s=s.replace('function showPage(name){currentPage=name;',"function showPage(name){if(currentPage!==name)GameSession.pause(currentPage);currentPage=name;")
 s=s.replace("if(currentPage==='snake'&&snake.status==='playing'){","if(currentPage==='snake'&&snake.status==='playing'&&GameSession.canPlay('snake')){")
 s=s.replace("if(currentPage==='tetris'&&tetris.status==='playing')tetris.tick(dt)","if(currentPage==='tetris'&&tetris.status==='playing'&&GameSession.canPlay('tetris'))tetris.tick(dt)")
@@ -20,4 +20,6 @@ s=s.replace("function syncLevelControl(id,n){const pg=$(id+'Page');if(!pg)return
 s=s.replace("launch.textContent=(id==='snake'?'Speed ':'Level ')+input.value;dialog.close()};done.textContent", "launch.textContent='Level '+input.value;dialog.dataset.original=input.value;dialog.close()};done.textContent")
 s=s.replace("cancel.onclick=()=>dialog.close();dialog.append(label,done,cancel)", "cancel.onclick=()=>{input.value=dialog.dataset.original;dialog.close();};dialog.addEventListener('cancel',()=>{input.value=dialog.dataset.original;});dialog.append(label,done,cancel)")
 s=s.replace("input.value=launch.textContent.replace('Level ','');", "input.value=dialog.dataset.original;launch.textContent='Level '+input.value;")
+s=s.replace("launch.onclick=()=>dialog.showModal();footer.append(launch)", "launch.onclick=()=>LevelPicker.open({page:pg,current:+input.value,max:+input.max,label:id==='snake'?'Speed':id==='tetris'?'Starting level':'Level',description:'Selecting another level starts a new attempt.',onSelect:n=>{input.value=n;form.requestSubmit();}});footer.append(launch)")
+s=s.replace("$('pacBack').onclick=", "document.addEventListener('dopop-resume',e=>{if(e.detail==='pac'&&lives>0){run=true;draw();}});$('pacBack').onclick=")
 p.write_text(s)

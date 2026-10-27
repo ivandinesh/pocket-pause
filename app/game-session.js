@@ -7,7 +7,7 @@ const GameSession=(()=>{
   if(!arcade.has(id))return;paused.add(id);
   const page=document.getElementById(id+'Page');if(!page||page.querySelector('[data-resume]'))return;
   const button=document.createElement('button');button.dataset.resume='';button.className='soft-button';button.textContent='Resume';
-  button.onclick=()=>{if(document.hidden||dialogOpen())return;paused.delete(id);button.remove();};
+  button.onclick=()=>{if(document.hidden||dialogOpen())return;paused.delete(id);button.remove();document.dispatchEvent(new CustomEvent('dopop-resume',{detail:id}));};
   page.querySelector('.game-heading').append(button);
  }
  function canPlay(id){return !document.hidden&&!dialogOpen()&&!paused.has(id);}
@@ -16,7 +16,7 @@ const GameSession=(()=>{
  // Dialog keyboard events must keep browser defaults but never reach game listeners.
  document.addEventListener('keydown',e=>{if(dialogOpen())e.stopImmediatePropagation();},true);
  const open=HTMLDialogElement.prototype.showModal;
- HTMLDialogElement.prototype.showModal=function(){pause();return open.call(this);};
+ HTMLDialogElement.prototype.showModal=function(){pause();if(this.querySelector('input[type=number]'))this.classList.add('shared-dialog');return open.call(this);};
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
  return {pause,canPlay,blocksInput};
 })();
