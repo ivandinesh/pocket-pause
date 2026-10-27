@@ -59,10 +59,7 @@
   function switchMode(mode){data.mode=mode;if(mode==='daily')todayOnOpen();note='';persist();render();}
   pg.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>switchMode(b.dataset.mode));
   function selectLevel(level){data.mode='levels';data.level=level;note='';persist();render();}
-  q('[data-level]').onclick=()=>dialog('Choose a level','<p>1,000 unique answers. Your attempts are kept when you switch levels.</p><form data-picker><label>Level <input type="number" inputmode="numeric" min="1" max="1000" required></label><button>Play</button></form>',d=>{
-    d.querySelector('input').value=data.level;
-    d.querySelector('[data-picker]').onsubmit=e=>{e.preventDefault();const n=Number(d.querySelector('input').value);if(Number.isInteger(n)&&n>=1&&n<=1000){selectLevel(n);d.close();}};
-  });
+  q('[data-level]').onclick=()=>LevelPicker.open({page:pg,current:data.level,max:1000,onSelect:selectLevel});
   q('[data-sound]').onclick=()=>{data.prefs.sound=!data.prefs.sound;persist();render();if(data.prefs.sound)playSound(false);};
   q('[data-help]').onclick=()=>dialog('Find the hidden word.','<p>Guess a five-letter word in six tries. Press Enter to submit. Invalid words do not use a try.</p><p><b>✓ Green:</b> correct letter and position.<br><b>↔ Amber:</b> in the word, in a different position.<br><b>× Gray:</b> no remaining copy of that letter.</p><p>Repeated letters only get as many colored clues as the answer contains. Keyboard keys keep their strongest clue.</p><p>Daily uses your device’s local date. Everyone on the same date and puzzle version gets the same word. An unfinished older daily stays available until you choose Today. Levels can be played in any order.</p><p>Hard mode requires all revealed letters, their counts, and correct positions. Amber letters must move. Enable it before your first guess.</p><p>No timers, accounts or internet needed after the offline download. Your progress is included in Offline & saves backups.</p><p class="wg-small">Dictionary: Tab Atkins Jr., MIT license. Answer selection and game design by dopop.</p>');
   q('[data-stats]').onclick=()=>{

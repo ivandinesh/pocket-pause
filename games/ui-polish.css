@@ -23,3 +23,14 @@ dialog{max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box}
 #feedbackLink{display:inline-block;margin:8px;padding:10px;color:#4266bb;text-decoration:underline}
 #homePage .mini-art{width:82px!important;height:82px!important;zoom:.78;overflow:visible}
 #homePage .home-foot{margin-top:20px!important}
+:root{--control-height:44px;--control-gap:8px;--panel-radius:20px;--control-border:#dfe6f2;--control-ink:#34465f}
+.shared-dialog,.level-dialog,.logic-dialog,.wg-dialog,.calm-game dialog{border:1px solid var(--control-border)!important;border-radius:var(--panel-radius)!important;padding:24px!important;width:min(400px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;color:var(--control-ink);box-sizing:border-box}
+.shared-dialog::backdrop{background:#20314e66}
+.shared-dialog form{display:flex;gap:var(--control-gap);flex-wrap:wrap}
+.shared-dialog label{flex-basis:100%;display:grid;gap:8px;margin-bottom:12px}
+.shared-dialog input{min-height:44px;font:inherit;font-size:18px;border:1px solid var(--control-border);border-radius:12px;padding:8px;box-sizing:border-box;width:100%}
+.shared-dialog button,[data-resume]{min-height:44px;padding:10px 16px;border:1px solid var(--control-border);border-radius:12px;background:#f2f6fd;color:var(--control-ink);font:inherit}
+.shared-dialog button[type=submit]{background:#4f78ec;color:white}
+[data-resume]{grid-column:2/-1;justify-self:start}
+#saveWarning{position:fixed;bottom:8px;left:12px;right:12px;z-index:10000;padding:12px;background:#fff1cc;color:#5b4100;border-radius:12px;text-align:center}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #3259ad;outline-offset:3px}
