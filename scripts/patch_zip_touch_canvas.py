@@ -35,4 +35,4 @@ if old not in s:
     raise SystemExit('zip live listener block not found')
 s=s.replace(old,new,1)
 p.write_text(s)
-print('patched Zip Line continuous snap drag + canvas')
+print('patched Number Path continuous snap drag + canvas')

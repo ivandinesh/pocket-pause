@@ -7,4 +7,4 @@ const ctx={document,HTMLDialogElement,CustomEvent:class{constructor(){}}};vm.cre
 assert(ctx.session.canPlay('snake'));new HTMLDialogElement().showModal();assert(!ctx.session.canPlay('snake'));dialog=false;assert(!ctx.session.canPlay('snake'));button.onclick();assert(ctx.session.canPlay('snake'));
 assert(ctx.session.blocksInput({closest:()=>({})}));document.hidden=true;events.visibilitychange[0]();assert(!ctx.session.canPlay('snake'));document.hidden=false;assert(!ctx.session.canPlay('snake'));button.onclick();assert(ctx.session.canPlay('snake'));
 const html=fs.readFileSync('dist/index.html','utf8');assert(html.includes("GameSession.canPlay('tetris')"));assert(html.includes("GameSession.canPlay('pac')"));assert(html.includes("GameSession.canPlay('sudoku')"));assert(!html.includes("$('pacLevel').onchange="));
-console.log('PASS: dialog and visibility pause require explicit resume; editable input guard; generated arcade/timer hooks and staged Pac-Man selection.');
+console.log('PASS: dialog and visibility pause require explicit resume; editable input guard; generated arcade/timer hooks and staged Maze Chase selection.');

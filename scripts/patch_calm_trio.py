@@ -1,4 +1,4 @@
-"""Add three isolated games to the existing site; generate reproducible Flow puzzles."""
+"""Add three isolated games to the existing site; generate reproducible Color Paths puzzles."""
 import json, random
 from pathlib import Path
 
@@ -43,4 +43,4 @@ if __name__=='__main__':
     s=s.replace('</head>','<style id="calmTrioStyles">'+Path('games/calm-trio.css').read_text()+'</style></head>')
     s=s.replace('</script>',js+'\n</script>',1)
     p.write_text(s)
-    print('Added Flow, Untangle and Flood: 50 levels each')
+    print('Added Color Paths, Untangle and Flood: 50 levels each')

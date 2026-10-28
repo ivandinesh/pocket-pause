@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#fbfcff">
-  <meta name="description" content="Pocket Pause — four quiet little games. Words, Sudoku, Snake and Tetris. No ads, no login, completely free.">
+  <meta name="description" content="DoPop — 17 tiny games. No ads. No login. No purchases. Works offline after the first download.">
   <title>Pocket Pause</title>
   <style>
 :root{
@@ -246,7 +246,7 @@ body:has(#snakePage.active) #app{min-height:100dvh}
 
 
 
-/* Tetris: full-screen left playfield + right control rail */
+/* Falling Blocks: full-screen left playfield + right control rail */
 body:has(#tetrisPage.active) .topbar{display:none}
 body:has(#tetrisPage.active) #app{min-height:100dvh}
 #tetrisPage{height:100dvh;min-height:0;max-width:none;padding:max(8px,env(safe-area-inset-top)) 10px max(8px,env(safe-area-inset-bottom));overflow:hidden;background:#fff radial-gradient(circle,#dce5f8 1px,transparent 1.35px);background-size:28px 28px}
@@ -335,7 +335,7 @@ body:has(#tetrisPage.active) #app{min-height:100dvh}
         </button>
         <button class="game-card" data-open="tetris">
           <span class="mini-art tetris-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-          <span class="card-copy"><b>Tetris</b><small>Drop dots. Clear rows.</small></span><span class="arrow">→</span>
+          <span class="card-copy"><b>Falling Blocks</b><small>Drop dots. Clear rows.</small></span><span class="arrow">→</span>
         </button>
       </div>
       <p class="home-foot">Progress stays on this device.</p>
@@ -404,18 +404,18 @@ body:has(#tetrisPage.active) #app{min-height:100dvh}
       <div class="dpad" aria-label="Snake controls"><button data-dir="up">↑</button><button data-dir="left">←</button><span>•</span><button data-dir="right">→</button><button data-dir="down">↓</button></div>
     </section>
 
-    <section id="tetrisPage" class="page game-page canvas-page" aria-label="Tetris game">
+    <section id="tetrisPage" class="page game-page canvas-page" aria-label="Falling Blocks game">
       <div class="game-heading canvas-heading">
         <button class="back-button" data-home>←</button>
-        <div><p class="eyebrow">TETRIS</p><h1>Everything in place.</h1></div>
+        <div><p class="eyebrow">FALLING BLOCKS</p><h1>Everything in place.</h1></div>
         <div class="heading-stat"><b id="tetrisScore">0</b><span>score</span></div>
       </div>
       <div class="tetris-layout">
         <div class="canvas-shell tetris-shell"><canvas id="tetrisCanvas"></canvas><div id="tetrisOverlay" class="canvas-overlay"><h2 id="tetrisOverlayTitle">A few falling dots.</h2><p>Tap rotate. Swipe or use controls.</p><button id="tetrisStart" class="primary-button">Play</button></div></div>
-        <aside class="tetris-side" aria-label="Tetris controls and next pieces">
+        <aside class="tetris-side" aria-label="Falling Blocks controls and next pieces">
           <div class="tetris-next-panel"><span>NEXT</span><div id="tetrisNext" class="tetris-next-stack"></div></div>
           <div class="tetris-side-stats"><span>LEVEL <b id="tetrisLevel">1</b></span><span>LINES <b id="tetrisLines">0</b></span></div>
-          <div class="tetris-controls" aria-label="Tetris controls">
+          <div class="tetris-controls" aria-label="Falling Blocks controls">
             <button data-tetris="rotate" aria-label="Rotate">↻</button>
             <button data-tetris="left" aria-label="Move left">←</button>
             <button data-tetris="right" aria-label="Move right">→</button>
@@ -592,7 +592,7 @@ sc.addEventListener('pointermove',e=>{if(!sGesture||sGesture.pointerId!==e.point
 sc.addEventListener('pointerup',e=>{if(!sGesture||sGesture.pointerId!==e.pointerId)return;handleSnakeGestureMove(e.clientX,e.clientY);sGesture=null;e.preventDefault()});
 sc.addEventListener('pointercancel',()=>{sGesture=null});
 
-// TETRIS
+// FALLING BLOCKS
 const tetris=new TetrisGame(),tc=$('tetrisCanvas'),tctx=tc.getContext('2d');let tW=0,tH=0,tDpr=1,tLast=0,tGesture=null;
 const colors={I:'#6e91f4',O:'#8aa4f5',T:'#4b75eb',S:'#7394ed',Z:'#557fed',J:'#3568ee',L:'#91a9f3'};
 function resizeTetris(){const r=tc.parentElement.getBoundingClientRect();if(r.width<1)return;tW=r.width;tH=r.height;tDpr=Math.min(2,devicePixelRatio||1);tc.width=tW*tDpr;tc.height=tH*tDpr;tctx.setTransform(tDpr,0,0,tDpr,0,0)}
