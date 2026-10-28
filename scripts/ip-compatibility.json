@@ -1,0 +1,30 @@
+{
+  "keys": {
+    "pattern": "['\"](?:pocketpause\\.[^'\"\\n]+|(?:tetris|pac|calm\\.v1|zip)\\.[^'\"\\n]+)['\"]",
+    "sha256": "3d79a531ad054261f6a0595120c4bc81f011ae63d4ff5202f83b96b9bd3dad01"
+  },
+  "maze": {
+    "pattern": "function make\\(restore=false\\).*?(?=\\nlet visualPlayer)",
+    "sha256": "9e5b6e828d4c5a90364010bec84a8e05b072f209a7f4a11b5e2eb363382ab450"
+  },
+  "number_path": {
+    "pattern": "function zipRandom\\(seed\\).*?(?=\\nfunction zipSave)",
+    "sha256": "93d7512576b2127dbe0f323eb028cb75a032334c044f2bdb37bc8e38cf700f45"
+  },
+  "color_paths": {
+    "pattern": "const CALM_FLOW_LEVELS=.*?;\\n",
+    "sha256": "74de83c9539e59b875aebd03244f6e815ffeb91d56e214996278f78e6e5ee8cd"
+  },
+  "word_answers": {
+    "pattern": "const WG_ANSWERS=.*?;\\n",
+    "sha256": "9e443512031bff6a818895027aacf04bff34996fbf48cdb402c4e620fd39cb23"
+  },
+  "word_levels": {
+    "pattern": "const UNIQUE_WORD_LEVELS=.*?;\\n",
+    "sha256": "12b009df0113a15af5c9b2590a5f159022a01d5e771b4c635948857f2dd81b50"
+  },
+  "falling_engine": {
+    "pattern": "class TetrisGame.*?(?=\\nconst |\\nfunction |\\n//)",
+    "sha256": "873a83af5b80c5415b6b624cac14b83142d369208e5e343eaaacaf69b1086602"
+  }
+}

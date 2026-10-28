@@ -5,14 +5,14 @@ s=p.read_text()
 old='''          <div class="tetris-next-panel"><span>NEXT</span><div id="tetrisNext" class="tetris-next-stack"></div></div>
           <div class="tetris-side-stats"><span>LEVEL <b id="tetrisLevel">1</b></span><span>LINES <b id="tetrisLines">0</b></span></div>'''
 new='''          <div class="tetris-next-panel"><span>NEXT</span><div id="tetrisNext" class="tetris-next-stack"></div></div>
-          <div class="tetris-appearance" aria-label="Tetris appearance">
-            <div class="tetris-palette" aria-label="Tetris color">
+          <div class="tetris-appearance" aria-label="Falling Blocks appearance">
+            <div class="tetris-palette" aria-label="Falling Blocks color">
               <button class="tetris-color" data-tetris-color="blue" style="--swatch:#4f78ec" aria-label="Blue" aria-pressed="true"></button>
               <button class="tetris-color" data-tetris-color="green" style="--swatch:#3e9b70" aria-label="Green" aria-pressed="false"></button>
               <button class="tetris-color" data-tetris-color="amber" style="--swatch:#d8942f" aria-label="Amber" aria-pressed="false"></button>
               <button class="tetris-color" data-tetris-color="graphite" style="--swatch:#596171" aria-label="Graphite" aria-pressed="false"></button>
             </div>
-            <div class="tetris-shapes" aria-label="Tetris block shape">
+            <div class="tetris-shapes" aria-label="Falling Blocks block shape">
               <button class="tetris-shape" data-tetris-shape="round" aria-pressed="true" aria-label="Round blocks">●</button>
               <button class="tetris-shape" data-tetris-shape="square" aria-pressed="false" aria-label="Square blocks">■</button>
             </div>
@@ -23,7 +23,7 @@ s=s.replace(old,new,1)
 
 css='''
 
-/* Tetris appearance controls */
+/* Falling Blocks appearance controls */
 #tetrisPage .tetris-appearance{display:flex;flex-direction:column;gap:7px}
 #tetrisPage .tetris-palette{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:0 2px}
 #tetrisPage .tetris-color{width:100%;aspect-ratio:1;border:1px solid #e1e8f6;border-radius:50%;background:#fff;display:grid;place-items:center;padding:0;cursor:pointer}

@@ -5,10 +5,10 @@ s=p.read_text()
 if 'id="wordSearchPage"' in s:
     raise SystemExit('new games already patched')
 
-s=s.replace('Pocket Pause — four quiet little games. Words, Sudoku, Snake and Tetris. No ads, no login, completely free.','Pocket Pause — seven quiet little games. Words, Sudoku, Snake, Tetris, Word Search, Zip Line and Fidget. No ads, no login, completely free.')
+s=s.replace('Pocket Pause — four quiet little games. Words, Sudoku, Snake and Falling Blocks. No ads, no login, completely free.','Pocket Pause — seven quiet little games. Words, Sudoku, Snake, Falling Blocks, Word Search, Number Path and Fidget. No ads, no login, completely free.')
 s=s.replace('No ads. No login. No purchases. Just four simple games.','No ads. No login. No purchases. Just seven simple games.')
 
-home_anchor='''        <button class="game-card" data-open="tetris">\n          <span class="mini-art tetris-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>\n          <span class="card-copy"><b>Tetris</b><small>Drop dots. Clear rows.</small></span><span class="arrow">→</span>\n        </button>'''
+home_anchor='''        <button class="game-card" data-open="tetris">\n          <span class="mini-art tetris-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>\n          <span class="card-copy"><b>Falling Blocks</b><small>Drop dots. Clear rows.</small></span><span class="arrow">→</span>\n        </button>'''
 new_cards='''
         <button class="game-card" data-open="wordSearch">
           <span class="mini-art search-art" aria-hidden="true"><i>W</i><i>O</i><i>R</i><i>D</i><i>S</i><i>E</i><i>E</i><i>K</i><i>Q</i></span>
@@ -16,7 +16,7 @@ new_cards='''
         </button>
         <button class="game-card" data-open="zipLine">
           <span class="mini-art zip-art" aria-hidden="true"><i>1</i><i>2</i><i>3</i><i>4</i></span>
-          <span class="card-copy"><b>Zip Line</b><small>Connect the numbers in one smooth line</small></span><span class="arrow">→</span>
+          <span class="card-copy"><b>Number Path</b><small>Connect the numbers in one smooth line</small></span><span class="arrow">→</span>
         </button>
         <button class="game-card" data-open="fidget">
           <span class="mini-art fidget-art" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
@@ -49,8 +49,8 @@ pages=r'''
       <div class="search-actions"><button id="searchNew" class="soft-button">New puzzle</button></div>
     </section>
 
-    <section id="zipLinePage" class="page game-page" aria-label="Zip Line number connect game">
-      <div class="game-heading extra-heading"><button class="back-button" data-home>←</button><div><p class="eyebrow">ZIP LINE</p><h1>One line. In order.</h1></div><div class="heading-stat"><b id="zipLevel">1</b><span>level</span></div></div>
+    <section id="zipLinePage" class="page game-page" aria-label="Number Path number connect game">
+      <div class="game-heading extra-heading"><button class="back-button" data-home>←</button><div><p class="eyebrow">NUMBER PATH</p><h1>One line. In order.</h1></div><div class="heading-stat"><b id="zipLevel">1</b><span>level</span></div></div>
       <div id="zipStage" class="zip-stage"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline id="zipPath" class="zip-path" points=""></polyline><line id="zipLive" class="zip-live" x1="0" y1="0" x2="0" y2="0" hidden></line></svg></div>
       <div class="zip-footer"><span id="zipMessage">Start at 1 and keep your finger down.</span><button id="zipReset" class="soft-button">Reset</button></div>
     </section>
@@ -82,7 +82,7 @@ function finishSearch(cells){const word=cells.map(([x,y])=>searchGrid[y][x]).joi
 function bindSearchCells(){const b=$('searchBoard');b.onpointerdown=e=>{const c=e.target.closest('.search-cell');if(!c)return;e.preventDefault();searchDrag={x:+c.dataset.x,y:+c.dataset.y,cells:[[+c.dataset.x,+c.dataset.y]],id:e.pointerId};try{b.setPointerCapture(e.pointerId)}catch{};paintSearchDrag(searchDrag.cells)};b.onpointermove=e=>{if(!searchDrag||searchDrag.id!==e.pointerId)return;const el=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.search-cell');if(!el)return;const cells=searchLineCells(searchDrag,{x:+el.dataset.x,y:+el.dataset.y});if(cells.length){searchDrag.cells=cells;paintSearchDrag(cells)}};b.onpointerup=e=>{if(!searchDrag)return;finishSearch(searchDrag.cells);searchDrag=null};b.onpointercancel=()=>{searchDrag=null;paintSearchDrag([])}}
 $('searchNew').addEventListener('click',()=>{searchPuzzle++;makeSearch();renderSearch();beep(430)});
 
-// ZIP LINE
+// NUMBER PATH
 let zipLevel=1,zipNodes=[],zipDone=0,zipDrag=null;
 function makeZip(){const rng=mulberry32(8301+zipLevel*131),count=Math.min(8+Math.floor(zipLevel/2),14),cols=4,rows=6,spots=[];for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)spots.push({x:(x+.5)/cols*100,y:(y+.5)/rows*100});for(let i=spots.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[spots[i],spots[j]]=[spots[j],spots[i]]}zipNodes=spots.slice(0,count);zipDone=0;zipDrag=null}
 function renderZip(){if(!zipNodes.length)makeZip();const stage=$('zipStage');stage.querySelectorAll('.zip-node').forEach(n=>n.remove());zipNodes.forEach((p,i)=>{const b=document.createElement('button');b.className='zip-node '+(i<zipDone?'done ':'')+(i===zipDone?'next':'');b.textContent=i+1;b.style.left=p.x+'%';b.style.top=p.y+'%';b.dataset.i=i;stage.appendChild(b)});drawZipPath();$('zipLevel').textContent=zipLevel;$('zipMessage').textContent=zipDone===zipNodes.length?'Complete — nice line.':'Connect '+(zipDone+1)+(zipDone?' next.':' and keep your finger down.')}
@@ -112,4 +112,4 @@ if old not in s:
 s=s.replace(old,new,1)
 
 p.write_text(s)
-print('Added Word Search, Zip Line and Fidget games')
+print('Added Word Search, Number Path and Fidget games')
