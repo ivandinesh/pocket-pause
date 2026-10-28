@@ -9,7 +9,7 @@ s=s.replace("if(run&&currentPage==='pac'&&!document.hidden){","if(run&&currentPa
 s=s.replace("if(currentPage==='sudoku'&&!sudoku.solved){","if(currentPage==='sudoku'&&!sudoku.solved&&GameSession.canPlay('sudoku')){")
 # Numeric picker changes are staged until explicit confirmation.
 s=s.replace("$('pacLevel').onchange=e=>", "const applyPacLevel=e=>")
-# Pac-Man's apply handler is inside its closure: use an explicit custom commit event.
+# Maze Chase's apply handler is inside its closure: use an explicit custom commit event.
 s=s.replace("const applyPacLevel=e=>", "$('pacLevel').addEventListener('dopop-level-commit',e=>")
 s=s.replace("run=false;make()};for(const name", "run=false;make()});for(const name")
 s=s.replace("input.dispatchEvent(new Event('change'));", "if(!input.checkValidity()){input.reportValidity();return;}if(input.value!==dialog.dataset.original)input.dispatchEvent(new Event('dopop-level-commit'));")

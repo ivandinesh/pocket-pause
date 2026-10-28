@@ -13,13 +13,13 @@ A mobile-first collection of calm puzzles, arcade games and tactile fidgets. No 
 | Word Guess | Five letters, six guesses; Daily and 1,000 fixed levels; hard mode, clue symbols, keyboard, statistics and streaks |
 | Sudoku | Number placement; puzzle selection and automatic progression |
 | Snake | Dot body and larger head with eyes; smooth movement, colors, shapes and speed selection |
-| Tetris | Falling blocks; starting level and appearance choices |
-| Zip Line | Ordered number connections covering the board; walls; editable path, flowing highlights, saved path and level picker |
-| Pac-Man | Continuous movement, queued turns, power dots, changing mazes, appearance and level controls |
+| Falling Blocks | Falling blocks; starting level and appearance choices |
+| Number Path | Ordered number connections covering the board; walls; editable path, flowing highlights, saved path and level picker |
+| Maze Chase | Continuous movement, queued turns, power dots, changing mazes, appearance and level controls |
 | Fidget | Free play; several spinner modes; Connected has ten varied gears, Spin and particles |
 | Dot Connect | 100 levels; matching-color chains, loop clears, goals, move limits and frost |
 | 2048 | Classic 4×4 merges; undo, saved board and best score; optional music |
-| Flow | 50 levels; join matching pairs and fill all cells without crossing |
+| Color Paths | 50 levels; join matching pairs and fill all cells without crossing |
 | Untangle | 50 levels; move nodes until edges do not cross or pass through nodes |
 | Flood | 50 levels; expand the corner region with colors within a move budget |
 | Light Up | 50 levels; illuminate every open cell; lights cannot see one another; numbered walls constrain adjacent lights |
@@ -51,7 +51,7 @@ Existing site-wide gesture safeguards prevent accidental selection, context menu
 
 Progress lives in localStorage on the current browser and origin. Existing keys are contracts: do not rename, clear or silently migrate them without a tested migration. Switching between dopop.fun, www.dopop.fun and older Vercel origins can produce separate saves.
 
-- Existing games primarily use pocketpause.v1.*; Zip also uses pocketpause.zip.progress.v1.
+- Existing games primarily use pocketpause.v1.*; Number Path also uses pocketpause.zip.progress.v1.
 - Word Guess: pocketpause.v1.wordguess.v1, with independent date/level rounds, guesses, unfinished entry, preferences and derived statistics.
 - Light Up/Bridges/Slide: pocketpause.v1.logic.lightUp, pocketpause.v1.logic.bridges, pocketpause.v1.logic.slide.
 - New games fit the existing backup allowlist. Offline & saves exports/imports JSON, validates allowed keys and asks before replacing progress.
@@ -75,7 +75,7 @@ Install: open online, wait for readiness, use Safari Add to Home Screen or Andro
 | index.html | Tracked base application; build scripts patch this source in sequence |
 | scripts/build.py | Ordered assembly and test gate |
 | scripts/patch_*.py | Existing game additions and targeted compatibility patches |
-| games/calm-trio.* | Flow, Untangle, Flood |
+| games/calm-trio.* | Color Paths, Untangle, Flood |
 | games/word-guess* | Word Guess mechanics, UI, styling, fixed answers, dictionary and license |
 | games/logic-trio.* | Light Up, Bridges, Slide generators, mechanics and UI |
 | pwa/client.js | Registration, readiness, update UI, installation and backup controls |
@@ -92,7 +92,7 @@ Run from a **fresh source checkout**:
 
     python3 scripts/build.py
 
-Output is dist/. Important: the inherited build pipeline modifies index.html in place. Do not run it twice against already-patched source. Use a disposable fresh checkout for each build; never commit the generated index.html over the tracked base. Do not discard unrelated user edits to obtain a clean build.
+Output is dist/. The build patches a disposable source copy; tracked index.html remains unchanged and repeated builds are supported. Never commit generated HTML over the tracked base.
 
 The build runs Word Guess rules first, then assembles games and offline assets, then runs:
 
@@ -164,16 +164,16 @@ Changes were staged in four branches: repeatable build, game lifecycle, update
 coordination, and puzzle progress/controls. Each stage was checked before the next.
 
 - Builds patch a disposable source copy, leaving tracked `index.html` unchanged.
-- `app/game-session.js` pauses Snake, Tetris and Pac-Man when leaving play,
+- `app/game-session.js` pauses Snake, Falling Blocks and Maze Chase when leaving play,
   opening dialogs or hiding the document. Resume is explicit. Editable controls
   and dialogs do not leak keyboard input into games; Sudoku timing also stops
   while hidden or a dialog is open.
 - `app/level-picker.js` provides validated integer selection, Play/Cancel and
   focus restoration. It is used by the five original form-based games, Word
   Guess, and the logic/calm trios. Choosing the current level leaves it intact.
-  Pac-Man retains an adapter that applies changes only on Play; Cancel restores
-  the label and value immediately. Zip Line and Dot Connect retain their pickers.
-- Light Up, Bridges, Slide, Flow, Untangle and Flood retain attempts and undo
+  Maze Chase retains an adapter that applies changes only on Play; Cancel restores
+  the label and value immediately. Number Path and Dot Connect retain their pickers.
+- Light Up, Bridges, Slide, Color Paths, Untangle and Flood retain attempts and undo
   history per level. Version 2 saves preserve the existing storage keys and read
   older current-attempt saves. Explicit Reset/Play again starts fresh.
 - Numeric dialogs share spacing, focus styles and minimum control sizing.
@@ -183,9 +183,26 @@ coordination, and puzzle progress/controls. Each stage was checked before the ne
 
 Validation: repeated builds were deterministic; the final build passed lifecycle,
 update deferral, puzzle generation/rules, save backup and mocked offline/cache
-checks. Browser checks covered all 17 launch/back routes, Pac-Man Play/Cancel,
+checks. Browser checks covered all 17 launch/back routes, Maze Chase Play/Cancel,
 and Light Up/Flood attempt restoration (including Light Up reload persistence).
 The HTTP preview cannot exercise real service workers. Physical iOS/Android,
 installed-app updates and real HTTPS multi-tab update timing remain release QA
 items. This is an incremental shared-control migration, not a complete rewrite
 of the legacy game engines or all settings panels.
+
+## Intellectual property and third-party content
+
+DoPop aims to use its own implementations and presentation, with locally generated
+puzzles where documented. Third-party open-source content retains its required
+notices; the Word Guess dictionary MIT notice is embedded in the offline bundle.
+Game names and presentation are intended to avoid implying affiliation with
+commercial game publishers. Proprietary schedules, art, music and levels are not
+intentionally copied. This is not a claim that every element is copyright-free
+or that any name has trademark clearance.
+
+See [the risk and license inventory](docs/IP_REVIEW.md) for source evidence and
+remaining provenance/trademark questions. Falling Blocks, Maze Chase, Number Path
+and Color Paths are descriptive display names; legacy internal IDs and save keys
+remain unchanged. Generated levels and Word Guess answer IDs are unchanged.
+Maze Chase now uses a diamond navigator, ring drones and ring beacons, with its
+existing seeded maze generator. No external character art or audio was added.
