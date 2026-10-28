@@ -3,12 +3,12 @@ import re
 
 p=Path('index.html')
 s=p.read_text()
-marker='/* Zip Line clean redo v7 */'
+marker='/* Number Path clean redo v7 */'
 if marker in s:
     raise SystemExit('already patched')
 
 css=r'''
-/* Zip Line clean redo v7 */
+/* Number Path clean redo v7 */
 #zipLinePage .zip-stage{
   position:relative;
   display:grid;
@@ -54,7 +54,7 @@ css=r'''
 '''
 s=s.replace('\n</style>','\n'+css+'\n</style>',1)
 
-new_js=r'''// ZIP LINE — clean box-filling drag game v7
+new_js=r'''// NUMBER PATH — clean box-filling drag game v7
 const zipSaveKey='pocketpause.zip.progress.v1';
 let zipStored=null;try{zipStored=JSON.parse(localStorage.getItem(zipSaveKey)||'null')}catch{}
 let zipLevel=Number.isInteger(zipStored?.level)&&zipStored.level>=1&&zipStored.level<=1000?zipStored.level:1,zipCols=5,zipRows=7,zipAnchorsByCell=new Map(),zipPathCells=[],zipGesture=null,zipCanvas=null;
@@ -250,26 +250,36 @@ const zipUndo=document.createElement('button');zipUndo.className=$('zipReset').c
 $('zipReset').addEventListener('click',()=>{clearTimeout(zipAdvance);zipAdvance=null;zipPathCells=[];zipGesture=null;zipRefresh()});
 '''
 
-pattern=r'// ZIP LINE — fill every box, anchors in order.*?// FIDGET — high-response sensory spin'
+pattern=r'// NUMBER PATH — fill every box, anchors in order.*?// FIDGET — high-response sensory spin'
 if not re.search(pattern,s,flags=re.S):
-    raise SystemExit('Zip Line section markers not found')
+    raise SystemExit('Number Path section markers not found')
 s=re.sub(pattern,new_js+'\n// FIDGET — high-response sensory spin',s,count=1,flags=re.S)
 p.write_text(s)
-print('replaced Zip Line with clean v7 implementation')
+print('replaced Number Path with clean v7 implementation')
 
-# Pac-Man follows the existing arcade palette and navigation.
+# Maze Chase follows the existing arcade palette and navigation.
 s=p.read_text()
 pac=r"""<script>
 (()=>{
-const card=document.createElement('button');card.className='game-card';card.innerHTML='<span class="mini-art" style="display:grid;place-items:center;font-size:48px;color:var(--blue)">◕</span><span class="card-copy"><b>Pac-Man</b><small>Collect dots. Dodge the chase.</small></span><span class="arrow">→</span>';document.querySelector('.game-grid').append(card);
-const page=document.createElement('section');page.id='pacPage';page.className='page game-page';page.innerHTML=`<div class="game-heading"><button class="back-button" id="pacBack">←</button><div><p class="eyebrow">PAC-MAN</p><h1>Follow the dots.</h1></div><div class="heading-stat"><b id="pacScore">0</b><span>score</span></div></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center" id="pacOptions"></div><canvas id="pacCanvas" style="display:block;width:100%;max-height:65dvh;aspect-ratio:15/19;touch-action:none;margin:12px auto;background:white;border-radius:24px"></canvas><div style="display:flex;justify-content:center;gap:10px"><button class="soft-button" id="pacPlay">Play / pause</button><button class="soft-button" id="pacRestart">Restart</button><label>Level <input id="pacLevel" type="number" min="1" max="1000" style="width:65px"></label></div><p class="center-note" id="pacNote">Swipe or use arrow keys. Large dots turn the chase around.</p>`;document.getElementById('app').append(page);
+const card=document.createElement('button');card.className='game-card';card.innerHTML='<span class="mini-art" style="display:grid;place-items:center;color:var(--blue)" aria-hidden="true"><svg viewBox="0 0 80 80" width="64" height="64"><path d="M12 16H50V34H68M12 64H32V44" fill="none" stroke="#c9d7ef" stroke-width="7" stroke-linecap="round"/><path d="M27 23L39 35L27 47L15 35Z" fill="#4f78ec"/><circle cx="27" cy="35" r="4" fill="white"/><circle cx="58" cy="60" r="7" fill="none" stroke="#596171" stroke-width="4"/></svg></span><span class="card-copy"><b>Maze Chase</b><small>Collect dots. Dodge the chase.</small></span><span class="arrow">→</span>';document.querySelector('.game-grid').append(card);
+const page=document.createElement('section');page.id='pacPage';page.className='page game-page';page.setAttribute('aria-label','Maze Chase game');page.innerHTML=`<div class="game-heading"><button class="back-button" id="pacBack">←</button><div><p class="eyebrow">MAZE CHASE</p><h1>Follow the dots.</h1></div><div class="heading-stat"><b id="pacScore">0</b><span>score</span></div></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center" id="pacOptions"></div><canvas id="pacCanvas" aria-label="Maze Chase board: collect dots and avoid ring drones" style="display:block;width:100%;max-height:65dvh;aspect-ratio:15/19;touch-action:none;margin:12px auto;background:white;border-radius:24px"></canvas><div style="display:flex;justify-content:center;gap:10px"><button class="soft-button" id="pacPlay">Play / pause</button><button class="soft-button" id="pacRestart">Restart</button><label>Level <input id="pacLevel" type="number" min="1" max="1000" style="width:65px"></label></div><p class="center-note" id="pacNote">Swipe or use arrow keys. Ring beacons turn the chase around.</p>`;document.getElementById('app').append(page);
 let level=+storage.get('pac.level',1)||1,color=storage.get('pac.color',snakeColor),shape=storage.get('pac.shape',snakeShape),run=false,score=0,lives=3,dir=[0,0],next=[0,0],power=0,tick=0,grid=[],dots=new Set(),player=[1,1],ghosts=[];
 const cv=$('pacCanvas'),ctx=cv.getContext('2d'),W=15,H=19;
 if(!SNAKE_COLORS[color])color='blue';
 function save(){storage.set('pac.level',level);storage.set('pac.progress',JSON.stringify({level,dots:[...dots],player,score,lives}));}
 function make(restore=false){let seed=level*777;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};grid=Array.from({length:H},()=>Array(W).fill(1));grid[1][1]=0;const stack=[[1,1]];while(stack.length){const [x,y]=stack.at(-1),opts=[[2,0],[-2,0],[0,2],[0,-2]].filter(([a,b])=>x+a>0&&x+a<W-1&&y+b>0&&y+b<H-1&&grid[y+b][x+a]);if(!opts.length){stack.pop();continue}const [a,b]=opts[Math.floor(rnd()*opts.length)];grid[y+b/2][x+a/2]=grid[y+b][x+a]=0;stack.push([x+a,y+b]);}for(let y=2;y<H-2;y++)for(let x=2;x<W-2;x++)if(grid[y][x]&&rnd()<.18&&((!grid[y-1][x]&&!grid[y+1][x])||(!grid[y][x-1]&&!grid[y][x+1])))grid[y][x]=0;dots=new Set();grid.forEach((r,y)=>r.forEach((v,x)=>{if(!v)dots.add(y*W+x)}));player=[1,1];dots.delete(16);score=0;lives=3;dir=next=[0,0];power=0;ghosts=[[13,17],[13,1],[1,17]].slice(0,Math.min(3,1+Math.floor(level/3)));if(restore){const z=parse(storage.get('pac.progress'));if(z?.level===level&&Array.isArray(z.dots)&&Array.isArray(z.player)&&!grid[z.player[1]]?.[z.player[0]]){dots=new Set(z.dots);player=z.player;score=z.score||0;lives=z.lives>0?z.lives:3;}}$('pacLevel').value=level;visualPlayer=[...player];visualGhosts=ghosts.map(g=>[...g]);accumulator=0;save();draw();}
 let visualPlayer=null,visualGhosts=[],frameTime=0,accumulator=0;
-function draw(){if(cv.width!==600){cv.width=600;cv.height=760;}const c=40,pal=SNAKE_COLORS[color];ctx.clearRect(0,0,600,760);function mark(x,y,r,fill){ctx.fillStyle=fill;ctx.beginPath();if(shape==='square')ctx.rect(x-r,y-r,2*r,2*r);else ctx.arc(x,y,r,0,7);ctx.fill();}grid.forEach((row,y)=>row.forEach((v,x)=>{if(v)mark(x*c+20,y*c+20,17,pal.body+'25');else if(dots.has(y*W+x))mark(x*c+20,y*c+20,((x===1||x===13)&&(y===1||y===17))?8:3,pal.food);}));(visualGhosts.length===ghosts.length?visualGhosts:ghosts).forEach(([x,y])=>{mark(x*c+20,y*c+20,13,power?'#b9c9e9':pal.body);mark(x*c+16,y*c+17,3,'white');mark(x*c+25,y*c+17,3,'white');});const [x,y]=visualPlayer||player;mark(x*c+20,y*c+20,15,pal.head);ctx.save();ctx.translate(x*c+20,y*c+20);ctx.rotate(Math.atan2(dir[1],dir[0]));ctx.fillStyle='white';ctx.beginPath();ctx.moveTo(0,0);const mouth=run?4+Math.abs(Math.sin(performance.now()/95))*8:7;ctx.lineTo(18,-mouth);ctx.lineTo(18,mouth);ctx.fill();ctx.restore();$('pacScore').textContent=score;$('pacNote').textContent=`${lives} lives · ${dots.size} dots · ${run?'Swipe or use arrows':'Paused · tap Play'}${power?' · power up':''}`;}
+function draw(){
+ if(cv.width!==600){cv.width=600;cv.height=760;}const c=40,pal=SNAKE_COLORS[color];ctx.clearRect(0,0,600,760);
+ function mark(x,y,r,fill){ctx.fillStyle=fill;ctx.beginPath();if(shape==='square')ctx.rect(x-r,y-r,2*r,2*r);else ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+ function ring(x,y,r,color){ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();}
+ grid.forEach((row,y)=>row.forEach((v,x)=>{const px=x*c+20,py=y*c+20;if(v)mark(px,py,17,pal.body+'25');else if(dots.has(y*W+x)){if((x===1||x===13)&&(y===1||y===17)){ring(px,py,8,pal.food);mark(px,py,2,pal.food);}else mark(px,py,3,pal.food);}}));
+ // Ring drones have no faces, ghost silhouettes or character-specific colors.
+ (visualGhosts.length===ghosts.length?visualGhosts:ghosts).forEach(([x,y])=>{const px=x*c+20,py=y*c+20,tint=power?'#b9c9e9':'#596171';ring(px,py,12,tint);mark(px,py,4,tint);});
+ // A solid diamond navigator with a central window, never an opening mouth.
+ const [x,y]=visualPlayer||player;ctx.save();ctx.translate(x*c+20,y*c+20);ctx.fillStyle=pal.head;ctx.beginPath();ctx.moveTo(0,-16);ctx.lineTo(13,0);ctx.lineTo(0,16);ctx.lineTo(-13,0);ctx.closePath();ctx.fill();mark(0,0,4,'white');ctx.restore();
+ $('pacScore').textContent=score;$('pacNote').textContent=`${lives} lives · ${dots.size} dots · ${run?'Swipe or use arrows':'Paused · tap Play'}${power?' · beacon active':''}`;
+}
 const valid=(p,d)=>grid[p[1]+d[1]]?.[p[0]+d[0]]===0;
 function step(){if(!run||currentPage!=='pac'||document.hidden)return;if(valid(player,next))dir=next;if(valid(player,dir))player=[player[0]+dir[0],player[1]+dir[1]];if(dots.delete(player[1]*W+player[0])){score+=10;if((player[0]===1||player[0]===13)&&(player[1]===1||player[1]===17))power=35;}if(power)power--;if(++tick%2===0)ghosts=ghosts.map(g=>{const opts=[[1,0],[-1,0],[0,1],[0,-1]].filter(d=>valid(g,d));opts.sort((a,b)=>(Math.abs(g[0]+a[0]-player[0])+Math.abs(g[1]+a[1]-player[1])-Math.abs(g[0]+b[0]-player[0])-Math.abs(g[1]+b[1]-player[1]))*(power?-1:1));const d=Math.random()<.25?opts[Math.floor(Math.random()*opts.length)]:opts[0];return d?[g[0]+d[0],g[1]+d[1]]:g;});ghosts=ghosts.map(g=>{if(g[0]===player[0]&&g[1]===player[1]){if(power){score+=100;return[13,17]}lives--;player=[1,1];dir=next=[0,0];run=false;}return g;});if(lives<=0){toast('Round over · Restart to try again');run=false;}if(!dots.size){level=level%1000+1;make();toast('Next maze');}save();draw();}
 let fromPlayer=null,fromGhosts=[];

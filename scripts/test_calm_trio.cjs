@@ -11,4 +11,4 @@ for(let l=1;l<=50;l++){
 }
 assert(ctx.calmCross({x:0,y:0},{x:10,y:10},{x:0,y:10},{x:10,y:0}));assert(!ctx.calmCross({x:0,y:0},{x:10,y:0},{x:0,y:10},{x:10,y:10}));
 const b=[0,0,1,0,1,1,2,2,1];assert.deepEqual(Array.from(ctx.calmRegion(b,3)),[0,1,3]);assert.deepEqual(Array.from(ctx.calmFlood(b,3,0)),b);assert.equal(ctx.calmRegion(ctx.calmFlood(b,3,1),3).length,7);assert.deepEqual(b,[0,0,1,0,1,1,2,2,1]);
-console.log('PASS: 50 distinct full-board Flow solutions, 50 solvable Flood budgets, 50 crossing-free Untangle solutions; deterministic generation, movement rules, flood connectivity and immutability.');
+console.log('PASS: 50 distinct full-board Color Paths solutions, 50 solvable Flood budgets, 50 crossing-free Untangle solutions; deterministic generation, movement rules, flood connectivity and immutability.');

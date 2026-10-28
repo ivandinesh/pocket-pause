@@ -26,7 +26,7 @@ css=r'''
 '''
 s=s.replace('\n</style>','\n'+css+'\n</style>',1)
 
-old=r'''// ZIP LINE
+old=r'''// NUMBER PATH
 let zipLevel=1,zipNodes=[],zipDone=0,zipDrag=null;
 function makeZip(){const rng=mulberry32(8301+zipLevel*131),count=Math.min(8+Math.floor(zipLevel/2),14),cols=4,rows=6,spots=[];for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)spots.push({x:(x+.5)/cols*100,y:(y+.5)/rows*100});for(let i=spots.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[spots[i],spots[j]]=[spots[j],spots[i]]}zipNodes=spots.slice(0,count);zipDone=0;zipDrag=null}
 function renderZip(){if(!zipNodes.length)makeZip();const stage=$('zipStage');stage.querySelectorAll('.zip-node').forEach(n=>n.remove());zipNodes.forEach((p,i)=>{const b=document.createElement('button');b.className='zip-node '+(i<zipDone?'done ':'')+(i===zipDone?'next':'');b.textContent=i+1;b.style.left=p.x+'%';b.style.top=p.y+'%';b.dataset.i=i;stage.appendChild(b)});drawZipPath();$('zipLevel').textContent=zipLevel;$('zipMessage').textContent=zipDone===zipNodes.length?'Complete — nice line.':'Connect '+(zipDone+1)+(zipDone?' next.':' and keep your finger down.')}
@@ -44,7 +44,7 @@ function fAngleAt(x,y){const r=fc.getBoundingClientRect();return Math.atan2(y-(r
 function fidgetFrame(t){const dt=fLastT?Math.min(.05,(t-fLastT)/1000):0;fLastT=t;if(!fPointer&&Math.abs(fVel)>.002){fAngle+=fVel*dt;fVel*=Math.pow(.985,dt*60);if(Math.abs(fVel)<.002)fVel=0;if(currentPage==='fidget')drawFidget()}requestAnimationFrame(fidgetFrame)}requestAnimationFrame(fidgetFrame);
 '''
 
-new=r'''// ZIP LINE — fill every box, anchors in order
+new=r'''// NUMBER PATH — fill every box, anchors in order
 let zipLevel=1,zipCols=5,zipRows=7,zipSolution=[],zipAnchors=new Map(),zipPathCells=[],zipDrag=null;
 function zipBasePath(cols,rows){const a=[];for(let y=0;y<rows;y++){if(y%2===0)for(let x=0;x<cols;x++)a.push([x,y]);else for(let x=cols-1;x>=0;x--)a.push([x,y])}return a}
 function zipTransform(path,cols,rows,mode){let out=path.map(([x,y])=>[x,y]),c=cols,r=rows;if(mode&1)out=out.map(([x,y])=>[c-1-x,y]);if(mode&2)out=out.map(([x,y])=>[x,r-1-y]);if(mode&4){out=out.map(([x,y])=>[y,x]);[c,r]=[r,c]}return{path:out,cols:c,rows:r}}
