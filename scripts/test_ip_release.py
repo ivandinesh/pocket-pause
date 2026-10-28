@@ -13,8 +13,9 @@ for name in ('Falling Blocks','Maze Chase','Number Path','Color Paths','Binary G
     assert name in s, name
 assert not re.search(r'\b(?:Tetris|TETRIS|Pac-Man|PAC-MAN|Pacman|Zip Line|ZIP LINE)\b',s)
 assert Path('games/word-guess-LICENSE.txt').read_text() in s
-assert Path('licenses/0hh1-MIT.txt').read_text() in s
-assert Path('licenses/0hn0-MIT.txt').read_text() in s
+# MIT notices are embedded as JavaScript string literals, so verify the exact JSON-encoded text.
+assert json.dumps(Path('licenses/0hh1-MIT.txt').read_text()) in s
+assert json.dumps(Path('licenses/0hn0-MIT.txt').read_text()) in s
 assert 'pocketpause.v1.binaryGrid' in s and 'pocketpause.v1.sightline' in s
 assert 'const mouth=' not in s and '>◕</span>' not in s
 assert 'solid diamond navigator' in s and 'Ring drones' in s
