@@ -1,0 +1,5 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');const src=fs.readFileSync('games/mit-duo-core.js','utf8');const ctx={globalThis:{}};vm.createContext(ctx);vm.runInContext(src,ctx);const C=ctx.globalThis.MitDuoCore;assert(C);
+for(const level of [1,10,11,35,36,50]){const c=C.binary(level);assert([4,6,8].includes(c.n));assert.strictEqual(c.solution.length,c.n*c.n);assert(C.binarySolved(c.solution,c.n));assert.strictEqual(c.puzzle.length,c.solution.length);c.puzzle.forEach((v,i)=>{assert(v===null||v===c.solution[i])});}
+assert(C.lineOK([0,0,1,1]));assert(!C.lineOK([0,0,0,1]));assert(!C.lineOK([1,1,1,0]));
+for(const level of [1,15,16,35,36,50]){const c=C.sightline(level);assert([5,6,7].includes(c.n));assert.strictEqual(c.solution.length,c.n*c.n);assert.strictEqual(c.clues.length,c.solution.length);c.clues.forEach((v,i)=>{if(v!==null){assert.strictEqual(c.solution[i],1);assert.strictEqual(v,C.sightCount(c.solution,c.n,i));}});assert(C.sightSolved(c.solution,c));}
+console.log('PASS: Binary Grid and Sightline deterministic cores and rule checks.');
