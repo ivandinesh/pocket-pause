@@ -13,6 +13,7 @@ steps=[
  'scripts/patch_word_guess.py',
  'scripts/patch_logic_trio.py',
  'scripts/patch_mit_duo.py',
+ 'scripts/patch_ants_apart.py',
  'scripts/patch_ui_polish.py',
  'scripts/patch_game_session.py',
 ]
