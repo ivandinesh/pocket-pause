@@ -36,7 +36,7 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     
     subprocess.run(['python3','scripts/build_offline.py'],check=True)
     
-    for test in ['scripts/test_game_session.cjs','scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_mit_duo.cjs','scripts/test_offline.cjs','scripts/test_renamed_games.cjs']:
+    for test in ['scripts/test_game_session.cjs','scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_calm_trio.cjs','scripts/test_mit_duo.cjs','scripts/test_mit_duo_release.cjs','scripts/test_offline.cjs','scripts/test_renamed_games.cjs']:
         subprocess.run(['node',test],check=True)
     subprocess.run(['python3','scripts/test_ip_release.py'],check=True)
     output=root/'dist'
