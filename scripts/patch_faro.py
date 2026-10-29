@@ -35,7 +35,7 @@ snippet = f'''{marker}
           environment: 'production'
         }},
         sessionTracking: {{
-          samplingRate: 0.1
+          samplingRate: 1.0
         }},
         instrumentations: sdk.getWebInstrumentations({{
           captureConsole: false
