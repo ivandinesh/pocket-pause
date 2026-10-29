@@ -25,50 +25,61 @@ markup='''
 script='''<script>
 (function(){
   var KEY='dopop.analytics.disabled';
-  var mounted=false;
+  var dialog=document.getElementById('privacyAnalyticsDialog');
+  var state=document.getElementById('privacyAnalyticsState');
+  var hint=document.getElementById('privacyAnalyticsHint');
+  var toggle=document.getElementById('privacyAnalyticsToggle');
+  if(!dialog||!state||!hint||!toggle)return;
+
   function disabled(){try{return localStorage.getItem(KEY)==='1';}catch(_){return false;}}
-  function mount(){
-    if(mounted||document.getElementById('privacyAnalyticsButton'))return true;
-    var foot=document.querySelector('.home-foot');
-    var dialog=document.getElementById('privacyAnalyticsDialog');
-    if(!foot||!dialog)return false;
-    var button=document.createElement('button');
-    button.id='privacyAnalyticsButton';
-    button.type='button';
-    button.className='text-button';
-    button.textContent='Privacy & analytics';
-    var credits=document.getElementById('creditsLicensesButton');
-    if(credits&&credits.parentNode===foot){
-      credits.after(document.createTextNode(' · '),button);
-    }else{
-      if(foot.childNodes.length)foot.append(document.createTextNode(' · '));
-      foot.append(button);
-    }
-    var state=document.getElementById('privacyAnalyticsState');
-    var hint=document.getElementById('privacyAnalyticsHint');
-    var toggle=document.getElementById('privacyAnalyticsToggle');
-    function render(){
-      var off=disabled();
-      state.textContent=off?'Analytics disabled':'Analytics enabled';
-      hint.textContent=off?'No Faro telemetry is loaded':'10% sampled technical telemetry';
-      toggle.textContent=off?'Enable analytics':'Disable analytics';
-    }
+  function render(){
+    var off=disabled();
+    state.textContent=off?'Analytics disabled':'Analytics enabled';
+    hint.textContent=off?'No Faro telemetry is loaded':'10% sampled technical telemetry';
+    toggle.textContent=off?'Enable analytics':'Disable analytics';
+  }
+  function wire(button){
+    if(button.dataset.privacyWired==='1')return;
+    button.dataset.privacyWired='1';
     button.addEventListener('click',function(){render();dialog.showModal();});
-    dialog.addEventListener('close',function(){button.focus();});
-    toggle.addEventListener('click',function(){
-      try{if(disabled())localStorage.removeItem(KEY);else localStorage.setItem(KEY,'1');}catch(_){}
-      location.reload();
-    });
-    render();
-    mounted=true;
+  }
+  function mount(){
+    var foot=document.querySelector('.home-foot');
+    if(!foot)return false;
+    var button=document.getElementById('privacyAnalyticsButton');
+    if(!button||button.parentNode!==foot){
+      if(button)button.remove();
+      button=document.createElement('button');
+      button.id='privacyAnalyticsButton';
+      button.type='button';
+      button.className='text-button';
+      button.textContent='Privacy & analytics';
+      var credits=document.getElementById('creditsLicensesButton');
+      if(credits&&credits.parentNode===foot){
+        credits.after(document.createTextNode(' · '),button);
+      }else{
+        if(foot.childNodes.length)foot.append(document.createTextNode(' · '));
+        foot.append(button);
+      }
+    }
+    wire(button);
     return true;
   }
-  if(!mount()){
-    var observer=new MutationObserver(function(){if(mount())observer.disconnect();});
-    observer.observe(document.documentElement,{childList:true,subtree:true});
-    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});
-    setTimeout(function(){if(mount())observer.disconnect();},0);
-  }
+
+  render();
+  mount();
+  var observer=new MutationObserver(function(){mount();});
+  observer.observe(document.body,{childList:true,subtree:true});
+  window.addEventListener('pageshow',mount);
+
+  dialog.addEventListener('close',function(){
+    var button=document.getElementById('privacyAnalyticsButton');
+    if(button)button.focus();
+  });
+  toggle.addEventListener('click',function(){
+    try{if(disabled())localStorage.removeItem(KEY);else localStorage.setItem(KEY,'1');}catch(_){}
+    location.reload();
+  });
 })();
 </script>'''
 
