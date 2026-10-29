@@ -17,6 +17,7 @@ steps=[
  'scripts/patch_ui_polish.py',
  'scripts/patch_game_session.py',
  'scripts/patch_credits.py',
+ 'scripts/patch_privacy_analytics.py',
  'scripts/patch_faro.py',
 ]
 # All patch scripts operate on a disposable copy, never tracked source.
