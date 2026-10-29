@@ -228,4 +228,5 @@ content. Current builds use a filtered 12dicts 6.0.2 word-game list with an offl
 attribution; the original unverified data is removed from current source and output.
 Words uses a versioned save migration that keeps level and score. The pinned MIT
 2048 engine still has 16,368 compatibility comparisons for moves, scores and
-animation destinations. Historical Git commits retain the prior word data.
+animation destinations. The `main` history is rewritten to remove prior word
+data; older remote feature-branch refs still need separate review if retained.

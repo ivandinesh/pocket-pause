@@ -164,5 +164,7 @@ are recorded in `games/word-content-manifest.json` and
 keeps level and score while clearing only the incompatible current attempt.
 
 This lowers the outstanding data-provenance risk for current releases. The
-older data remains in historical Git commits, and the change is not a claim of
-formal legal clearance or of independent authorship for every legacy code path.
+`main` history is rewritten to remove the old data blobs. Existing remote
+feature-branch refs were not rewritten and may still point to those commits.
+This is not a claim of formal legal clearance or of independent authorship for
+every legacy code path.

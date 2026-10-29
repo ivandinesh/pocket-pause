@@ -120,8 +120,11 @@ Escape, verify focus returns, then repeat offline in an installed PWA.
 
 The original lexical source could not be established from the repository history
 or owner confirmation. The prior Words bank, fixed 1,000-level table, and four
-Word Search sets have been removed from the current source/build inputs. Git
-history was not rewritten, so older commits still contain the historical data.
+Word Search sets have been removed from the current source/build inputs. The
+public `main` history is rewritten to remove those data blobs from its ancestry.
+The ten existing remote feature-branch refs were left unchanged; they may still
+expose old commits. No open pull requests were found when this cleanup was
+prepared.
 
 Current source: Alan Beale's 12dicts release 6.0.2,
 `International/3of6game.txt`. The compiler explicitly releases the lists to the
@@ -148,3 +151,7 @@ The Word Guess dictionary and fixed answer IDs are untouched. These changes
 resolve the missing source attribution for current Words/Word Search data; they
 do not establish independent authorship for all historical game code or provide
 formal legal clearance.
+
+After the force update, collaborators with old clones should re-clone `main` or
+carefully reset their local branch after preserving any local work. Git hosting
+may retain unreachable objects or cached references for some time.
