@@ -16,6 +16,9 @@ snippet = f'''{marker}
 (function(){{
   var host = window.location.hostname;
   if (host !== 'dopop.fun' && host !== 'www.dopop.fun') return;
+  try {{
+    if (localStorage.getItem('dopop.analytics.disabled') === '1') return;
+  }} catch (_) {{}}
 
   var script = document.createElement('script');
   script.async = true;
