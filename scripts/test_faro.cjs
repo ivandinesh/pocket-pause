@@ -17,6 +17,7 @@ must('captureConsole: false', 'Console capture must stay disabled');
 must('faro-collector-prod-us-central-0.grafana.net/collect/0bcb5bd4ff070ee3b3f5631842db8da4', 'Faro collector URL missing');
 must('id="privacyAnalyticsDialog"', 'Privacy dialog missing');
 must("button.textContent='Privacy & analytics'", 'Privacy footer button missing');
+must("credits.insertAdjacentElement('afterend',button)", 'Privacy link should sit beside credits when available');
 must("var KEY='dopop.analytics.disabled'", 'Privacy toggle storage key missing');
 must('No Faro telemetry is loaded', 'Privacy disabled-state explanation missing');
 mustNot('FARO_API_KEY', 'FARO_API_KEY must never be exposed in browser output');
