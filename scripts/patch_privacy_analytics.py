@@ -33,7 +33,8 @@ script='''<script>
   button.type='button';
   button.className='text-button';
   button.textContent='Privacy & analytics';
-  foot.append(button);
+  var credits=document.getElementById('creditsLicensesButton');
+  if(credits&&credits.parentNode===foot)credits.insertAdjacentElement('afterend',button);else foot.append(button);
   var state=document.getElementById('privacyAnalyticsState');
   var hint=document.getElementById('privacyAnalyticsHint');
   var toggle=document.getElementById('privacyAnalyticsToggle');
