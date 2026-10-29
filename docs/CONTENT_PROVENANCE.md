@@ -115,3 +115,36 @@ in this environment, and both Chromium download attempts failed. Automated HTML
 and hash checks verify bundling, not visual layout or native focus behavior.
 Check Home credits at 320px width and desktop, scroll all notices, use Done and
 Escape, verify focus returns, then repeat offline in an installed PWA.
+
+## Follow-up — Words and Word Search data replacement — 2026-10-29
+
+The original lexical source could not be established from the repository history
+or owner confirmation. The prior Words bank, fixed 1,000-level table, and four
+Word Search sets have been removed from the current source/build inputs. Git
+history was not rewritten, so older commits still contain the historical data.
+
+Current source: Alan Beale's 12dicts release 6.0.2,
+`International/3of6game.txt`. The compiler explicitly releases the lists to the
+public domain and requests acknowledgment. DoPop uses neither of the 12dicts
+lists whose antecedent terms are excepted (`2of12inf` and `2+2+3`). The archive
+SHA-256 and the transformed dataset hashes are recorded in
+`games/word-content-manifest.json`; the archive checksum matches the SourceForge
+release page. Offline Home credits include the source, compiler, data treatment,
+and requested acknowledgment in `games/12dicts-NOTICE.txt`.
+
+The committed normalized lexicon contains 24,148 unique uppercase ASCII entries
+of 3–7 letters, selected from unannotated entries only. Words levels are
+reproducibly generated from that pinned lexicon: 1,000 distinct playable racks,
+with target count increasing from three to six across four level bands. Word
+Search uses eight newly selected themes from the same lexicon and retains its
+local seeded grid generator. Its 1,000-level selector remains; only the themed
+word content and resulting grids change.
+
+Words keeps its existing `words.progress` storage key and level index. Save
+content version 2 retains level and score but discards legacy in-progress finds,
+bonus finds, hint reveals, and hint count, then informs the player. Word Search
+keeps its existing numeric puzzle key; it did not persist found-word attempts.
+The Word Guess dictionary and fixed answer IDs are untouched. These changes
+resolve the missing source attribution for current Words/Word Search data; they
+do not establish independent authorship for all historical game code or provide
+formal legal clearance.

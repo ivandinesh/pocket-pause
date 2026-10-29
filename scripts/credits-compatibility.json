@@ -1,16 +1,4 @@
 {
-  "words_bank": {
-    "pattern": "const WORDS=.*?(?=\\nfunction wordsFor)",
-    "sha256": "7785883fb6854c36b17d8c8849b5eea283a7970f703b40a7d9976d94693b2b63"
-  },
-  "word_search_sets": {
-    "pattern": "const SEARCH_WORD_SETS=.*?;",
-    "sha256": "2e8712650e5a258930d31934ef68e62c0299c31e9b052d625283f5392be1922d"
-  },
-  "word_search_generator": {
-    "pattern": "function makeSearch\\(\\).*?(?=\\nfunction )",
-    "sha256": "902f535b9ba0443dbd9cb0964e880cfce0fbaee2423cb26e59f2199f60239607"
-  },
   "merge_storage": {
     "pattern": "function spawnMerge\\(.*?(?=\\n let merge=read)",
     "sha256": "ab7f9ac4ec2a8462382064a2dcfe2a72635314694207ec162b6dcf814075bb37"

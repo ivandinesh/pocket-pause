@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "source": {
+    "name": "12dicts",
+    "release": "6.0.2",
+    "compiler": "Alan Beale",
+    "file": "International/3of6game.txt",
+    "release_date": "2016-06-22",
+    "release_url": "https://wordlist.aspell.net/12dicts/",
+    "archive_url": "https://sourceforge.net/projects/wordlist/files/12Dicts/6.0/12dicts-6.0.2.zip/download",
+    "archive_sha256": "64ac1d35acb66b550c7ebc56e080b62e0bad8f5984d72059dc2e05ac48780e52",
+    "rights": "The compiler explicitly released 12dicts to the public domain and requests acknowledgment. The 2of12inf and 2+2+3 lists have separate antecedent terms; DoPop uses neither."
+  },
+  "normalization": "Keep only unannotated ASCII alphabetic entries of 3 to 7 letters from International/3of6game.txt; uppercase, deduplicate, and sort alphabetically.",
+  "lexicon_entries": 24148,
+  "lexicon_sha256": "0aa1e6d83fd6373abc57de2f6d54fc6d042bf1585da2a2c4801cf57b062f44cf",
+  "word_search_themes": "games/word-search-themes.json",
+  "word_search_themes_sha256": "77527677a3acfc029ab4ff30a6f9611fab49599c0dfd39c81b9b753ce87b24f3",
+  "word_search_grid_seed": "wordRng(3907 + puzzleIndex * 97), using the versioned deterministic xorshift32 helper",
+  "word_levels": {
+    "count": 1000,
+    "rack_source": "Distinct 4 to 7 letter racks from the normalized lexicon that can form at least six words.",
+    "rack_order": "Group by rack length in counts 100/300/350/250 for lengths 4/5/6/7; rank rack signatures by SHA-256 of dopop-words-v2:<sorted-rack>.",
+    "targets": "Generated deterministically from the rack and lexicon; target count rises from 3 to 6 in four 250-level bands."
+  }
+}

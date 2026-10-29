@@ -151,3 +151,18 @@ embedded MIT notice and generated JavaScript syntax. Offline release identifier:
 `b00ab7d919302d440515` (previous production build: `f6b623db045ce266f3e7`).
 Build/test success is technical verification only. Branch prepared for review;
 production/main is unchanged by this naming batch.
+
+## Current word-data status — 2026-10-29
+
+The earlier risk table is a historical baseline. The unresolved Words and Word
+Search datasets have since been replaced in current source with a filtered
+subset of Alan Beale's 12dicts 6.0.2 `International/3of6game.txt` word-game
+list. The source declares a public-domain release and requests acknowledgment;
+the full source, archive hash, normalization, derived hashes, and offline notice
+are recorded in `games/word-content-manifest.json` and
+`games/12dicts-NOTICE.txt`. Words saves use a content-version migration that
+keeps level and score while clearing only the incompatible current attempt.
+
+This lowers the outstanding data-provenance risk for current releases. The
+older data remains in historical Git commits, and the change is not a claim of
+formal legal clearance or of independent authorship for every legacy code path.

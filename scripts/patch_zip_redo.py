@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+from word_content import javascript_content
 
 p=Path('index.html')
 s=p.read_text()
@@ -388,11 +389,9 @@ setInterval(()=>{
 '''
 s=s.replace('</script>',progress+'\n</script>',1);p.write_text(s)
 
-# Validated distinct word puzzles, ordered by letter count and answer count.
-s=p.read_text()
-word_levels='[]'
-replacement="const UNIQUE_WORD_LEVELS="+word_levels+";\nfunction makeWordLevel(index){return UNIQUE_WORD_LEVELS[((index%1000)+1000)%1000]}\n"
-s=re.sub(r"function makeWordLevel\(index\)\{.*?\n\}\nclass WordGame",replacement+"class WordGame",s,count=1,flags=re.S)
+if 'const WORD_DATA_PLACEHOLDER=true;' not in s:
+    raise SystemExit('Words content placeholder missing or already replaced')
+s=s.replace('const WORD_DATA_PLACEHOLDER=true;', javascript_content(), 1)
 p.write_text(s)
 
 # Additive connected-gears mode; existing fidgets are unchanged.

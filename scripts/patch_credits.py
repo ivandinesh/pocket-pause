@@ -4,10 +4,13 @@ from pathlib import Path
 p=Path('index.html');s=p.read_text()
 assert 'id="creditsDialog"' not in s
 notice=escape(Path('games/word-guess-LICENSE.txt').read_text())
+word_data_notice=escape(Path('games/12dicts-NOTICE.txt').read_text())
 markup='''
 <dialog id="creditsDialog" aria-labelledby="creditsTitle">
 <h2 id="creditsTitle" tabindex="-1" autofocus>Credits &amp; licenses</h2>
 <p>Third-party content included in DoPop is listed below. These notices are available offline; source links need an internet connection.</p>
+<h3>Derived word data: Words and Word Search</h3>
+<pre>'''+word_data_notice+'''</pre>
 <h3>Imported content: Word Guess dictionary</h3>
 <p>The accepted-word dictionary comes from <a href="https://github.com/tabatkins/wordle-list" target="_blank" rel="noopener noreferrer">tabatkins/wordle-list</a>, by Tab Atkins Jr., under the MIT License. This attribution covers the dictionary, not the whole game.</p>
 <pre>'''+notice+'''</pre>

@@ -19,10 +19,6 @@
     "pattern": "const WG_ANSWERS=.*?;\\n",
     "sha256": "9e443512031bff6a818895027aacf04bff34996fbf48cdb402c4e620fd39cb23"
   },
-  "word_levels": {
-    "pattern": "const UNIQUE_WORD_LEVELS=.*?;\\n",
-    "sha256": "12b009df0113a15af5c9b2590a5f159022a01d5e771b4c635948857f2dd81b50"
-  },
   "falling_engine": {
     "pattern": "class TetrisGame.*?(?=\\nconst |\\nfunction |\\n//)",
     "sha256": "873a83af5b80c5415b6b624cac14b83142d369208e5e343eaaacaf69b1086602"

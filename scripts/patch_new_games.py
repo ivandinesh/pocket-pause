@@ -1,4 +1,7 @@
 from pathlib import Path
+import json
+import hashlib
+from word_content import load_lexicon
 
 p=Path('index.html')
 s=p.read_text()
@@ -111,5 +114,17 @@ if old not in s:
     raise SystemExit('resize anchor not found')
 s=s.replace(old,new,1)
 
+lexicon, manifest = load_lexicon()
+lexicon_set=set(lexicon)
+theme_data=Path('games/word-search-themes.json').read_bytes()
+if hashlib.sha256(theme_data).hexdigest()!=manifest['word_search_themes_sha256']:
+    raise SystemExit('Word Search themes checksum does not match the provenance manifest')
+search_sets=json.loads(theme_data)
+if any(word not in lexicon_set for group in search_sets for word in group):
+    raise SystemExit('Word Search theme contains a word outside the pinned lexicon')
+if len(search_sets)!=8 or any(not group or len(group)>8 or len(group)!=len(set(group)) for group in search_sets):
+    raise SystemExit('Word Search theme data has an invalid shape')
+s=s.replace('const SEARCH_WORD_SETS=[];', 'const SEARCH_WORD_SETS='+json.dumps(search_sets,separators=(',',':'))+';', 1)
+s=s.replace('rng=mulberry32(3907+searchPuzzle*97)', 'rng=wordRng(3907+searchPuzzle*97)', 1)
 p.write_text(s)
 print('Added Word Search, Number Path and Fidget games')

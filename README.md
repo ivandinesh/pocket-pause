@@ -8,8 +8,8 @@ A mobile-first collection of calm puzzles, arcade games and tactile fidgets. No 
 
 | Game | Interaction and progression |
 | --- | --- |
-| Words | Circular letter wheel; connect letters; 1,000 distinct letter sets; saved progress and level selection |
-| Word Search | Find hidden words; puzzle selector and automatic progression |
+| Words | Circular letter wheel; connect letters; 1,000 deterministic, distinct letter sets generated from the attributed 12dicts lexicon; saved progress and level selection |
+| Word Search | Find hidden words in deterministic grids; eight themed sets from the same attributed lexicon; puzzle selector and automatic progression |
 | Word Guess | Five letters, six guesses; Daily and 1,000 fixed levels; hard mode, clue symbols, keyboard, statistics and streaks |
 | Sudoku | Number placement; puzzle selection and automatic progression |
 | Snake | Dot body and larger head with eyes; smooth movement, colors, shapes and speed selection |
@@ -55,6 +55,7 @@ Progress lives in localStorage on the current browser and origin. Existing keys 
 - Word Guess: pocketpause.v1.wordguess.v1, with independent date/level rounds, guesses, unfinished entry, preferences and derived statistics.
 - Light Up/Bridges/Slide: pocketpause.v1.logic.lightUp, pocketpause.v1.logic.bridges, pocketpause.v1.logic.slide.
 - New games fit the existing backup allowlist. Offline & saves exports/imports JSON, validates allowed keys and asks before replacing progress.
+- Words retains its existing save key and level number. On first load after the lexicon update, the current attempt and hints are cleared while level and score are kept; the save records content version 2. Word Search keeps its current puzzle number; found words were not persisted.
 - Clearing site data removes saves. Browser storage can be evicted or refused. Exported backups are recommended; installation is not a permanent backup.
 - No accounts or cloud sync. Saves are not shared across devices. Arcade resume behavior follows each game's implementation.
 
@@ -75,6 +76,11 @@ Install: open online, wait for readiness, use Safari Add to Home Screen or Andro
 | index.html | Tracked base application; build scripts patch this source in sequence |
 | scripts/build.py | Ordered assembly and test gate |
 | scripts/patch_*.py | Existing game additions and targeted compatibility patches |
+| scripts/word_content.py | Deterministic Words rack generation from the pinned lexicon |
+| games/words-lexicon.txt | Normalized 3–7 letter 12dicts 3of6game subset |
+| games/word-search-themes.json | DoPop’s themed selection from the normalized lexicon |
+| games/word-content-manifest.json | Source release, archive and derived-data hashes, transformation rules and level-generation contract |
+| games/12dicts-NOTICE.txt | Offline attribution for derived word data |
 | games/calm-trio.* | Color Paths, Untangle, Flood |
 | games/word-guess* | Word Guess mechanics, UI, styling, fixed answers, dictionary and license |
 | games/logic-trio.* | Light Up, Bridges, Slide generators, mechanics and UI |
@@ -210,13 +216,16 @@ existing seeded maze generator. No external character art or audio was added.
 ### Credits and provenance
 
 Home → **Credits & licenses** displays the full notice for the confirmed Word
-Guess dictionary import and the licensed 2048 movement engine, and retains the Q42 notices in a separate puzzle-rule
+Guess dictionary import, the derived 12dicts word data, and the licensed 2048
+movement engine, and retains the Q42 notices in a separate puzzle-rule
 acknowledgments section. Notices are included in the hashed offline app; following
 upstream source links requires internet. Public credits identify actual imported
 content separately from inspiration and do not imply a license for every game.
 
-The [content provenance follow-up](docs/CONTENT_PROVENANCE.md) records the exact
-history and remaining evidence gaps for Words and Word Search, plus the pinned MIT engine
-replacement for 2048. Word data, level identities and saves are unchanged; 16,368
-compatibility cases verify equivalent 2048 moves, scores and animation destinations. Unconfirmed sources are not presented
-as licensed imports. Compatibility fixtures guard these boundaries in the build.
+The [content provenance follow-up](docs/CONTENT_PROVENANCE.md) records the source
+replacement for Words and Word Search and the remaining evidence gaps for historical
+content. Current builds use a filtered 12dicts 6.0.2 word-game list with an offline
+attribution; the original unverified data is removed from current source and output.
+Words uses a versioned save migration that keeps level and score. The pinned MIT
+2048 engine still has 16,368 compatibility comparisons for moves, scores and
+animation destinations. Historical Git commits retain the prior word data.

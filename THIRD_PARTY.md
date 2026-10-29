@@ -8,6 +8,7 @@ DoPop keeps third-party provenance explicit. A credit is not a substitute for th
 | Binary Grid | 0hh1, Q42; preserved source lineage via https://github.com/florisluiten/0hh1 | MIT; Copyright (c) 2014 Q42 | Puzzle-rule lineage/reference. DoPop supplies its own deterministic level generation, interface, saves, styling and offline integration. Full notice: `licenses/0hh1-MIT.txt`. |
 | Sightline | 0hn0, Q42; upstream https://github.com/Techdojo/0hn0 | MIT; Copyright (c) 2015 Q42 | Puzzle-rule lineage/reference. DoPop supplies its own deterministic level generation, interface, saves, styling and offline integration. Full notice: `licenses/0hn0-MIT.txt`. |
 | Word Guess accepted dictionary | tabatkins/wordle-list | MIT | Accepted-guess dictionary. Existing full notice remains in `games/word-guess-LICENSE.txt`. |
+| Words and Word Search lexicon | Alan Beale, 12dicts 6.0.2, `International/3of6game.txt` | Public domain; compiler requests acknowledgment | Filtered 3–7 letter subset. Source release, exact archive hash, transformation and offline attribution: `games/word-content-manifest.json` and `games/12dicts-NOTICE.txt`. |
 
 ## Import policy
 
@@ -19,8 +20,8 @@ DoPop keeps third-party provenance explicit. A credit is not a substitute for th
 
 ## Public notices and historical provenance
 
-Home → Credits & licenses includes the Word Guess dictionary and 2048 engine notices, plus
-the existing Q42 notices offline. Rule references are labeled separately from
-imported content; the new 2048 engine import is pinned and the older word banks remain unverified.
-See [the historical provenance follow-up](docs/CONTENT_PROVENANCE.md) for the
-remaining evidence gaps and compatibility boundaries.
+Home → Credits & licenses includes the Word Guess dictionary, 12dicts word-data
+attribution, and 2048 engine notices, plus the existing Q42 notices offline. Rule
+references are labeled separately from imported code and derived data. The
+historical audit and replacement record are in
+[CONTENT_PROVENANCE.md](docs/CONTENT_PROVENANCE.md).

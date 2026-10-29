@@ -1,6 +1,7 @@
 """Release naming, license and saved-level compatibility gate.
 Fingerprints captured from the built main f8692c8, before naming/art changes.
-Do not update fingerprints to hide an unintended migration.
+Do not update fingerprints to hide an unintended migration. Words content version 2
+is a documented, intentional migration from the unverified legacy puzzle data.
 """
 from pathlib import Path
 import hashlib,json,re,subprocess,tempfile
@@ -13,6 +14,9 @@ for name in ('Falling Blocks','Maze Chase','Number Path','Color Paths','Binary G
     assert name in s, name
 assert not re.search(r'\b(?:Tetris|TETRIS|Pac-Man|PAC-MAN|Pacman|Zip Line|ZIP LINE)\b',s)
 assert Path('games/word-guess-LICENSE.txt').read_text() in s
+assert 'const WORD_CONTENT_VERSION=2;' in s
+assert 'UNIQUE_WORD_LEVELS' not in s
+assert 'Words levels were updated. Your level and score are saved; this puzzle starts fresh.' in s
 # MIT notices are embedded as JavaScript string literals, so verify the exact JSON-encoded text.
 assert json.dumps(Path('licenses/0hh1-MIT.txt').read_text()) in s
 assert json.dumps(Path('licenses/0hn0-MIT.txt').read_text()) in s
