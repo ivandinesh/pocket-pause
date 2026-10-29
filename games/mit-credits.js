@@ -1,5 +1,14 @@
+// One Home entry; full notice markup is embedded by patch_credits.py.
 (()=>{
- const foot=document.querySelector('.home-foot');if(!foot||document.getElementById('creditsLicensesButton'))return;
- const b=document.createElement('button');b.id='creditsLicensesButton';b.className='mit-credit-link';b.textContent='Credits & licenses';foot.insertAdjacentElement('afterend',b);
- b.onclick=()=>{const d=document.createElement('dialog');d.className='mit-dialog';d.innerHTML='<h2>Credits & licenses</h2><p><b>Binary Grid</b><br>DoPop adaptation of the puzzle rules popularized by 0hh1 from Q42.<br>Original software © 2014 Q42 · MIT License.</p><details><summary>0hh1 MIT license</summary><pre class="mit-license" data-l0></pre></details><p><b>Sightline</b><br>DoPop adaptation of the puzzle rules popularized by 0hn0 from Q42.<br>Original software © 2015 Q42 · MIT License.</p><details><summary>0hn0 MIT license</summary><pre class="mit-license" data-l1></pre></details><p>Other third-party notices bundled by DoPop remain in their respective game/license sections.</p><form method="dialog"><button>Done</button></form>';document.body.append(d);d.querySelector('[data-l0]').textContent=globalThis.DOPopLicense0hh1||'';d.querySelector('[data-l1]').textContent=globalThis.DOPopLicense0hn0||'';d.onclose=()=>d.remove();d.showModal();};
+ const foot=document.querySelector('.home-foot');
+ if(!foot||document.getElementById('creditsLicensesButton'))return;
+ const button=document.createElement('button');
+ button.id='creditsLicensesButton';button.className='mit-credit-link';
+ button.type='button';button.textContent='Credits & licenses';
+ button.setAttribute('aria-haspopup','dialog');
+ button.setAttribute('aria-controls','creditsDialog');
+ foot.insertAdjacentElement('afterend',button);
+ const dialog=document.getElementById('creditsDialog');
+ button.addEventListener('click',()=>dialog.showModal());
+ dialog.addEventListener('close',()=>button.focus());
 })();
