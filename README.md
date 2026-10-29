@@ -206,3 +206,17 @@ and Color Paths are descriptive display names; legacy internal IDs and save keys
 remain unchanged. Generated levels and Word Guess answer IDs are unchanged.
 Maze Chase now uses a diamond navigator, ring drones and ring beacons, with its
 existing seeded maze generator. No external character art or audio was added.
+
+### Credits and provenance
+
+Home → **Credits & licenses** displays the full notice for the confirmed Word
+Guess dictionary import and the licensed 2048 movement engine, and retains the Q42 notices in a separate puzzle-rule
+acknowledgments section. Notices are included in the hashed offline app; following
+upstream source links requires internet. Public credits identify actual imported
+content separately from inspiration and do not imply a license for every game.
+
+The [content provenance follow-up](docs/CONTENT_PROVENANCE.md) records the exact
+history and remaining evidence gaps for Words and Word Search, plus the pinned MIT engine
+replacement for 2048. Word data, level identities and saves are unchanged; 16,368
+compatibility cases verify equivalent 2048 moves, scores and animation destinations. Unconfirmed sources are not presented
+as licensed imports. Compatibility fixtures guard these boundaries in the build.
