@@ -68,6 +68,7 @@ script='''<script>
 
   render();
   mount();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});
   var observer=new MutationObserver(function(){mount();});
   observer.observe(document.body,{childList:true,subtree:true});
   window.addEventListener('pageshow',mount);
