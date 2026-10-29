@@ -4,6 +4,7 @@ DoPop keeps third-party provenance explicit. A credit is not a substitute for th
 
 | DoPop component | Upstream/reference | License | What DoPop uses |
 | --- | --- | --- | --- |
+| 2048 movement engine | https://github.com/gabrielecirulli/2048 at `478b6ec346e3787f589e4af751378d06ded4cbbc` | MIT; Copyright (c) 2014 Gabriele Cirulli | Unmodified Grid, Tile and GameManager code, isolated behind the DoPop adapter. Full notice: `licenses/2048-MIT.txt`. |
 | Binary Grid | 0hh1, Q42; preserved source lineage via https://github.com/florisluiten/0hh1 | MIT; Copyright (c) 2014 Q42 | Puzzle-rule lineage/reference. DoPop supplies its own deterministic level generation, interface, saves, styling and offline integration. Full notice: `licenses/0hh1-MIT.txt`. |
 | Sightline | 0hn0, Q42; upstream https://github.com/Techdojo/0hn0 | MIT; Copyright (c) 2015 Q42 | Puzzle-rule lineage/reference. DoPop supplies its own deterministic level generation, interface, saves, styling and offline integration. Full notice: `licenses/0hn0-MIT.txt`. |
 | Word Guess accepted dictionary | tabatkins/wordle-list | MIT | Accepted-guess dictionary. Existing full notice remains in `games/word-guess-LICENSE.txt`. |
@@ -15,3 +16,11 @@ DoPop keeps third-party provenance explicit. A credit is not a substitute for th
 - Do not import GPL/AGPL code into the bundled DoPop application without an explicit licensing decision for the combined work.
 - Do not treat source-available, freeware, game mechanics, artwork, music, levels or branding as reusable merely because they can be viewed online.
 - Preserve all required copyright and permission notices in offline distributions.
+
+## Public notices and historical provenance
+
+Home → Credits & licenses includes the Word Guess dictionary and 2048 engine notices, plus
+the existing Q42 notices offline. Rule references are labeled separately from
+imported content; the new 2048 engine import is pinned and the older word banks remain unverified.
+See [the historical provenance follow-up](docs/CONTENT_PROVENANCE.md) for the
+remaining evidence gaps and compatibility boundaries.

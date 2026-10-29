@@ -38,20 +38,7 @@ css=r'''
 js=r'''
 // DOP0P NEW GAMES — isolated rules and saved states.
 // Pure rule functions are also exercised by the repository regression checks.
-function dopopMerge(board,direction){
- const result=Array(16).fill(0),tracks=[];let gain=0;
- for(let line=0;line<4;line++){
-  const ids=Array.from({length:4},(_,k)=>direction==='left'?line*4+k:direction==='right'?line*4+3-k:direction==='up'?k*4+line:(3-k)*4+line);
-  const tiles=ids.filter(i=>board[i]).map(i=>({i,v:board[i]}));let out=0;
-  for(let j=0;j<tiles.length;j++){
-   const a=tiles[j],b=tiles[j+1],to=ids[out++];
-   if(b&&a.v===b.v){result[to]=a.v*2;gain+=a.v*2;tracks.push({from:a.i,to,value:a.v},{from:b.i,to,value:b.v});j++;}
-   else{result[to]=a.v;tracks.push({from:a.i,to,value:a.v});}
-  }
- }
- return{board:result,gain,tracks,changed:result.some((v,i)=>v!==board[i])};
-}
-function dopopCanMove(board){return board.some(v=>!v)||board.some((v,i)=>(i%4<3&&v===board[i+1])||(i<12&&v===board[i+4]));}
+// LICENSED_2048_CORE
 function dopopDotConfig(level){const tier=level<=10?0:level<=30?1:level<=60?2:3;return{n:tier===0?5:6,colors:tier<2?3:tier===2?4:5,moves:[24,25,27,29][tier],goal:6+Math.min(9,Math.floor((level-1)/10)),frost:level<21?0:Math.min(8,2+Math.floor((level-21)/12)),targetCount:tier===0?2:tier===1?3:tier===2?3:4};}
 function dopopAdjacent(a,b,n){return Math.abs(a%n-b%n)+Math.abs(Math.floor(a/n)-Math.floor(b/n))===1;}
 function dopopDotPath(board,path,index,n){
@@ -148,6 +135,9 @@ function dopopDotHasMove(board,n){return board.some((v,i)=>(i%n<n-1&&v===board[i
  renderDots();renderMerge();
 })();
 '''
+vendor=Path('games/vendor/2048')
+upstream='/* '+Path('licenses/2048-MIT.txt').read_text()+' */\n'+'\n'.join((vendor/name).read_text() for name in ('grid.js','tile.js','game_manager.js'))
+js=js.replace('// LICENSED_2048_CORE',Path('games/merge-licensed.js').read_text().replace('/* UPSTREAM_SOURCE */',upstream))
 s=s.replace('</head>',css+'\n</head>')
 s=s.replace('</script>',js+'\n</script>',1)
 p.write_text(s)
