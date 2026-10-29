@@ -20,6 +20,8 @@ assert 'aria-labelledby="creditsTitle"' in s and '<form method="dialog">' in s
 assert "dialog.addEventListener('close',()=>button.focus())" in s
 # No unconfirmed attribution is presented as an included component.
 assert 'Tatham' not in notice
+assert 'Rule references for new puzzles' in notice
+assert 'No reference code, puzzle packs or artwork are bundled for these four games.' in notice
 assert 'Derived word data: Words and Word Search' in notice
 assert 'Imported code: 2048 movement engine' in notice
 assert 'Imported content:' in notice and 'Puzzle-rule acknowledgments' in notice

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "authoring": "DoPop-generated content; no third-party source code, boards, artwork or dictionaries imported.",
+  "generator": "scripts/generate_puzzle_set.cjs and games/puzzle-set-core.js",
+  "level_ids": "Thirty fixed levels per game. Preserve committed level data and IDs when changing UI or generators.",
+  "levels_sha256": "d6d223ed390b7efe219d0874fb93d6c9a2c0d8f7d6d63f76734cee19bec15929",
+  "references": [
+    "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/net.html",
+    "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/loopy.html",
+    "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/guess.html",
+    "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/pattern.html"
+  ]
+}

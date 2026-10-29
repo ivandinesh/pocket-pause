@@ -1,6 +1,6 @@
 {
   "keys": {
-    "pattern": "['\"](?:pocketpause\\.(?!(?:v1\\.binaryGrid|v1\\.sightline|v1\\.antsApartPrototype)['\"])[^'\"\\n]+|(?:tetris|pac|calm\\.v1|zip)\\.[^'\"\\n]+)['\"]",
+    "pattern": "['\"](?:pocketpause\\.(?!(?:v1\\.binaryGrid|v1\\.sightline|v1\\.antsApartPrototype|v1\\.rotateNetwork|v1\\.loop|v1\\.colorCode|v1\\.pictureGrid|v1\\.appearance)['\"])[^'\"\\n]+|(?:tetris|pac|calm\\.v1|zip)\\.[^'\"\\n]+)['\"]",
     "sha256": "3d79a531ad054261f6a0595120c4bc81f011ae63d4ff5202f83b96b9bd3dad01"
   },
   "maze": {

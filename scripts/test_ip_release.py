@@ -22,6 +22,8 @@ assert json.dumps(Path('licenses/0hh1-MIT.txt').read_text()) in s
 assert json.dumps(Path('licenses/0hn0-MIT.txt').read_text()) in s
 assert 'pocketpause.v1.binaryGrid' in s and 'pocketpause.v1.sightline' in s
 assert 'pocketpause.v1.antsApartPrototype' in s
+for game in ('rotateNetwork','loop','colorCode','pictureGrid'):
+    assert 'pocketpause.v1.'+game in s, game+' save key missing'
 assert 'const mouth=' not in s and '>◕</span>' not in s
 assert 'function drawAnt(' in s and 'function drawSpider(' in s
 assert 'avoid spiders' in s

@@ -18,7 +18,7 @@ for size in (180,192,512):(root/f'icon-{size}.png').write_bytes(png(size))
 manifest={'id':'/','name':'dopop — little games, good moments','short_name':'dopop','description':'Calm little games, ready to play offline.','start_url':'/','scope':'/','display':'standalone','background_color':'#ffffff','theme_color':'#ffffff','lang':'en','icons':[{'src':f'/icon-{n}.png','sizes':f'{n}x{n}','type':'image/png','purpose':'any maskable'}for n in (192,512)]}
 (root/'manifest.webmanifest').write_text(json.dumps(manifest))
 p=root/'index.html';s=p.read_text();assert 'id="offlineTools"' not in s and 'Preparing offline play' not in s
-head='<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png"><meta name="theme-color" content="#ffffff"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="dopop"><meta name="apple-mobile-web-app-status-bar-style" content="default">'
+head='<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="dopop"><meta name="apple-mobile-web-app-status-bar-style" content="default">'
 s=s.replace('</head>',head+'<style>'+Path('pwa/style.css').read_text()+'</style></head>')
 s=s.replace('</body>','<script type="module">'+Path('pwa/client.js').read_text()+'</script></body>');p.write_text(s)
 assets=[{'url':'/','sha':hashlib.sha256(p.read_bytes()).hexdigest()}]

@@ -25,14 +25,21 @@ A mobile-first collection of calm puzzles, arcade games and tactile fidgets. No 
 | Light Up | 50 levels; illuminate every open cell; lights cannot see one another; numbered walls constrain adjacent lights |
 | Bridges | 50 levels; tap between islands to cycle zero/single/double bridges; match island totals and connect the entire network |
 | Slide | 50 levels; slide adjacent numbered tiles into the empty cell; 3×3 then 4×4; starts generated through legal moves |
+| Binary Grid | 50 levels; balance two tile types with no triples or duplicate rows/columns |
+| Sightline | 50 levels; mark cells open or blocked to satisfy visibility clues |
+| Ants Apart | 12 levels; separate ants with cuts; saved boards and unfinished trails, inline opening guide, pause/resume and best cut counts |
+| Rotate Network | 30 unique-solution levels; rotate and lock tiles to connect a network without loops |
+| Loop | 30 unique-solution levels; draw one loop to satisfy numbered edge clues |
+| Color Code | 30 fixed codes; four colors with shape symbols, eight guesses, duplicate-aware feedback |
+| Picture Grid | 30 unique-solution levels; row/column run clues reveal original abstract patterns |
 
 New Light Up, Bridges and Slide games include independent saves, undo (last 30 moves), reset confirmation, level selection, appearance controls and automatic advancement after completion. These are original generated puzzles; a known solution is checked, but uniqueness of every solution and human difficulty have not been proven. Bridges uses nearest-neighbor rectilinear island grids, so legal bridge segments cannot cross. Future expansions should improve puzzle variety after playtesting.
 
 ## Theme and interface contract
 
-- Plain white outside play areas. Restrained pale-blue dots may appear within boards and home artwork.
+- Use white surfaces in Light mode and navy surfaces in Dark mode. Keep DoPop’s restrained dot pattern visible on home and dotted play fields.
 - Blue is the default accent (#4f78ec); use the shared SNAKE_COLORS palette rather than inventing competing options.
-- Rounded geometry, soft borders, clear dark text and ample spacing. Offer round/square choices where the mechanics permit.
+- Rounded geometry, soft borders, readable text in both themes and ample spacing. Offer round/square choices where the mechanics permit.
 - Home is a compact app-icon grid with readable game labels. Preserve familiar icon placement when adding games.
 - Game pages use a compact back/title/sound header, a generous play area, and bottom level/actions controls. Avoid repeating the site masthead inside games.
 - Respect viewport height and device safe areas. On short landscape screens, scrolling is preferable to overlapping controls.
@@ -40,6 +47,14 @@ New Light Up, Bridges and Slide games include independent saves, undo (last 30 m
 - Word Guess clue colors retain their meanings regardless of accent: green correct, amber misplaced, gray absent. Optional symbols and accessible labels complement color.
 - Animations should be gentle, with reduced-motion support for animated effects. Sound is opt-in. Never require audio to solve a puzzle.
 - Keep help available and explain controls. Every control needs a descriptive accessible label; keep native button keyboard behavior and visible focus.
+
+## Appearance
+
+Home → **Appearance** offers System, Light and Dark. System is the default and follows device changes; an explicit choice stays in this browser. The preference uses `pocketpause.v1.appearance` and is included in Offline & saves backups. Theme selection applies before game rendering and does not reset progress or resume paused play.
+
+Both palettes retain blue accents and the DoPop dots. The dark palette uses navy surfaces, readable neutral text, visible borders and the existing semantic colors. The build converts presentation colors into shared CSS tokens; dynamic inline SVG/HTML colors use the same palette. Canvas paint mapping preserves native gradients and leaves gameplay engines unchanged. Static canvases repaint on theme changes without advancing a round. Word Guess clues retain distinct green, amber and gray states, and color/symbol puzzles retain their color identities. No image or page inversion filter is used.
+
+Validation includes theme preference/OS/storage checks, native canvas paint checks, all 24 dark game pages and home icons, 46 settings/help/level dialogs, active arcade play, clue feedback, 320px phone and landscape layouts, saved overrides and offline reopening. The initial-screen text contrast scan reports no failures. Physical iOS/Android and installed-app status-bar behavior still need device QA.
 
 ## Input and mobile behavior
 
@@ -54,6 +69,7 @@ Progress lives in localStorage on the current browser and origin. Existing keys 
 - Existing games primarily use pocketpause.v1.*; Number Path also uses pocketpause.zip.progress.v1.
 - Word Guess: pocketpause.v1.wordguess.v1, with independent date/level rounds, guesses, unfinished entry, preferences and derived statistics.
 - Light Up/Bridges/Slide: pocketpause.v1.logic.lightUp, pocketpause.v1.logic.bridges, pocketpause.v1.logic.slide.
+- Rotate Network, Loop, Color Code and Picture Grid use `pocketpause.v1.rotateNetwork`, `pocketpause.v1.loop`, `pocketpause.v1.colorCode` and `pocketpause.v1.pictureGrid`, with independent attempts and undo history per level. Ants Apart keeps `pocketpause.v1.antsApartPrototype` and migrates its payload to version 2.
 - New games fit the existing backup allowlist. Offline & saves exports/imports JSON, validates allowed keys and asks before replacing progress.
 - Words retains its existing save key and level number. On first load after the lexicon update, the current attempt and hints are cleared while level and score are kept; the save records content version 2. Word Search keeps its current puzzle number; found words were not persisted.
 - Clearing site data removes saves. Browser storage can be evicted or refused. Exported backups are recommended; installation is not a permanent backup.
@@ -81,9 +97,13 @@ Install: open online, wait for readiness, use Safari Add to Home Screen or Andro
 | games/word-search-themes.json | DoPop’s themed selection from the normalized lexicon |
 | games/word-content-manifest.json | Source release, archive and derived-data hashes, transformation rules and level-generation contract |
 | games/12dicts-NOTICE.txt | Offline attribution for derived word data |
+| games/puzzle-set-* and games/puzzle-set.js | New puzzle rules, interface, fixed levels and provenance manifest |
+| games/ants-apart.* | Ant separation game, board persistence and inline guide |
 | games/calm-trio.* | Color Paths, Untangle, Flood |
 | games/word-guess* | Word Guess mechanics, UI, styling, fixed answers, dictionary and license |
 | games/logic-trio.* | Light Up, Bridges, Slide generators, mechanics and UI |
+| app/theme.js, app/theme-colors.js, app/theme.css | Appearance preference, shared light/dark palette and canvas/inline presentation integration |
+| scripts/patch_theme.py | Build-time CSS tokens and static-board repaint hooks |
 | pwa/client.js | Registration, readiness, update UI, installation and backup controls |
 | pwa/sw.js | Worker template, release cache verification and update coordination |
 | pwa/style.css | Offline management UI |
@@ -100,8 +120,11 @@ Run from a **fresh source checkout**:
 
 Output is dist/. The build patches a disposable source copy; tracked index.html remains unchanged and repeated builds are supported. Never commit generated HTML over the tracked base.
 
-The build runs Word Guess rules first, then assembles games and offline assets, then runs:
+The build checks Word Guess, Binary Grid/Sightline, the new puzzle pack and theme behavior before assembly, then checks the generated games and offline release. Relevant checks include:
 
+    node scripts/test_puzzle_set.cjs
+    node scripts/test_theme.cjs
+    node scripts/test_ants_apart.cjs
     node scripts/test_logic_trio.cjs
     node scripts/test_new_games.cjs
     node scripts/test_calm_trio.cjs
@@ -126,9 +149,21 @@ Rollback by reverting the release commit or using the platform's deployment roll
 
 The Word Guess accepted dictionary comes from https://github.com/tabatkins/wordle-list under MIT. Its full notice is in games/word-guess-LICENSE.txt and embedded in the bundle. Answer selection and puzzle generators are dopop's own content. Do not copy third-party game branding, artwork or proprietary puzzle schedules. This repository does not declare a blanket license for all original application code.
 
-## Remaining roadmap
+## Puzzle expansion and Ants Apart
 
-Previously discussed but not implemented here: Loop, Color Code, Peg Solitaire and Rotate. Prioritize puzzle variety, accessible inputs and physical-device QA before increasing level counts. Accounts, analytics, advertising, purchases and cloud synchronization are outside the current design.
+Rotate Network, Loop, Color Code and Picture Grid are implemented with 30 pinned levels each. The four pages share theme-aware surfaces, blue accents, restrained borders and a compact action row. Progression is explicit through Next level. Each game supports keyboard/touch input, validated per-level attempts, 30 undo steps, confirmed reset, help and offline play. Color Code uses the four existing DoPop colors plus distinct shapes; no sound or animation is required.
+
+`games/puzzle-set-core.js` contains the mechanics and authoring generators. `games/puzzle-set-levels.json` pins level IDs; its SHA-256 and rule references are recorded in `games/puzzle-set-manifest.json`. Network boards are non-wrapping 4×4/5×5 trees; Loop uses 5×5 edge grids; Picture Grid uses 5×5/7×7 original abstract patterns. Solver checks require one solution for every Network, Loop and Picture Grid level. `scripts/test_puzzle_set.cjs` also independently audits graph structure, exhaustively checks small loop/picture fixtures and checks all 65,536 four-symbol code feedback pairs. These checks establish the documented rules and uniqueness, not human difficulty calibration.
+
+Rule references: [Net](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/net.html), [Loopy](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/loopy.html), [Guess](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/guess.html) and [Pattern](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/pattern.html). The new implementations and generated content were written for DoPop; no reference code, boards, artwork or dictionaries were imported. These references do not imply a license or name clearance for the whole application.
+
+Ants Apart retains its existing `pocketpause.v1.antsApartPrototype` key and 12 level identities. Version 2 reads older progress/best scores and adds validated boards per level: completed cuts, ant positions, the unfinished trail, player direction and the movement RNG state. Returning to an unfinished board requires explicit Resume. Boards save approximately once per second while playing, on important cut events, on pause and on page exit; sudden termination may lose the most recent second of movement. Malformed attempts fall back to a fresh board while valid progress is retained. Storage failures are surfaced.
+
+Help, level selection and backgrounding pause Ants Apart. Collisions discard the unfinished cut while preserving completed lines. Completion waits for Next level. Held directions no longer postpone movement, region topology is cached until a cut changes the board, and reduced-motion mode removes player interpolation. The first level has a short inline guide. Ants and the navigator use original canvas geometry on a field that follows the selected theme; short landscape layouts can scroll. Its controller checks cover saves, migration, RNG continuation, collision recovery and pause ownership. Further difficulty tuning needs playtesting.
+
+Verification: the full build passes, including fixed-level uniqueness, save compatibility, backup validation, offline packaging and license gates. Chrome checks covered first and final levels, undo/reset, level selection, native keyboard input, save/reload, Ants Apart trail restoration, successful backup import and rollback after a simulated storage failure. Viewports were 320×568, 390×844, 844×390 and 768×1024; actions remained reachable with no horizontal page overflow. Reduced-motion mode and an actual service-worker offline reload of all 24 games were checked. These are desktop Chrome viewport checks; physical iOS/Android and installed-device QA remain separate.
+
+Prioritize puzzle variety, accessible inputs and physical-device QA before increasing level counts. Accounts, advertising, purchases and cloud synchronization are outside the current design.
 
 ## Compact layout and feedback setup
 
@@ -145,7 +180,7 @@ continue to work offline.
 
 ### Release device checklist
 
-Test all 17 game pages at 320x568, 360x640, 390x844, 412x915, tablet portrait/
+Test all 24 game pages at 320x568, 360x640, 390x844, 412x915, tablet portrait/
 landscape and desktop. Check Safari/iOS and Android Chrome both in browser and
 installed mode. For each game: launch, interact, undo/reset, select a level,
 return home, reopen and reload. Verify first/middle/final levels, invalid picker

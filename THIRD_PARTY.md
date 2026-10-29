@@ -25,3 +25,7 @@ attribution, and 2048 engine notices, plus the existing Q42 notices offline. Rul
 references are labeled separately from imported code and derived data. The
 historical audit and replacement record are in
 [CONTENT_PROVENANCE.md](docs/CONTENT_PROVENANCE.md).
+
+## New puzzle rule references
+
+Rotate Network, Loop, Color Code and Picture Grid reference the documented Net, Loopy, Guess and Pattern rules in the [Portable Puzzle Collection](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/). The new JavaScript, UI, canvas/SVG geometry and procedural level content were written for DoPop. No upstream code or puzzle pack was imported, so these references are not listed as bundled MIT code. Exact manual URLs, generator paths and the pinned level-pack hash are in `games/puzzle-set-manifest.json`. Any future upstream code import requires a pinned revision, a file-level license check and the full applicable offline notice.

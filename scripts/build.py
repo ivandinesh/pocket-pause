@@ -15,11 +15,13 @@ steps=[
  'scripts/patch_logic_trio.py',
  'scripts/patch_mit_duo.py',
  'scripts/patch_ants_apart.py',
+ 'scripts/patch_puzzle_set.py',
  'scripts/patch_ui_polish.py',
  'scripts/patch_game_session.py',
  'scripts/patch_credits.py',
  'scripts/patch_privacy_analytics.py',
  'scripts/patch_faro.py',
+ 'scripts/patch_theme.py',
 ]
 # All patch scripts operate on a disposable copy, never tracked source.
 root=Path(__file__).resolve().parent.parent
@@ -33,6 +35,8 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     os.chdir(stage)
     subprocess.run(['node','scripts/test_word_guess.cjs'],check=True)
     subprocess.run(['node','scripts/test_mit_duo.cjs'],check=True)
+    subprocess.run(['node','scripts/test_puzzle_set.cjs'],check=True)
+    subprocess.run(['node','scripts/test_theme.cjs'],check=True)
     for step in steps:
         subprocess.run(['python3',step],check=True)
     Path('dist').mkdir(exist_ok=True)
@@ -41,7 +45,7 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     
     subprocess.run(['python3','scripts/build_offline.py'],check=True)
     
-    for test in ['scripts/test_game_session.cjs','scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_2048_compat.cjs','scripts/test_calm_trio.cjs','scripts/test_mit_duo.cjs','scripts/test_mit_duo_release.cjs','scripts/test_offline.cjs','scripts/test_renamed_games.cjs','scripts/test_faro.cjs']:
+    for test in ['scripts/test_ants_apart.cjs','scripts/test_game_session.cjs','scripts/test_auto_update.cjs','scripts/test_logic_trio.cjs','scripts/test_new_games.cjs','scripts/test_2048_compat.cjs','scripts/test_calm_trio.cjs','scripts/test_mit_duo.cjs','scripts/test_mit_duo_release.cjs','scripts/test_offline.cjs','scripts/test_renamed_games.cjs','scripts/test_faro.cjs']:
         subprocess.run(['node',test],check=True)
     subprocess.run(['python3','scripts/test_ip_release.py'],check=True)
     subprocess.run(['python3','scripts/test_credits.py'],check=True)
