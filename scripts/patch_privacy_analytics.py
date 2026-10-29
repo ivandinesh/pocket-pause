@@ -12,9 +12,8 @@ css='''<style>
 markup='''
 <dialog id="privacyAnalyticsDialog" aria-labelledby="privacyAnalyticsTitle">
   <h2 id="privacyAnalyticsTitle" tabindex="-1" autofocus>Privacy &amp; analytics</h2>
-  <p>DoPop uses a small amount of anonymous technical telemetry to understand crashes and real-world performance. We do not use ads, marketing profiles, session replay or cross-site tracking.</p>
-  <p>When analytics is enabled, a sampled portion of visits may send browser performance information and unhandled errors to Grafana Cloud. Game progress, saved boards, words you enter and other gameplay content are not sent.</p>
-  <div class="privacy-state"><strong id="privacyAnalyticsState">Analytics enabled</strong><span id="privacyAnalyticsHint">Helps improve reliability</span></div>
+  <p>We collect anonymous error and usage analytics to help improve DoPop.</p>
+  <div class="privacy-state"><strong id="privacyAnalyticsState">Analytics enabled</strong><span id="privacyAnalyticsHint">Helps improve DoPop</span></div>
   <div class="privacy-actions">
     <button type="button" class="soft-button" id="privacyAnalyticsToggle">Disable analytics</button>
     <form method="dialog"><button class="soft-button">Done</button></form>
@@ -35,7 +34,7 @@ script='''<script>
   function render(){
     var off=disabled();
     state.textContent=off?'Analytics disabled':'Analytics enabled';
-    hint.textContent=off?'No Faro telemetry is loaded':'10% sampled technical telemetry';
+    hint.textContent=off?'No analytics are collected':'Helps improve DoPop';
     toggle.textContent=off?'Enable analytics':'Disable analytics';
   }
   function wire(button){
