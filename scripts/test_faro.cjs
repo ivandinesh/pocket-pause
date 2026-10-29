@@ -17,11 +17,13 @@ must('captureConsole: false', 'Console capture must stay disabled');
 must('faro-collector-prod-us-central-0.grafana.net/collect/0bcb5bd4ff070ee3b3f5631842db8da4', 'Faro collector URL missing');
 must('id="privacyAnalyticsDialog"', 'Privacy dialog missing');
 must("button.textContent='Privacy & analytics'", 'Privacy footer button missing');
-must("credits.insertAdjacentElement('afterend',button)", 'Privacy link should sit beside credits when available');
+must("credits.after(document.createTextNode(' · '),button)", 'Privacy link should sit beside credits when available');
+must('new MutationObserver', 'Privacy control must tolerate a footer created after its script runs');
+must("document.addEventListener('DOMContentLoaded',mount,{once:true})", 'Privacy control must retry after DOM ready');
 must("var KEY='dopop.analytics.disabled'", 'Privacy toggle storage key missing');
 must('No Faro telemetry is loaded', 'Privacy disabled-state explanation missing');
 mustNot('FARO_API_KEY', 'FARO_API_KEY must never be exposed in browser output');
 mustNot('TracingInstrumentation', 'Tracing must stay disabled in baseline');
 mustNot('ReplayInstrumentation', 'Session replay must stay disabled in baseline');
 
-console.log('PASS: Faro is production-only, sampled, non-secret, opt-out aware, with tracing/replay/console capture disabled and privacy controls present.');
+console.log('PASS: Faro is production-only, sampled, non-secret, opt-out aware, with delayed footer mounting and privacy controls present.');
