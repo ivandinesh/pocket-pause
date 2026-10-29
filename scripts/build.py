@@ -8,6 +8,7 @@ steps=[
  'scripts/patch_zip_live_drag.py',
  'scripts/patch_zip_touch_canvas.py',
  'scripts/patch_zip_redo.py',
+ 'scripts/patch_maze_ant_spider.py',
  'scripts/patch_dots_2048.py',
  'scripts/patch_calm_trio.py',
  'scripts/patch_word_guess.py',
