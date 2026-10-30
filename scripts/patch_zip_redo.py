@@ -314,7 +314,7 @@ s=s.replace('</script>',extra+'\n</script>',1);p.write_text(s)
 s=p.read_text()
 uniform=r"""<style>
 body:has(.game-page.active) .topbar{display:none}body:has(.game-page.active) #app{min-height:100dvh}
-#app .game-page.active{display:flex;flex-direction:column;height:100dvh;min-height:0;max-width:850px;width:100%;margin:auto;padding:max(12px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom));background:#fff radial-gradient(circle,#dce5f7 1px,transparent 1.4px);background-size:26px 26px;overflow:auto;gap:8px}
+#app .game-page.active{display:flex;flex-direction:column;height:100dvh;min-height:0;max-width:none;width:100%;margin:auto;padding:max(12px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom));background:#fff radial-gradient(circle,#dce5f7 1px,transparent 1.4px);background-size:26px 26px;overflow:auto;gap:8px}
 #app .game-page .game-heading{width:100%;flex-shrink:0;margin:0 0 6px;padding:2px 4px;gap:10px}#app .game-page .back-button{background:#ffffffbb;border:0;box-shadow:none;color:#899aba}#app .game-page .game-heading h1{font-size:clamp(23px,5vw,32px)}
 .game-footer{margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;flex-shrink:0;padding:6px 0}.game-footer .soft-button,.level-launch{min-height:42px;border-radius:999px!important;padding:10px 16px!important;background:#ffffffed;border:1px solid #e1e8f5;font-size:13px;cursor:pointer}.game-footer .level-control{margin:0}.game-footer .center-note{width:100%;margin:2px}
 .level-dialog{border:1px solid #dfe7f8;border-radius:24px;padding:24px;max-width:90vw;color:#26334d}.level-dialog::backdrop{background:#23314d55}.level-dialog form{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.level-dialog input{width:80px;padding:10px;border:1px solid #dfe7f8;border-radius:12px}
@@ -337,7 +337,7 @@ s=s.replace('</script>',ui+'\n</script>',1);p.write_text(s)
 # Consistent touch-safe chrome and centered appearance choices.
 s=p.read_text()
 polish=r'''<style>
-#app .game-page.active{background:#fff!important;background-image:none!important}
+#app .game-page.active{background:transparent!important;background-image:none!important}
 #app .game-page,#app .game-page *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 #app .game-page input,#app .game-page textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 #app .game-heading,#app .game-footer,#app .game-footer>*{background-color:#fff;background-image:none}

@@ -23,7 +23,8 @@ s=s.replace('</head>',head+'<style>'+Path('pwa/style.css').read_text()+'</style>
 s=s.replace('</body>','<script type="module">'+Path('pwa/client.js').read_text()+'</script></body>');p.write_text(s)
 assets=[{'url':'/','sha':hashlib.sha256(p.read_bytes()).hexdigest()}]
 for name in ('manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'):assets.append({'url':'/'+name,'sha':hashlib.sha256((root/name).read_bytes()).hexdigest()})
-template=Path('pwa/sw.js').read_text();release=hashlib.sha256((json.dumps(assets)+template).encode()).hexdigest()[:20]
-(root/'sw.js').write_text(template.replace('__RELEASE__',json.dumps(release)).replace('__ASSETS__',json.dumps(assets)))
+routes=['/games']+['/games/'+g['slug']for g in json.loads(Path('seo/games.json').read_text())]
+template=Path('pwa/sw.js').read_text();release=hashlib.sha256((json.dumps(assets)+template+json.dumps(routes)).encode()).hexdigest()[:20]
+(root/'sw.js').write_text(template.replace('__RELEASE__',json.dumps(release)).replace('__ASSETS__',json.dumps(assets)).replace('__GAME_ROUTES__',json.dumps(routes)))
 (root/'offline-release.json').write_text(json.dumps({'release':release,'assets':assets},indent=2))
 print(f'Offline release {release}: {len(assets)} verified assets, {sum((root/("index.html" if a["url"]=="/" else a["url"][1:])).stat().st_size for a in assets)} bytes')

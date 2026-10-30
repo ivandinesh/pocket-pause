@@ -12,7 +12,7 @@ css='''<style>
 markup='''
 <dialog id="privacyAnalyticsDialog" aria-labelledby="privacyAnalyticsTitle">
   <h2 id="privacyAnalyticsTitle" tabindex="-1" autofocus>Privacy &amp; analytics</h2>
-  <p>We collect anonymous error and usage analytics to help improve DoPop.</p>
+  <p>We collect error, performance and limited usage analytics to help improve DoPop. We count game opens, first gameplay input and visits ending without play. Custom events do not include guesses, answers, board contents or save backups.</p>
   <div class="privacy-state"><strong id="privacyAnalyticsState">Analytics enabled</strong><span id="privacyAnalyticsHint">Helps improve DoPop</span></div>
   <div class="privacy-actions">
     <button type="button" class="soft-button" id="privacyAnalyticsToggle">Disable analytics</button>
@@ -43,7 +43,7 @@ script='''<script>
     button.addEventListener('click',function(){render();dialog.showModal();});
   }
   function mount(){
-    var foot=document.querySelector('.home-foot');
+    var foot=document.getElementById('homeLegal')||document.querySelector('.home-foot');
     if(!foot)return false;
     var button=document.getElementById('privacyAnalyticsButton');
     if(!button||button.parentNode!==foot){
@@ -55,9 +55,8 @@ script='''<script>
       button.textContent='Privacy & analytics';
       var credits=document.getElementById('creditsLicensesButton');
       if(credits&&credits.parentNode===foot){
-        credits.after(document.createTextNode(' · '),button);
+        credits.after(button);
       }else{
-        if(foot.childNodes.length)foot.append(document.createTextNode(' · '));
         foot.append(button);
       }
     }

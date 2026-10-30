@@ -27,7 +27,7 @@ A mobile-first collection of calm puzzles, arcade games and tactile fidgets. No 
 | Slide | 50 levels; slide adjacent numbered tiles into the empty cell; 3×3 then 4×4; starts generated through legal moves |
 | Binary Grid | 50 levels; balance two tile types with no triples or duplicate rows/columns |
 | Sightline | 50 levels; mark cells open or blocked to satisfy visibility clues |
-| Ants Apart | 12 levels; separate ants with cuts; saved boards and unfinished trails, inline opening guide, pause/resume and best cut counts |
+| Ants Apart | 36 levels; separate ants with cuts; saved boards and unfinished trails, inline opening guide, pause/resume and best cut counts |
 | Rotate Network | 30 unique-solution levels; rotate and lock tiles to connect a network without loops |
 | Loop | 30 unique-solution levels; draw one loop to satisfy numbered edge clues |
 | Color Code | 30 fixed codes; four colors with shape symbols, eight guesses, duplicate-aware feedback |
@@ -157,7 +157,7 @@ Rotate Network, Loop, Color Code and Picture Grid are implemented with 30 pinned
 
 Rule references: [Net](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/net.html), [Loopy](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/loopy.html), [Guess](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/guess.html) and [Pattern](https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/pattern.html). The new implementations and generated content were written for DoPop; no reference code, boards, artwork or dictionaries were imported. These references do not imply a license or name clearance for the whole application.
 
-Ants Apart retains its existing `pocketpause.v1.antsApartPrototype` key and 12 level identities. Version 2 reads older progress/best scores and adds validated boards per level: completed cuts, ant positions, the unfinished trail, player direction and the movement RNG state. Returning to an unfinished board requires explicit Resume. Boards save approximately once per second while playing, on important cut events, on pause and on page exit; sudden termination may lose the most recent second of movement. Malformed attempts fall back to a fresh board while valid progress is retained. Storage failures are surfaced.
+Ants Apart retains its existing `pocketpause.v1.antsApartPrototype` key and the original 12 level identities, with 24 additional levels. Version 2 reads older progress/best scores and adds validated boards per level: completed cuts, ant positions, the unfinished trail, player direction and the movement RNG state. Returning to an unfinished board waits for a fresh direction or swipe. Boards save approximately once per second while playing, on important cut events, on pause and on page exit; sudden termination may lose the most recent second of movement. Malformed attempts fall back to a fresh board while valid progress is retained. Storage failures are surfaced.
 
 Help, level selection and backgrounding pause Ants Apart. Collisions discard the unfinished cut while preserving completed lines. Completion waits for Next level. Held directions no longer postpone movement, region topology is cached until a cut changes the board, and reduced-motion mode removes player interpolation. The first level has a short inline guide. Ants and the navigator use original canvas geometry on a field that follows the selected theme; short landscape layouts can scroll. Its controller checks cover saves, migration, RNG continuation, collision recovery and pause ownership. Further difficulty tuning needs playtesting.
 
@@ -206,7 +206,7 @@ coordination, and puzzle progress/controls. Each stage was checked before the ne
 
 - Builds patch a disposable source copy, leaving tracked `index.html` unchanged.
 - `app/game-session.js` pauses Snake, Falling Blocks and Maze Chase when leaving play,
-  opening dialogs or hiding the document. Resume is explicit. Editable controls
+  opening dialogs or hiding the document. Resume requires fresh movement input. Editable controls
   and dialogs do not leak keyboard input into games; Sudoku timing also stops
   while hidden or a dialog is open.
 - `app/level-picker.js` provides validated integer selection, Play/Cancel and
@@ -265,3 +265,60 @@ Words uses a versioned save migration that keeps level and score. The pinned MIT
 2048 engine still has 16,368 compatibility comparisons for moves, scores and
 animation destinations. The `main` history is rewritten to remove prior word
 data; older remote feature-branch refs still need separate review if retained.
+
+## Search visibility and monitoring
+
+The app links to a lightweight `/games` directory and 24 static game guides with rules, controls, tips and direct Play links. Accurate descriptions, production canonicals, social metadata, structured data, `robots.txt` and `sitemap.xml` are generated with the release. Preview builds use `noindex`. An owner must verify Search Console and submit the sitemap after deployment; indexing and ranking are not guaranteed.
+
+The existing Faro implementation adds allowlisted game views, foreground view timing, startup readiness and offline/update/save/backup outcomes. It keeps the production and opt-out gates, 100% sampling and pinned SDK. Custom signals are bounded and exclude game input and save contents; automatic click/frustration capture is disabled. The new events have not been assessed against private dashboard traffic in this checkout.
+
+Run `python3 scripts/check_site.py` after publishing to verify the canonical site, guide URLs, metadata, sitemap and 404 behavior. The full build includes SEO and telemetry regression checks.
+
+### Direct arcade controls
+
+Ants Apart uses a small person outline, with ↑ above ← ↓ → in its touch D-pad. Arrow/WASD keys, direction buttons and swipes start or resume its saved board with that same direction. Snake, Falling Blocks and Maze Chase also accept movement to start/resume; their Play buttons remain optional, where present. No extra Resume button is inserted. Ants Apart and Maze Chase retain a Pause control.
+
+Dialogs, background tabs and leaving a game pause play. Closing a dialog or returning does not resume automatically. A held keyboard arrow cannot resume a paused session until released and pressed again; editable fields keep their arrow keys. Saves, level identities and game engines are unchanged.
+
+Validation: `python3 scripts/build.py` includes controller checks for all Ants Apart Arrow/WASD directions, first-input start/resume, held-key suppression and dialog ownership. Browser checks covered D-pad placement and 44px touch targets, light/dark layouts at 320/390/768px, arcade starts and Maze Chase keyboard/swipe resume.
+
+### Ants Apart level expansion
+
+There are now 36 fixed levels. Levels 1–12 retain their exact starting positions and speeds. Levels 13–36 rotate through an open field and five layouts with partial blue lines attached to the edge. These lines are safe paths; every opening still has one connected region, so none starts already solved.
+
+| Levels | Ants | Ant step interval |
+| --- | --- | --- |
+| 1–12 | 2–5 | Original 293–216 ms |
+| 13–18 | 6 | 213–198 ms |
+| 19–24 | 7 | 208–193 ms |
+| 25–30 | 8 | 203–188 ms |
+| 31–36 | 8 | 188–178 ms |
+
+The player keeps the same 88 ms movement interval. Adding an ant gives a small speed respite before the next ramp. Ants now avoid occupied cells: previously they could stack and appear to disappear, including on older levels. Save keys, version 2 payloads, existing scores and attempts remain supported.
+
+The controller audit checks all 36 openings for unique layouts, expected ant counts, spacing, connectivity and constructive ant-free separation cuts. It also checks 21,600 moving-ant states for bounds, wall avoidance and overlapping ants; every level is saved/reloaded with continued RNG checks. Opening geometry certificates hold ant positions fixed; they do not prove moving-ant timing or a perfect human difficulty curve. Those still benefit from playtesting.
+
+### Ants Apart hearts
+
+Each level attempt has three hearts shown beside the ant count. Only direct contact between an ant and the player costs one heart. If an ant eats an unfinished seed trail away from the player, the line vanishes and the player returns to the exact point where that line started, with no heart lost. Completed lines remain safe, and a fresh direction starts the next cut. At zero hearts, movement stops and the existing Restart control becomes Retry level. Retry resets that board and refills its hearts while retaining best scores and other levels.
+
+Hearts are saved per level in the existing version 2 attempt payload. Older attempts without a heart count start with three; exhausted attempts stay exhausted after reload. Touching a completed blue line remains safe.
+
+Game usage monitoring separates game opens from the first accepted gameplay input, and reports observed visits ending without a start. All 24 game controllers are covered. Counts represent visits, not unique people or completed rounds; foreground duration includes reading and paused time. The existing Faro collector is reused; localhost does not send analytics.
+
+### Desktop and mobile layouts
+
+DoPop now uses a continuous dotted background and responsive game workspaces. At widths of at least 1024px and heights of at least 600px, existing boards and controls are grouped side by side. Compact windows restore the original vertical arrangement. Each game retains one board and one set of controls, with the same input handlers and saves. Home uses three, four or six game columns according to available width and groups its existing utility links together.
+
+Sudoku docks its existing number pad on desktop and restores the mobile popover, including all nine digits. Canvas games repaint when their containers resize. Existing levels, engines, pause rules, hearts, undo and offline behavior are retained. The theme compiler preserves selector whitespace so responsive descendant rules remain valid.
+
+The implementation is in `app/responsive.css`, `app/responsive.js` and `scripts/patch_responsive.py`. The normal `python3 scripts/build.py` remains the release check. Optional Playwright suites exercise all 24 games in eight window sizes and both themes, plus state preservation during reflow:
+
+```sh
+node scripts/test_responsive_browser.cjs
+node scripts/test_responsive_state.cjs
+```
+
+Run a built local preview first. These optional suites need Playwright installed in the development environment. `PLAYWRIGHT_MODULE` can point to an external Playwright installation, `BROWSER_EXECUTABLE` can select Chrome, and `DOPOP_PREVIEW_URL` defaults to `http://localhost:8765/`. The state suite only permits localhost URLs and adds temporary read-only controller probes to its isolated browser response; they are never written into the release. Viewport checks do not replace physical-device or Safari/Firefox QA.
+
+Home Appearance is a labeled icon button beside the points in the top bar. Privacy & analytics and Credits & licenses share one legal row beneath Feedback on compact screens. Footer groups use layout spacing rather than separator text, with install/save actions kept together.

@@ -22,4 +22,19 @@ s=s.replace("cancel.onclick=()=>dialog.close();dialog.append(label,done,cancel)"
 s=s.replace("input.value=launch.textContent.replace('Level ','');", "input.value=dialog.dataset.original;launch.textContent='Level '+input.value;")
 s=s.replace("launch.onclick=()=>dialog.showModal();footer.append(launch)", "launch.onclick=()=>LevelPicker.open({page:pg,current:+input.value,max:+input.max,label:id==='snake'?'Speed':id==='tetris'?'Starting level':'Level',description:'Selecting another level starts a new attempt.',onSelect:n=>{input.value=n;form.requestSubmit();}});footer.append(launch)")
 s=s.replace("$('pacBack').onclick=", "document.addEventListener('dopop-resume',e=>{if(e.detail==='pac'&&lives>0){run=true;draw();}});$('pacBack').onclick=")
+# Direct movement owns start/resume; engine and seeded level data stay unchanged.
+s=s.replace("function startSnake(){snake.reset", "function startSnake(){if(!GameSession.resume('snake'))return;snake.reset")
+s=s.replace("function steerSnake(dir){if(snake.status", "function steerSnake(dir){if(!GameSession.resume('snake'))return;if(snake.status")
+s=s.replace("&&(next.x!==current.x||next.y!==current.y))steerSnake(dir)", ")steerSnake(dir)")
+s=s.replace("function startTetris(){tetris.reset", "function startTetris(){if(!GameSession.resume('tetris'))return;tetris.reset")
+s=s.replace("function tAction(a){if(tetris.status", "function tAction(a){if(!GameSession.resume('tetris'))return;if(tetris.status")
+s=s.replace("'Paused · tap Play'", "'Move or swipe to start'")
+s=s.replace("$('pacPlay').onclick=()=>{if(lives<=0)make();run=!run;draw()}", "$('pacPlay').onclick=()=>{run=false;GameSession.pause('pac');draw()}")
+s=s.replace("card.onclick=()=>{showPage('pac');draw()}", "function steerMaze(d){if(!GameSession.resume('pac'))return;if(lives<=0)make();next=d;run=true;draw()}card.onclick=()=>{showPage('pac');draw()}")
+s=s.replace("e.preventDefault();next=d;", "e.preventDefault();steerMaze(d);")
+s=s.replace("next=Math.abs(x)>Math.abs(y)?[Math.sign(x),0]:[0,Math.sign(y)];", "steerMaze(Math.abs(x)>Math.abs(y)?[Math.sign(x),0]:[0,Math.sign(y)]);")
+s=s.replace("$('pacNote').textContent=", "$('pacPlay').textContent=run?'Pause':'Paused';$('pacPlay').disabled=!run;$('pacNote').textContent=")
+# A ready or finished board accepts gestures through the quiet overlay.
+s=s.replace('</head>', '<style>#snakeOverlay,#tetrisOverlay{pointer-events:none}#snakeOverlay button,#tetrisOverlay button{pointer-events:auto}</style></head>')
+
 p.write_text(s)

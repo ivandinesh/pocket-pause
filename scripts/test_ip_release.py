@@ -30,6 +30,8 @@ assert 'avoid spiders' in s
 # The app stays self-contained; a namespace URI is not an external asset.
 assert not re.search(r'<(?:script|img|audio|video)[^>]*src=["\']https?://',s)
 with tempfile.TemporaryDirectory() as directory:
-    for i,m in enumerate(re.finditer(r'<script\b[^>]*>(.*?)</script>',s,re.S)):
-        p=Path(directory)/f'module-{i}.mjs';p.write_text(m[1]);subprocess.run(['node','--check',str(p)],check=True)
+    for i,m in enumerate(re.finditer(r'<script\b([^>]*)>(.*?)</script>',s,re.S)):
+        if 'application/ld+json' in m[1]:
+            json.loads(m[2]);continue
+        p=Path(directory)/f'module-{i}.mjs';p.write_text(m[2]);subprocess.run(['node','--check',str(p)],check=True)
 print('PASS: display names, MIT notices, unchanged legacy save keys/engines/level data, new isolated save keys, ant/spider Maze Chase art, bundled-script syntax.')

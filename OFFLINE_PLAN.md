@@ -26,3 +26,9 @@ Rotate Network, Loop, Color Code and Picture Grid each bundle 30 fixed levels in
 Automated worker tests use actual generated assets with a simulated offline network: navigation, cache-only requests, all 24 game implementations bundled, failed/mismatched installs, readiness, repair, activation/cache isolation, safe/blocked multi-tab updates and icon/manifest validation. Existing puzzle and 2048 regression suites also run. Chrome checks cover the 24 game pages, 46 dark-mode settings/help/level dialogs, saved appearance choices, device-theme changes, offline reopening, Ants Apart board restoration, successful backup import and rollback after a simulated storage failure. Production deployment readiness must be checked after publishing.
 
 Physical Android and iPhone Home Screen installation, airplane-mode cold launch, OS eviction, and device file-picker backup round trips require device testing; do not claim these are verified by desktop browser tests.
+
+## Search guide integration
+
+The search build adds a directory and 24 lightweight static game guides outside the five-asset verified game bundle. Known guide URLs use network-first navigation; if fetching fails, the worker returns the cached app, which can open the requested game. Unknown paths remain real 404s. Static guide tabs acknowledge safe-update requests, defer while a dialog is open and release temporary locks on cancellation, activation or timeout. They do not register workers or initiate updates themselves.
+
+Faro now receives bounded offline readiness, installation/repair, update and backup outcomes in eligible production sessions. It does not persist an offline telemetry history or record save contents. Events use fixed names and enumerated outcomes; local previews and analytics-disabled sessions are excluded.

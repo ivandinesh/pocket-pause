@@ -8,7 +8,7 @@ styles=re.findall(r'(<style\b[^>]*>)(.*?)(</style>)',s,re.S)
 styles.append(('',Path('pwa/style.css').read_text(),''))
 js=Path('app/theme-colors.js').read_text()+r'''
 const fs=require('fs'),input=JSON.parse(fs.readFileSync(0,'utf8')),palette={};
-const output=input.map(css=>css.replace(/(--[\w-]+|[\w-]+)\s*:\s*([^;{}]+)/g,(all,property,value)=>property+':'+DoPopThemeColors.transform(value,DoPopThemeColors.role(property),(key,value)=>palette[key]=value)));
+const output=input.map(css=>css.replace(/(--[\w-]+|[\w-]+)(\s*):(\s*)([^;{}]+)/g,(all,property,before,after,value)=>property+before+':'+after+DoPopThemeColors.transform(value,DoPopThemeColors.role(property),(key,value)=>palette[key]=value)));
 process.stdout.write(JSON.stringify({output,palette}));
 '''
 compiled=json.loads(subprocess.run(['node','-e',js],input=json.dumps([style[1] for style in styles]),capture_output=True,text=True,check=True).stdout)

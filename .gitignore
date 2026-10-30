@@ -1,0 +1,28 @@
+# Generated site and local deployment state
+/dist/
+/.vercel/
+
+# Local monitoring exports and design-review material
+/monitoring/
+/docs/design/
+/docs/GAME_USAGE_METRICS.md
+/docs/SEO_AND_MONITORING.md
+/docs/RESPONSIVE_LAYOUT_PLAN.md
+
+# Machine-specific workspace instructions
+/AGENTS.md
+
+# Dependencies, caches and browser test output
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+playwright-report/
+test-results/
+.DS_Store
+
+# Local environment settings
+.env
+.env.*
+!.env.example
+!.env.sample

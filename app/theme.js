@@ -32,10 +32,10 @@
     scan(document.body);
     new MutationObserver(records=>{const nodes=new Set();for(const record of records){if(record.type==='attributes')nodes.add(record.target);else record.addedNodes.forEach(n=>{if(n.nodeType===1)nodes.add(n);});}nodes.forEach(scan);}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['style','fill','stroke','stop-color']});
     const home=document.getElementById('homePage');if(!home)return;
-    const button=document.createElement('button');button.id='appearanceButton';button.type='button';button.className='text-button';button.textContent='Appearance';button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls','appearanceDialog');
+    const button=document.createElement('button');button.id='appearanceButton';button.type='button';button.className='icon-button appearance-button';button.setAttribute('aria-label','Appearance');button.title='Appearance';button.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg>';button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls','appearanceDialog');
     const dialog=document.createElement('dialog');dialog.id='appearanceDialog';dialog.className='appearance-dialog';dialog.setAttribute('aria-labelledby','appearanceTitle');dialog.innerHTML='<h2 id="appearanceTitle">Appearance</h2><p data-theme-note></p><div class="appearance-modes" role="group" aria-label="Color theme"></div><form method="dialog"><button>Done</button></form>';
     for(const name of modes){const b=document.createElement('button');b.type='button';b.dataset.themeMode=name;b.textContent=name[0].toUpperCase()+name.slice(1);b.onclick=()=>choose(name);dialog.querySelector('.appearance-modes').append(b);}
-    document.body.append(dialog);(home.querySelector('.home-foot')||home).append(button);
+    document.body.append(dialog);const actions=document.querySelector('.top-actions');if(actions)actions.insertBefore(button,document.getElementById('soundButton'));else home.append(button);
     button.onclick=()=>{renderChoice();dialog.showModal();};dialog.addEventListener('close',()=>button.focus());renderChoice();
   }
   document.addEventListener('DOMContentLoaded',mount,{once:true});

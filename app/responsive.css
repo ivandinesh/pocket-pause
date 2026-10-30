@@ -1,0 +1,140 @@
+/* Shared window composition. Games keep one board and their existing controls. */
+body{background-color:var(--theme-page,#fbfcff);background-image:radial-gradient(circle,var(--theme-dot,#e0e8f7) .8px,transparent 1px);background-size:26px 26px}
+.topbar{max-width:1240px;width:100%;margin-inline:auto;padding-inline:24px}
+#homePage{background:transparent!important;max-width:1184px!important;padding:24px 24px 32px!important}
+#homePage .home-intro{padding:4px 0 20px!important}
+#homePage .home-intro h1{font-size:clamp(34px,3vw,44px)!important;font-weight:650}
+#homePage .home-intro>p:last-child{font-size:15px;color:var(--theme-muted)}
+#homePage .game-grid{gap:22px 20px!important}
+#homePage .mini-art{width:82px!important;height:82px!important;zoom:1;border-radius:22px!important}
+#homePage .card-copy b{font-size:14px!important;font-weight:600}
+#homePage .game-card{min-height:104px!important;gap:8px!important}
+#homePage .home-foot{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 12px;max-width:900px;margin:12px auto 0!important;padding-top:8px}
+#homePage .home-foot #offlineStatus{flex-basis:100%}
+#homePage .game-guide-link{margin:24px auto 0}
+#app .game-page.active{background:transparent!important;max-width:960px;width:100%}
+#app .game-page .game-heading,#app .game-page .game-footer,#app .game-page .game-footer>*{background-color:transparent;background-image:none}
+#app .game-page .game-heading{align-items:center}
+#app .game-page .back-button{box-shadow:none;background:var(--theme-surface,#fff);width:44px;height:44px}
+.ants-actions button,.ants-steer button{min-height:44px}
+/* Keep the mobile board and its direction controls together. */
+#app #antsApartPage:not([data-wide]) .ants-wrap{flex:0 1 auto;margin-top:auto;margin-bottom:12px}
+#app #antsApartPage:not([data-wide]) .ants-steer{margin-top:0}
+#app #antsApartPage:not([data-wide]) .ants-note{margin-bottom:auto}
+@media(max-width:599px){
+ .topbar{padding-inline:16px}
+ #homePage{padding:8px 12px 24px!important}
+ #homePage .home-intro{padding:8px 0 24px!important}
+ #homePage .game-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:20px 8px!important}
+ #homePage .mini-art{width:68px!important;height:68px!important;zoom:1;border-radius:19px!important}
+ #homePage .game-card{min-height:94px!important;gap:8px!important}
+ #homePage .card-copy b{font-size:12px!important}
+ #homePage .home-foot{gap:2px 6px;margin-top:24px!important}
+}
+@media(min-width:600px) and (max-width:1023px){#homePage .game-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+/* JS adds data-wide only when both width and height support this composition. */
+#app .game-page[data-wide].active{
+ --stage-height:min(720px,calc(100dvh - 160px));--stage-width:560px;--board-edge:min(100%,var(--stage-height),var(--stage-width));
+ display:flex!important;flex-direction:column!important;width:100%;max-width:1240px;min-height:100dvh;height:auto!important;
+ padding:24px 32px 28px;overflow:visible;gap:20px;
+}
+#app .game-page[data-wide]>.game-heading{margin:0;padding:0;min-height:52px;max-width:calc(var(--stage-width) + 264px);align-self:center}
+#app .game-page[data-wide] .game-heading h1{font-size:30px;font-weight:550;line-height:1.12}
+.play-layout{display:grid;grid-template-columns:minmax(0,1fr) 232px;align-items:center;gap:32px;flex:1;min-height:0;width:100%;max-width:calc(var(--stage-width) + 264px);margin-inline:auto}
+.play-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-width:0;min-height:0;width:100%}
+.play-tools{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;min-width:0;width:100%;padding:16px 0}
+#app [data-wide] .play-tools>.game-footer,#app [data-wide] .play-tools>.new-footer{margin:0;padding:0;width:100%;gap:16px}
+#app [data-wide] .play-tools :is(.logic-actions,.mit-actions,.ps-actions,.ants-actions,.new-actions,.wg-actions){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin:0}
+#app [data-wide] .play-tools button:not(.color-swatch,.new-swatch,.tetris-color,.snake-color){min-height:44px}
+#app [data-wide] .play-tools :is(.ants-note,.ants-guide,.mit-note,.ps-note,.logic-note,.new-status,.center-note){margin:0;min-height:0;max-width:100%;line-height:1.6;text-align:left;font-size:13px}
+#app [data-wide] .play-tools :is(.ants-meta,.mit-meta,.ps-meta,.logic-meta,.calm-meta,.merge-meta,.wg-meta){width:100%;margin:0;text-align:left;font-size:12px;line-height:1.5}
+#app [data-wide] .play-tools .ants-steer{margin:0 auto}
+#app [data-wide] .play-stage :is(.new-middle,.mit-board-wrap,.ps-board-wrap,.logic-middle,.ants-wrap){display:flex;flex:none;align-items:center;justify-content:center;padding:0;margin:0;min-height:0;width:100%}
+#app [data-wide] .play-stage :is(.mit-board,.ps-board:not(.ps-code),.logic-board,.new-board,.calm-board){width:var(--board-edge)!important;height:auto;max-width:100%;aspect-ratio:1;flex:none}
+#app #sudokuPage[data-wide]{--stage-width:640px}
+#app #sudokuPage[data-wide] #sudokuBoard{width:var(--board-edge)!important;height:auto!important;margin:0;flex:none}
+#app #sudokuPage[data-wide] #sudokuNumbers{position:static!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;max-width:232px;padding:0;margin:0;transform:none!important;box-shadow:none;border:0;background:transparent;z-index:auto}
+#app #sudokuPage[data-wide] #sudokuNumbers:before,#app #sudokuPage[data-wide] #sudokuNumbers:after{display:none}
+#app #sudokuPage[data-wide] #sudokuNumbers button{min-width:0;width:auto;min-height:48px}
+#app #sudokuPage[data-wide] .sudoku-toolbar{justify-content:center;margin:0}
+#app #sudokuPage[data-wide] .sudoku-tools{flex-wrap:wrap;justify-content:center}
+#app [data-wide] .play-stage .ps-code{width:min(100%,400px);max-width:400px}
+#app [data-wide] .play-stage .ps-tools{max-width:400px}
+#app #antsApartPage[data-wide],#app #snakePage[data-wide]{--stage-width:900px}
+#app #antsApartPage[data-wide] .ants-board{width:min(100%,calc(var(--stage-height)*1.5),900px);aspect-ratio:3/2}
+#app #antsApartPage[data-wide] .ants-guide[hidden]{display:none}
+#app #snakePage[data-wide] .canvas-shell{flex:none;width:100%;height:var(--stage-height);min-height:0;max-height:720px;border-radius:22px}
+#app #snakePage[data-wide] .dpad{display:none}
+#app #tetrisPage[data-wide]{--stage-width:min(620px,calc(var(--stage-height)*.5 + 144px))}
+#app #tetrisPage[data-wide] .tetris-layout{flex:none;width:min(100%,calc(var(--stage-height)*.5 + 144px));height:var(--stage-height);grid-template-columns:minmax(0,1fr) 120px;gap:16px}
+#app #tetrisPage[data-wide] .tetris-shell{min-height:0;height:100%}
+#app #pacPage[data-wide]{--stage-width:calc(var(--stage-height)*15/19)}
+#app #pacPage[data-wide] #pacCanvas{flex:none;width:min(100%,calc(var(--stage-height)*15/19))!important;height:auto;aspect-ratio:15/19;max-height:var(--stage-height)!important;min-height:0;margin:0!important}
+#app #wordSearchPage[data-wide]{--stage-width:min(var(--stage-height),680px)}
+#app #wordSearchPage[data-wide] #searchBoard{flex:none;width:min(100%,var(--stage-height),680px);height:auto;aspect-ratio:1;grid-template-rows:repeat(10,minmax(0,1fr));margin:0}
+#app #wordSearchPage[data-wide] .search-cell{font-size:clamp(18px,2vw,27px)}
+#app #wordSearchPage[data-wide] #searchWords{display:flex;flex-wrap:wrap;justify-content:flex-start;overflow:visible;width:100%;gap:8px}
+#app #wordSearchPage[data-wide] .search-actions:empty{display:none}
+#app #zipLinePage[data-wide]{--stage-width:min(680px,calc(var(--stage-height)*.8))}
+#app #zipLinePage[data-wide] #zipStage{flex:none;width:min(100%,calc(var(--stage-height)*.8),680px);height:auto;max-height:none;margin:0}
+#app #zipLinePage[data-wide] .zip-footer{width:100%;margin:0;flex-wrap:wrap}
+#app #fidgetPage[data-wide]{--stage-width:800px}
+#app #fidgetPage[data-wide] .fidget-stage{flex:none;width:100%;height:var(--stage-height);min-height:0;aspect-ratio:auto;max-width:none;max-height:none;margin:0}
+#app #fidgetPage[data-wide] .fidget-toolbar{width:100%;flex-wrap:wrap;justify-content:center}
+#app #wordsPage[data-wide]>.game-heading{max-width:none}
+#app #wordsPage[data-wide] .play-layout{max-width:none;grid-template-columns:minmax(0,1fr) minmax(340px,440px);gap:48px}
+#app #wordsPage[data-wide] .word-targets{--tile:clamp(34px,4vw,52px);width:100%;max-height:none;flex:none;margin:0;gap:16px 12px;padding:0}
+#app #wordsPage[data-wide] .word-wheel-wrap{--wheel:min(360px,40dvh);width:100%;flex:none;min-height:0;margin:0}
+#app #wordsPage[data-wide] .word-selection-row{width:100%;flex:none}
+#app #wordsPage[data-wide] .word-gesture-hint{width:100%;margin:0;text-align:center}
+#app #wordsPage[data-wide] .play-tools{gap:14px}
+#app #wordsPage[data-wide] .play-stage{min-height:var(--stage-height)}
+#app #wordGuessPage[data-wide]{--stage-width:520px}
+#app #colorCodePage[data-wide]{--stage-width:420px}
+#app #pictureGridPage[data-wide],#app #loopPage[data-wide],#app .logic-game[data-wide]{--stage-width:520px}
+#app #rotateNetworkPage[data-wide]{--board-edge:min(100%,calc(var(--stage-height) - 64px),var(--stage-width))}
+#app #wordGuessPage[data-wide] .play-stage{gap:12px}
+#app #wordGuessPage[data-wide] .wg-middle{flex:none;min-height:0;width:100%;padding:0}
+#app #wordGuessPage[data-wide] .wg-board{width:min(300px,31dvh)}
+#app #wordGuessPage[data-wide] .wg-footer{max-width:500px}
+#app #wordGuessPage[data-wide] .wg-key-row button{height:46px}
+#app #wordGuessPage[data-wide] .wg-result{margin:0;max-width:500px}
+#app [data-wide] .play-tools .mit-credit-link{align-self:flex-start;margin:0}
+@media(max-height:500px) and (orientation:landscape){
+ #app .game-page.active{height:auto!important;min-height:100dvh;overflow:visible}
+ #app #snakePage .canvas-shell{flex:none;height:70dvh;min-height:220px}
+ #app #pacPage #pacCanvas{height:auto;width:min(100%,340px)!important;flex:none}
+ #app #antsApartPage .ants-wrap{flex:none;margin-top:12px}
+}
+
+@media(min-width:1024px) and (max-height:800px){
+ #homePage{padding-top:8px!important;padding-bottom:16px!important}
+ #homePage .mini-art{width:68px!important;height:68px!important;border-radius:19px!important}
+ #homePage .game-card{min-height:88px!important}
+ #homePage .game-grid{gap:14px 20px!important}
+ #homePage .home-intro{padding-bottom:16px!important}
+ #homePage .home-foot{margin-top:8px!important}
+}
+
+/* Quiet, predictable footer rows; appearance belongs with the top controls. */
+#homeUtilities{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;margin:20px auto 0;width:100%;color:var(--theme-muted);font-size:12px}
+#homeUtilities .seo-guides{margin:0;min-height:44px;display:flex;align-items:center;justify-content:center}
+#homeUtilities .home-foot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;margin:0!important;padding:0;max-width:100%}
+#homeUtilities #feedbackLink{display:inline-flex;align-items:center;min-height:44px;margin:0;padding:8px}
+#homeLegal{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:8px;width:100%;min-width:0}
+#homeLegal #privacyAnalyticsButton,#homeLegal #creditsLicensesButton{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 8px;margin:0;white-space:nowrap;font-size:12px;font-weight:500}
+#homeUtilities #offlineTools{display:flex;flex-direction:column;align-items:center;padding:0;margin:0;gap:6px}
+#homeUtilities #offlineTools>div{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+#homeUtilities #offlineStatus{order:2;margin:0;text-align:center;font-size:11px;line-height:1.5}
+#homeUtilities #offlineTools button{font-size:12px;min-height:44px}
+@media(min-width:900px){
+ #homeUtilities{display:grid;grid-template-columns:auto auto auto;justify-content:center;column-gap:28px;row-gap:8px}
+ #homeUtilities .seo-guides{grid-column:1;grid-row:1}
+ #homeUtilities .home-foot{grid-column:2;grid-row:1}
+ #homeLegal{grid-column:3;grid-row:1;width:auto}
+ #homeUtilities #offlineTools{grid-column:1/-1;grid-row:2}
+}
+@media(max-width:359px){.top-actions{gap:6px}.topbar{padding-inline:12px}#homeLegal{gap:2px}#homeLegal #privacyAnalyticsButton,#homeLegal #creditsLicensesButton{padding-inline:6px}}
+#app :is(.game-footer,.new-actions,.mit-actions,.logic-actions,.ps-actions,.wg-actions,.zip-footer) button:not(.color-swatch,.new-swatch,.snake-color,.tetris-color){min-height:44px}
+/* Keep the miniature connector inside its icon at compact card sizes. */
+#homePage .zip-art::after{left:28%;top:42%;width:45%;height:35%}

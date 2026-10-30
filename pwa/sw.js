@@ -1,6 +1,7 @@
 /* Build injects immutable release metadata. No progress is stored in these caches. */
 const RELEASE=__RELEASE__;
 const ASSETS=__ASSETS__;
+const GAME_ROUTES=__GAME_ROUTES__;
 const CACHE='dopop-release-'+RELEASE;
 async function verified(response,asset){
  if(!response.ok||response.type==='opaque')throw Error('Download failed: '+asset.url);
@@ -24,6 +25,7 @@ self.addEventListener('activate',e=>e.waitUntil((async()=>{
 self.addEventListener('fetch',e=>{
  const url=new URL(e.request.url);
  if(e.request.method!=='GET'||url.origin!==self.location.origin)return;
+ if(e.request.mode==='navigate'&&GAME_ROUTES.includes(url.pathname.replace(/\/$/,''))){e.respondWith(fetch(e.request).catch(async()=>{const cache=await caches.open(CACHE);return await cache.match('/')||Response.error();}));return;}
  const path=e.request.mode==='navigate'&&(url.pathname==='/'||url.pathname==='/index.html')?'/':url.pathname;
  const asset=ASSETS.find(a=>a.url===path);if(!asset)return;
  e.respondWith((async()=>{
