@@ -27,7 +27,7 @@ s=s.replace('</head>',metadata+'<script type="application/ld+json">'+json.dumps(
 s=re.sub(r'(<div class="home-intro">.*?<h1[^>]*>.*?</h1>\s*<p>).*?(</p>)',r'\g<1>'+str(len(catalogue))+r' free little games. Play online or keep them offline.\2',s,count=1,flags=re.S)
 needle='<p class="home-foot">'
 # The visible crawlable entry is small; the games directory supplies the full link graph.
-footer='<p class="seo-guides"><a href="/games">Game guides &amp; rules</a></p>'
+footer='<p class="seo-guides"><a href="/games">Game guides</a></p>'
 if needle in s:s=s.replace(needle,footer+needle,1)
 else:
     match=re.search(r'<[^>]+class="home-foot"',s);assert match,'Home footer missing';s=s[:match.start()]+footer+s[match.start():]

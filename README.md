@@ -171,6 +171,25 @@ The homepage uses 3 columns on phones, 4 on tablets and 6 on wide desktops.
 Sudoku retains square cells; Light Up uses equal grid tracks. Slide distinguishes
 its blank tile, and Bridges shows connection targets. Dialogs scroll on short screens.
 
+The home footer has three actions: Game guides, Feedback and About DoPop.
+About DoPop contains Appearance, installation, Offline & saves, Privacy & analytics,
+and Credits & licenses. Appearance also remains available through the top icon.
+Only one utility sheet opens at a time; closing it returns to About DoPop and its
+originating control. Installation is hidden in standalone mode. Routine offline
+readiness stays inside About DoPop; offline download/storage problems also appear
+on the home screen.
+
+Scores belong to individual games. Words retains its existing points and hint costs
+inside its game; there is no header balance or shared currency. Other games keep
+their existing scores, levels and best results. Ants Apart retries remain free,
+and Fidget remains unscored. Existing save formats are unchanged.
+
+Optional footer browser QA (after building and starting the local preview):
+
+```sh
+PLAYWRIGHT_MODULE=/path/to/node_modules/playwright BROWSER_EXECUTABLE=/path/to/browser node scripts/test_home_footer_browser.cjs
+```
+
 Feedback uses Google Forms, configured in `feedback-config.json` with the public
 responder URL. The homepage link opens in a new tab. Google Forms and Tally HTTPS
 responder URLs are accepted; other destinations fail the build. Enable Responses →

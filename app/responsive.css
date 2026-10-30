@@ -116,25 +116,24 @@ body{background-color:var(--theme-page,#fbfcff);background-image:radial-gradient
  #homePage .home-foot{margin-top:8px!important}
 }
 
-/* Quiet, predictable footer rows; appearance belongs with the top controls. */
-#homeUtilities{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;margin:20px auto 0;width:100%;color:var(--theme-muted);font-size:12px}
-#homeUtilities .seo-guides{margin:0;min-height:44px;display:flex;align-items:center;justify-content:center}
-#homeUtilities .home-foot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;margin:0!important;padding:0;max-width:100%}
-#homeUtilities #feedbackLink{display:inline-flex;align-items:center;min-height:44px;margin:0;padding:8px}
-#homeLegal{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:8px;width:100%;min-width:0}
-#homeLegal #privacyAnalyticsButton,#homeLegal #creditsLicensesButton{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 8px;margin:0;white-space:nowrap;font-size:12px;font-weight:500}
-#homeUtilities #offlineTools{display:flex;flex-direction:column;align-items:center;padding:0;margin:0;gap:6px}
-#homeUtilities #offlineTools>div{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
-#homeUtilities #offlineStatus{order:2;margin:0;text-align:center;font-size:11px;line-height:1.5}
-#homeUtilities #offlineTools button{font-size:12px;min-height:44px}
-@media(min-width:900px){
- #homeUtilities{display:grid;grid-template-columns:auto auto auto;justify-content:center;column-gap:28px;row-gap:8px}
- #homeUtilities .seo-guides{grid-column:1;grid-row:1}
- #homeUtilities .home-foot{grid-column:2;grid-row:1}
- #homeLegal{grid-column:3;grid-row:1;width:auto}
- #homeUtilities #offlineTools{grid-column:1/-1;grid-row:2}
-}
-@media(max-width:359px){.top-actions{gap:6px}.topbar{padding-inline:12px}#homeLegal{gap:2px}#homeLegal #privacyAnalyticsButton,#homeLegal #creditsLicensesButton{padding-inline:6px}}
+/* Three quiet home actions; secondary utilities live in one sheet. */
+#homePage .home-foot[hidden]{display:none!important}
+#homeUtilities{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0 12px;width:100%;max-width:520px;margin:32px auto 0;padding:12px 0 0;border-top:1px solid var(--theme-line);color:var(--theme-muted);font-size:12px}
+#homeUtilities .seo-guides{display:flex;margin:0;font-size:inherit}
+#homeUtilities :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 6px;border:0;border-radius:8px;background:transparent;color:var(--theme-muted);font:inherit;font-weight:500;text-decoration:none;cursor:pointer}
+#homeUtilities :is(a,button):hover{color:var(--theme-accent)}
+#homeUtilities :is(a,button):focus-visible,.about-dopop button:focus-visible{outline:2px solid var(--theme-accent);outline-offset:3px}
+#homeOfflineWarning{flex-basis:100%;margin:8px 0 0;line-height:1.6;text-align:center}
+.about-dopop{background:var(--theme-surface);color:var(--theme-ink);border-color:var(--theme-line)}
+.about-dopop>p{color:var(--theme-muted);font-size:13px;line-height:1.6}
+.about-options{display:flex;flex-direction:column;gap:0;margin-top:16px}
+.about-options>button,.about-options #homeLegal button,.about-options #offlineTools button{display:flex;align-items:center;text-align:left;justify-content:flex-start;width:100%;min-height:48px;border:0;border-radius:8px;margin:0;padding:10px 8px;background:transparent;color:var(--theme-ink);font:inherit;font-size:14px;font-weight:400}
+.about-options button:hover{background:var(--theme-raised)}
+.about-options #offlineTools{padding:0;margin:0;text-align:left}
+.about-options #offlineTools>div,#homeLegal{display:flex;flex-direction:column;gap:0;width:100%}
+.about-options #offlineStatus{margin:4px 8px 12px;font-size:12px;line-height:1.5;color:var(--theme-muted)}
+.about-dopop>form{display:flex;justify-content:flex-end;margin-top:20px}
+@media(max-width:599px){#homeUtilities{justify-content:center;gap:0 8px;margin-top:28px}}
 #app :is(.game-footer,.new-actions,.mit-actions,.logic-actions,.ps-actions,.wg-actions,.zip-footer) button:not(.color-swatch,.new-swatch,.snake-color,.tetris-color){min-height:44px}
 /* Keep the miniature connector inside its icon at compact card sizes. */
 #homePage .zip-art::after{left:28%;top:42%;width:45%;height:35%}

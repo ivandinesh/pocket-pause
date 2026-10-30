@@ -15,5 +15,9 @@ old="[...pad.querySelectorAll('button')].slice(0,9).forEach((b,n)=>{b.disabled=s
 new="[...pad.querySelectorAll('button')].filter(b=>/^[1-9]$/.test(b.textContent.trim())).forEach(b=>{b.disabled=sudoku.board.flat().filter(v=>v===+b.textContent.trim()).length>=9})"
 assert s.count(old)==1
 s=s.replace(old,new,1)
+# Words keeps its own balance beside its hints; no collection-wide currency.
+s=s.replace('<span id="pointsChip" class="points-chip" hidden><b id="globalPoints">100</b> pts</span>','')
+s=s.replace("$('pointsChip').hidden=name!=='words';",'')
+s=s.replace("$('globalPoints').textContent=wordGame.score;",'')
 s=s.replace('</script>',Path('app/responsive.js').read_text()+'\n</script>',1)
 p.write_text(s)

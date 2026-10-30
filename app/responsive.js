@@ -8,25 +8,43 @@ function syncResponsiveSudokuPad(){
  }
 }
 (()=>{
- // Home utilities arrive from the offline, privacy and credits modules.
+ // Keep a quiet three-action footer; existing utilities retain their handlers.
  const home=document.getElementById('homePage'),utilities=document.createElement('footer'),legal=document.createElement('div');
- utilities.id='homeUtilities';utilities.setAttribute('aria-label','App options');legal.id='homeLegal';legal.setAttribute('role','group');legal.setAttribute('aria-label','Privacy and licenses');utilities.append(legal);home.append(utilities);
+ utilities.id='homeUtilities';utilities.setAttribute('aria-label','DoPop links');
+ const about=document.createElement('dialog');about.id='aboutDopop';about.className='offline-dialog about-dopop';about.setAttribute('aria-labelledby','aboutDopopTitle');
+ about.innerHTML='<h2 id="aboutDopopTitle">About DoPop</h2><p>Little games. Good moments.<br>No ads, accounts or purchases. Progress stays on this device.</p><div class="about-options"><button type="button" id="aboutAppearance">Appearance</button></div><form method="dialog"><button>Done</button></form>';
+ const options=about.querySelector('.about-options');legal.id='homeLegal';legal.setAttribute('role','group');legal.setAttribute('aria-label','Privacy and licenses');options.append(legal);
+ const button=document.createElement('button');button.id='aboutDopopButton';button.type='button';button.textContent='About DoPop';button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls',about.id);button.onclick=()=>about.showModal();
+ const warning=document.createElement('p');warning.id='homeOfflineWarning';warning.setAttribute('role','status');warning.hidden=true;
+ utilities.append(button,warning);home.append(utilities,about);
+ about.addEventListener('close',()=>{if(!document.querySelector('dialog[open]'))button.focus();});
+ // Open one sheet at a time, then return focus to the originating option.
+ function leaveAbout(action,origin){
+  about.close();action();
+  const next=[...document.querySelectorAll('dialog[open]')].at(-1);
+  if(next)next.addEventListener('close',()=>{if(home.classList.contains('active')&&!document.querySelector('dialog[open]')){about.showModal();origin.focus();}},{once:true});
+ }
+ document.getElementById('aboutAppearance').onclick=e=>leaveAbout(()=>document.getElementById('appearanceButton')?.click(),e.currentTarget);
+ const utilityTarget=e=>e.target.closest('button')?.matches('#offlineManage,#offlineInstall,#privacyAnalyticsButton,#creditsLicensesButton')?e.target.closest('button'):null;
+ about.addEventListener('click',e=>{if(utilityTarget(e))about.close();},true);
+ // Bubble runs after the existing target handler has synchronously opened its sheet.
+ about.addEventListener('click',e=>{const target=utilityTarget(e),next=[...document.querySelectorAll('dialog[open]')].at(-1);if(target&&next)next.addEventListener('close',()=>{if(home.classList.contains('active')&&!document.querySelector('dialog[open]')){about.showModal();target.focus();}},{once:true});});
  function organizeHome(){
-  const focused=document.activeElement;
-  for(const selector of ['.seo-guides','.home-foot','#offlineTools']){
-   const node=home.querySelector(selector);if(node&&node.parentNode!==utilities)utilities.append(node);
-  }
-  const ordered=[home.querySelector('.seo-guides'),home.querySelector('.home-foot'),legal,home.querySelector('#offlineTools')].filter(Boolean);
-  let cursor=utilities.firstElementChild;
-  for(const node of ordered){if(node!==cursor)utilities.insertBefore(node,cursor);cursor=node.nextElementSibling;}
+  const focused=document.activeElement,guide=home.querySelector('.seo-guides'),feedback=document.getElementById('feedbackLink'),offline=document.getElementById('offlineTools');
+  if(guide&&guide.parentNode!==utilities)utilities.insertBefore(guide,button);
+  if(feedback&&feedback.parentNode!==utilities){feedback.textContent='Feedback';utilities.insertBefore(feedback,button);}
+  const foot=home.querySelector('.home-foot');if(foot&&!foot.hidden)foot.hidden=true;
+  if(offline&&offline.parentNode!==options)options.insertBefore(offline,legal);
   const privacy=document.getElementById('privacyAnalyticsButton'),credits=document.getElementById('creditsLicensesButton');
   if(privacy&&(privacy.parentNode!==legal||legal.firstElementChild!==privacy))legal.prepend(privacy);
   if(credits&&(credits.parentNode!==legal||legal.lastElementChild!==credits))legal.append(credits);
-  // Old separator text has no role in the new rows; the spacing is structural.
-  const foot=home.querySelector('.home-foot');if(foot)for(const node of [...foot.childNodes])if(node.nodeType===3&&node.textContent.trim()==='·')node.remove();
+  const status=document.getElementById('offlineStatus')?.textContent||'',problem=/not ready|unavailable|interrupted|cannot be saved|Connect once/i.test(status);
+  const message=problem?status:'';if(warning.textContent!==message)warning.textContent=message;warning.hidden=!problem;
+  const install=document.getElementById('offlineInstall');if(install)install.hidden=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true||install.textContent==='App installed';
   if(focused?.isConnected&&focused!==document.body&&document.activeElement!==focused)focused.focus({preventScroll:true});
  }
  new MutationObserver(organizeHome).observe(home,{childList:true,subtree:true});organizeHome();
+ matchMedia('(display-mode: standalone)').addEventListener('change',organizeHome);
  const wide=matchMedia('(min-width: 1024px) and (min-height: 600px)'),layouts=[];
  const boards={words:'.word-targets',sudoku:'#sudokuBoard',snake:'.canvas-shell',tetris:'.tetris-layout',wordSearch:'#searchBoard',zipLine:'#zipStage',fidget:'.fidget-stage',pac:'#pacCanvas',dotConnect:'.new-middle',merge:'.new-middle',flow:'.new-middle',untangle:'.new-middle',flood:'.new-middle',wordGuess:'.wg-middle,.wg-result,.wg-footer',lightUp:'.logic-middle',bridges:'.logic-middle',slide:'.logic-middle',binaryGrid:'.mit-board-wrap',sightline:'.mit-board-wrap',antsApart:'.ants-wrap',rotateNetwork:'.ps-board-wrap',loop:'.ps-board-wrap',colorCode:'.ps-board-wrap',pictureGrid:'.ps-board-wrap'};
  for(const [id,selector] of Object.entries(boards)){
