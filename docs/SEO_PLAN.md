@@ -125,3 +125,35 @@ security headers, create a login requirement for production or interrupt offline
 - [Google JavaScript SEO basics](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)
 - [Google Core Web Vitals guidance](https://developers.google.com/search/docs/appearance/core-web-vitals)
 - [Search Console Core Web Vitals report](https://support.google.com/webmasters/answer/9205520)
+
+## Keyword metadata update — 30 October 2026
+
+This implementation is **metadata only**, following the owner's clarification.
+Visible headings, taglines, game instructions, guide summaries, navigation and
+layouts stay unchanged. Home and directory metadata target free puzzle/browser
+games with no ads and no login. Each of the 24 guides has a unique search title
+and a separate `meta_description` in seo/games.json; descriptions are not reused as
+visible summary text. Open Graph/Twitter previews and WebPage structured metadata
+use the appropriate search copy. Game names and game-entity descriptions retain
+their existing identities and visible summaries.
+
+Target terms are chosen by actual gameplay relevance, not asserted search volume:
+
+| Page group | Relevant search topics |
+| --- | --- |
+| Home/directory | free puzzle games, browser games, no ads, no login, no sign-up |
+| Words / Word Search / Word Guess | word games, letter wheel, word search puzzles, daily five-letter word puzzle |
+| Sudoku / 2048 / Slide | Sudoku game, number puzzles, number merging game, sliding puzzle |
+| Light Up / Bridges / Binary Grid / Sightline / Loop | logic puzzles, number clues, bridges puzzle, binary logic, single-loop puzzle |
+| Number Path / Color Paths / Dot Connect / Flood / Untangle | number connection, path puzzles, matching dots, color flood, untangle logic game |
+| Ants Apart / Rotate Network / Color Code / Picture Grid | ant separation puzzle, tile rotation, codebreaker, nonogram-style picture puzzle |
+| Snake / Falling Blocks / Maze Chase / Fidget | snake game, block puzzle, maze arcade game, fidget spinners and gears |
+
+An existing runtime assignment that replaced the SEO page title with the brand
+only is removed; the configured title now survives app initialization. No
+`meta name="keywords"` list is added: Google explicitly ignores that tag for
+indexing/ranking. Search titles/descriptions express the intended topics naturally;
+they do not guarantee a ranking position or that Google will display the supplied
+snippet verbatim. Visible-content expansion in the earlier plan is deferred.
+
+Reference: [Google-supported metadata](https://developers.google.com/search/docs/crawling-indexing/special-tags).

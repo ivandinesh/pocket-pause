@@ -26,18 +26,25 @@ index=Page(paths['/'].read_text());assert index.title.startswith('DoPop — Free
 assert any(attrs.get('href')=='/games'for tag,attrs in index.links if tag=='a')
 directory=Page(paths['/games'].read_text());targets={a.get('href')for tag,a in directory.links if tag=='a'}
 assert all('/games/'+g['slug']in targets for g in games)
-titles=set()
+titles=set();seen_descriptions=set()
 for path,file in paths.items():
  text=file.read_text();page=Page(text);assert page.title not in titles; titles.add(page.title)
  assert page.h1 if path=='/'else len(page.h1)==1,(path,page.h1)
  canonical=[attrs['href']for tag,attrs in page.links if tag=='link'and attrs.get('rel')=='canonical'];assert canonical==[origin+path],path
  descriptions=[m['content']for m in page.metas if m.get('name')=='description'];assert len(descriptions)==1 and len(descriptions[0])>50,path
+ assert 'no ads'in page.title.lower()and'no login'in page.title.lower(),path
+ assert descriptions[0]not in seen_descriptions,path
+ seen_descriptions.add(descriptions[0])
+ assert 'no ads'in descriptions[0].lower()and('login'in descriptions[0].lower()),path
+ assert not any(m.get('name')=='keywords'for m in page.metas),'Do not add obsolete keyword-list metadata'
  robots=[m['content']for m in page.metas if m.get('name')=='robots'];assert robots==[('noindex,follow'if os.environ.get('VERCEL_ENV')=='preview'else'index,follow')]
  assert any(m.get('property')=='og:image'and m['content']==origin+'/social-card.png'for m in page.metas)
  schemas=[json.loads(content)for attrs,content in page.scripts if attrs.get('type')=='application/ld+json'];assert schemas,path
  assert 'aggregateRating'not in json.dumps(schemas)and'reviewRating'not in json.dumps(schemas)
  if path.startswith('/games/'):
   game=next(g for g in games if path.endswith('/'+g['slug']));assert page.h1==[game['name']]
+  assert descriptions==[game['meta_description']]
+  assert game['summary']in text,'SEO must preserve the original visible game introduction'
   assert any(attrs.get('href')=='/?game='+game['id']for tag,attrs in page.links if tag=='a'),path
   assert 'How to play'in text and 'Controls and progress'in text
   assert file.stat().st_size<30000,(path,'Guide exceeded lightweight HTML budget')
