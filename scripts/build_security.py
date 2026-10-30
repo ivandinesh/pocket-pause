@@ -1,16 +1,20 @@
 """Externalize executable scripts after assembly, retaining exact order and script types."""
 from pathlib import Path
-from html.parser import HTMLParser
-import hashlib,json,re,os
+from html import escape
+from html_scripts import Scripts
+import hashlib,json,os
 root=Path('dist');assets=root/'assets';assets.mkdir(exist_ok=True)
-pattern=re.compile(r'<script\b([^>]*)>(.*?)</script>',re.S|re.I)
-def external(match):
-    attrs,code=match.groups()
-    if re.search(r'\bsrc\s*=',attrs) or re.search(r'type=[\"\']application/ld\+json',attrs):return match[0]
-    digest=hashlib.sha256(code.encode()).hexdigest()
-    (assets/(digest+'.js')).write_text(code)
-    return '<script'+attrs+' src="/assets/'+digest+'.js"></script>'
-for file in root.rglob('*.html'):file.write_text(pattern.sub(external,file.read_text()))
+for file in root.rglob('*.html'):
+    source=file.read_text()
+    for script in reversed(Scripts(source).scripts):
+        attrs=dict(script.attrs)
+        if 'src'in attrs or attrs.get('type','').lower()not in ('','module','text/javascript','application/javascript'):continue
+        digest=hashlib.sha256(script.body.encode()).hexdigest()
+        (assets/(digest+'.js')).write_text(script.body)
+        attributes=''.join(' '+key+(''if value is None else '="'+escape(value,quote=True)+'"')for key,value in script.attrs)
+        replacement='<script'+attributes+' src="/assets/'+digest+'.js"></script>'
+        source=source[:script.start]+replacement+source[script.end:]
+    file.write_text(source)
 # Rebuild the offline contract after transforming the final HTML and scripts.
 previous=json.loads((root/'offline-release.json').read_text())
 paths=[a['url']for a in previous['assets']]+['/'+str(p.relative_to(root))for p in sorted(assets.glob('*.js'))]

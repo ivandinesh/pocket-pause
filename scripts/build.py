@@ -42,6 +42,7 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     subprocess.run(['node','scripts/test_theme.cjs'],check=True)
     subprocess.run(['node','scripts/test_telemetry.cjs'],check=True)
     subprocess.run(['node','scripts/test_save_safety.cjs'],check=True)
+    subprocess.run(['python3','scripts/test_html_scripts.py'],check=True)
     subprocess.run(['node','scripts/test_guide_client.cjs'],check=True)
     for step in steps:
         subprocess.run(['python3',step],check=True)

@@ -144,3 +144,16 @@ controls still require access to those private account settings. No new analytic
 backend, login, cloud-save system or player-facing security controls were added.
 Physical Safari/iOS/Android verification remains separate from desktop Chrome
 viewport testing. GitHub CI has not run on the server until the workflows are published. Check its actual results after publication.
+
+### First published CodeQL results
+
+The first scan of `2101997` reported two high-severity `py/bad-tag-filter`
+alerts: the release compiler and the license/syntax test used regular expressions
+to locate script elements. Their inputs are generated repository HTML; no remote
+player-controlled HTML path was established. Both sites now use a shared HTMLParser
+script locator, and the test-only Python source reader uses the same parser.
+Regression cases cover mixed-case tags, quoted delimiters, comments, style text
+and unfinished script elements. The full build passed; the local offline release
+identity remained `0e2c3cd27a2cac2fd528`, confirming identical packaged player-facing
+bytes after this parsing change. Re-run CodeQL on the follow-up commit before
+activating the main ruleset; scan success alone does not establish zero findings.
