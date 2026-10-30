@@ -157,3 +157,9 @@ and unfinished script elements. The full build passed; the local offline release
 identity remained `0e2c3cd27a2cac2fd528`, confirming identical packaged player-facing
 bytes after this parsing change. Re-run CodeQL on the follow-up commit before
 activating the main ruleset; scan success alone does not establish zero findings.
+
+The browser workflow uses the verified Google Chrome installation on the pinned
+Ubuntu 24.04 runner image with locked Playwright tooling, matching the branded
+Chrome combination tested locally. This avoids reinstalling OS/browser packages
+on every run; the browser version is logged for diagnosis. CodeQL and application
+build checks remain independent jobs.

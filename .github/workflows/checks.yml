@@ -11,7 +11,7 @@ concurrency:
 jobs:
   verify:
     name: release-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -27,11 +27,12 @@ jobs:
           cache-dependency-path: tooling/package-lock.json
       - run: python3 scripts/check_secrets.py
       - run: npm ci --ignore-scripts --prefix tooling
-      - run: npx --prefix tooling playwright install --with-deps chromium
+      - run: google-chrome --version
       - run: python3 scripts/build.py
       - name: Browser checks
         env:
           PLAYWRIGHT_MODULE: ${{ github.workspace }}/tooling/node_modules/playwright
+          BROWSER_EXECUTABLE: /usr/bin/google-chrome
         run: |
           python3 scripts/preview.py > /tmp/dopop-preview.log 2>&1 &
           for attempt in $(seq 1 30); do
