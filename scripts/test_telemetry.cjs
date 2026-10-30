@@ -43,3 +43,10 @@ console.log('PASS: production/opt-out gates, bounded queues and signals, active 
 }
 for(const options of [{host:'localhost'},{off:true},{blocked:true}]){const e=environment(options);e.T.attach({api:e.api});e.T.view('snake');assert.equal(e.T.play('snake'),false);e.T.view('home');assert.equal(e.events.length,0);}
 console.log('PASS: gameplay starts deduplicate per visit, open-only exits, wrong-game/dialog/hidden/opt-out guards, foreground duration buckets, repeated pagehide and bfcache lifecycle.');
+
+{
+ const e=environment();const safe=e.T.filter({type:'exception',payload:{type:'SyntaxError',value:'PRIVATE_SAVE JSON content',context:{backup:'PRIVATE_SAVE'},stacktrace:{frames:[{filename:'https://evil.example/PRIVATE_PATH?token=PRIVATE_SAVE',function:'PRIVATE_SAVE',lineno:42,colno:3,module:'PRIVATE_SAVE'}]}}});
+ assert(!JSON.stringify(safe).includes('PRIVATE_'),'exception text, context, function/module and external paths must not leak');
+ assert.equal(safe.payload.type,'SyntaxError');assert.equal(safe.payload.stacktrace.frames[0].lineno,42);assert.equal(safe.payload.stacktrace.frames[0].filename,'https://evil.example');
+}
+console.log('PASS: exception payload privacy keeps source coordinates without arbitrary message/context or external paths.');

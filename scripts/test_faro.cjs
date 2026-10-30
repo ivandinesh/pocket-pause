@@ -30,3 +30,6 @@ mustNot('TracingInstrumentation', 'Tracing must stay disabled in baseline');
 mustNot('ReplayInstrumentation', 'Session replay must stay disabled in baseline');
 
 console.log('PASS: Faro is production-only, 100% sampled, non-secret, opt-out aware, with delayed footer mounting and privacy controls present.');
+
+must("script.integrity='sha384-bjae8Oy0Fku2zDeCzCQLszzUFKofMfaN2Cz/K/j7zQFoUK/omScLytTOsbtQ+ZW0'", 'Faro SDK requires a verified integrity hash');
+must("script.crossOrigin='anonymous'", 'Cross-origin integrity requires CORS');

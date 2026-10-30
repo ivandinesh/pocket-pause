@@ -7,6 +7,9 @@
   if(pending||attempts>=2||!navigator.onLine||!DOPopTelemetry.allowed())return;pending=true;attempts++;
   var script=document.createElement('script');script.async=true;
   script.src='https://unpkg.com/@grafana/faro-web-sdk@2.13.0/dist/bundle/faro-web-sdk.iife.js';
+  script.integrity='sha384-bjae8Oy0Fku2zDeCzCQLszzUFKofMfaN2Cz/K/j7zQFoUK/omScLytTOsbtQ+ZW0';
+  script.crossOrigin='anonymous';
+  script.referrerPolicy='no-referrer';
   script.onload=function(){try{
    var sdk=window.GrafanaFaroWebSdk;if(!sdk||!sdk.initializeFaro||!sdk.getWebInstrumentations)return;
    var excluded=[sdk.UserActionInstrumentation,sdk.NavigationInstrumentation,sdk.FrustrationInstrumentation].filter(function(type){return typeof type==='function';});

@@ -20,10 +20,19 @@
  // Controllers call this only after accepting gameplay input; never send that input.
  function play(id){if(!allowed()||id!==view||!games.has(id)||!visit||document.hidden||document.querySelector('dialog[open]'))return false;if(!visit.played){visit.played=true;signal('game_start',{game:id});}return true;}
  function select(next){if(!views.has(next)||next===view)return;finish();view=next;foreground=0;started=null;if(allowed()&&sdk)try{sdk.api.setView({name:view});}catch{}if(games.has(view))begin();}
- function cleanURL(value){try{const url=new URL(value,location.origin);return url.origin===location.origin?location.origin+(paths.has(url.pathname.replace(/\/$/,'')||'/')?(url.pathname.replace(/\/$/,'')||'/'):'/'):url.origin+url.pathname;}catch{return location.origin+'/';}}
+ function cleanURL(value){try{const url=new URL(value,location.origin);return url.origin===location.origin?location.origin+(paths.has(url.pathname.replace(/\/$/,'')||'/')?(url.pathname.replace(/\/$/,'')||'/'):'/'):url.origin;}catch{return location.origin+'/';}}
  function filter(item){if(!allowed())return null;
   function scrub(value,depth=0){if(depth>12)return undefined;if(typeof value==='string')return value.replace(/https?:\/\/[^\s"'<>]+/g,url=>cleanURL(url));if(Array.isArray(value))return value.map(v=>scrub(v,depth+1));if(value&&typeof value==='object'){const out={};for(const [key,item]of Object.entries(value))out[key]=scrub(item,depth+1);return out;}return value;}
-  const safe=scrub(item);if(safe.meta?.page)safe.meta.page={url:cleanURL(safe.meta.page.url||location.href)};if(safe.meta?.user)delete safe.meta.user;return safe;
+  const safe=scrub(item);
+  // Browser exception messages can contain rejected JSON, saved values or extension data.
+  // Keep source coordinates for debugging; never forward arbitrary exception text/context.
+  if(safe.type==='exception'){
+   const error=safe.payload||{},types=new Set(['Error','TypeError','RangeError','ReferenceError','SyntaxError','URIError','EvalError','AggregateError','StartupError']);
+   safe.payload={type:types.has(error.type)?error.type:'Error',value:'DoPop application error',timestamp:error.timestamp,
+    stacktrace:{frames:(error.stacktrace?.frames||[]).slice(0,30).map(frame=>({filename:cleanURL(frame.filename||location.origin),function:'app',
+     lineno:Number.isInteger(frame.lineno)?frame.lineno:0,colno:Number.isInteger(frame.colno)?frame.colno:0}))}};
+  }
+  if(safe.meta?.page)safe.meta.page={url:cleanURL(safe.meta.page.url||location.href)};if(safe.meta?.user)delete safe.meta.user;return safe;
  }
 
  function attach(instance){sdk=instance;if(!allowed()){queue=[];return;}try{if(view)sdk.api.setView({name:view});}catch{}const waiting=queue;queue=[];waiting.forEach(deliver);for(const frame of startupErrors.splice(0))try{sdk.api.pushError(new Error('DoPop startup error'),{type:'StartupError',stackFrames:frame?[frame]:[]});}catch{}}
