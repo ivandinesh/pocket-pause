@@ -2,7 +2,8 @@
 from pathlib import Path
 from html.parser import HTMLParser
 import hashlib,json,re
-s=Path('dist/index.html').read_text()
+from release_source import html
+s=html()
 class Notices(HTMLParser):
     def __init__(self):super().__init__();self.inside=False;self.parts=[]
     def handle_starttag(self,tag,attrs):

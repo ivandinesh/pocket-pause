@@ -1,7 +1,21 @@
 {
   "keys": {
     "pattern": "['\"](?:pocketpause\\.(?!(?:v1\\.binaryGrid|v1\\.sightline|v1\\.antsApartPrototype|v1\\.rotateNetwork|v1\\.loop|v1\\.colorCode|v1\\.pictureGrid|v1\\.appearance)['\"])[^'\"\\n]+|(?:tetris|pac|calm\\.v1|zip)\\.[^'\"\\n]+)['\"]",
-    "sha256": "3d79a531ad054261f6a0595120c4bc81f011ae63d4ff5202f83b96b9bd3dad01"
+    "sha256": "3d79a531ad054261f6a0595120c4bc81f011ae63d4ff5202f83b96b9bd3dad01",
+    "values": [
+      "'pac.color'",
+      "'pac.level'",
+      "'pac.progress'",
+      "'pac.shape'",
+      "'pocketpause.v1.'",
+      "'pocketpause.v1.logic.'",
+      "'pocketpause.v1.tetris.startLevel'",
+      "'pocketpause.v1.wordguess.v1'",
+      "'pocketpause.zip.progress.v1'",
+      "'tetris.color'",
+      "'tetris.shape'",
+      "'tetris.startLevel'"
+    ]
   },
   "maze": {
     "pattern": "function make\\(restore=false\\).*?(?=\\nlet visualPlayer)",

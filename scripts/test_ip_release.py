@@ -5,11 +5,16 @@ is a documented, intentional migration from the unverified legacy puzzle data.
 """
 from pathlib import Path
 import hashlib,json,re,subprocess,tempfile
-s=Path('dist/index.html').read_text()
+from release_source import html
+s=html()
 for key,item in json.loads(Path('scripts/ip-compatibility.json').read_text()).items():
     found=re.findall(item['pattern'],s,re.S)
     assert found, key
-    assert hashlib.sha256('\n'.join(found).encode()).hexdigest()==item['sha256'], key+' compatibility changed'
+    if key=='keys':
+        # The backup registry repeats existing keys; preserve key identities, not occurrence counts.
+        assert set(item['values']) <= set(found), 'Legacy save key removed'
+    else:
+        assert hashlib.sha256('\n'.join(found).encode()).hexdigest()==item['sha256'], key+' compatibility changed'
 for name in ('Falling Blocks','Maze Chase','Number Path','Color Paths','Binary Grid','Sightline','Ants Apart'):
     assert name in s, name
 assert not re.search(r'\b(?:Tetris|TETRIS|Pac-Man|PAC-MAN|Pacman|Zip Line|ZIP LINE)\b',s)

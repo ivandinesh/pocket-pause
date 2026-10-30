@@ -18,9 +18,12 @@ for size in (180,192,512):(root/f'icon-{size}.png').write_bytes(png(size))
 manifest={'id':'/','name':'dopop — little games, good moments','short_name':'dopop','description':'Calm little games, ready to play offline.','start_url':'/','scope':'/','display':'standalone','background_color':'#ffffff','theme_color':'#ffffff','lang':'en','icons':[{'src':f'/icon-{n}.png','sizes':f'{n}x{n}','type':'image/png','purpose':'any maskable'}for n in (192,512)]}
 (root/'manifest.webmanifest').write_text(json.dumps(manifest))
 p=root/'index.html';s=p.read_text();assert 'id="offlineTools"' not in s and 'Preparing offline play' not in s
-head='<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="dopop"><meta name="apple-mobile-web-app-status-bar-style" content="default">'
+head='<script>'+Path('pwa/save-safety.js').read_text()+'</script><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="dopop"><meta name="apple-mobile-web-app-status-bar-style" content="default">'
 s=s.replace('</head>',head+'<style>'+Path('pwa/style.css').read_text()+'</style></head>')
-s=s.replace('</body>','<script type="module">'+Path('pwa/client.js').read_text()+'</script></body>');p.write_text(s)
+# Register pure per-game validators in the same lexical scope as their existing cores.
+pos=s.index('<script type="module">');end=s.index('</script>',pos)
+s=s[:end]+Path('pwa/save-validators.js').read_text()+s[end:]
+s=s.replace('</body>','<script type="module">'+'await DoPopSaveSafety.ready;\n'+Path('pwa/client.js').read_text()+'</script></body>');p.write_text(s)
 assets=[{'url':'/','sha':hashlib.sha256(p.read_bytes()).hexdigest()}]
 for name in ('manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'):assets.append({'url':'/'+name,'sha':hashlib.sha256((root/name).read_bytes()).hexdigest()})
 routes=['/games']+['/games/'+g['slug']for g in json.loads(Path('seo/games.json').read_text())]

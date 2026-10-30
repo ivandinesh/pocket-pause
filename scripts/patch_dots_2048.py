@@ -82,6 +82,8 @@ function dopopDotHasMove(board,n){return board.some((v,i)=>(i%n<n-1&&v===board[i
  let dots=read('dots',null);if(!validDots(dots))dots=newDots(1);let dotHistory=read('dotsUndo',null);if(!validDots(dotHistory)||dotHistory.level!==dots.level)dotHistory=null;
  let dotPath=[],dotLoop=false,dotLoopTo=null,dotPointer=null,dotBusy=false,dotEpoch=0,dotWinAt=0;
  const db=$('dotConnectBoard');
+ globalThis.DoPopSaveSafety?.register('pocketpause.v1.new.dots',v=>validDots(v));
+ globalThis.DoPopSaveSafety?.register('pocketpause.v1.new.dotsUndo',v=>v===null||validDots(v));
  function saveDots(){write('dots',dots);write('dotsUndo',dotHistory);}
  function cancelDotDrag(){dotPath=[];dotLoop=false;dotLoopTo=null;dotPointer=null;drawDotLine();}
  function drawDotLine(){const n=dots.n,points=dotPath.map(i=>[(i%n+.5)*100/n,(Math.floor(i/n)+.5)*100/n]);if(dotLoop&&dotLoopTo!==null)points.push([(dotLoopTo%n+.5)*100/n,(Math.floor(dotLoopTo/n)+.5)*100/n]);$('dotLine').setAttribute('points',points.map(p=>p.join(',')).join(' '));$('dotLine').setAttribute('stroke',palette[dots.board[dotPath[0]]]||'transparent');db.querySelectorAll('.connect-dot').forEach(b=>b.classList.toggle('selected',dotPath.includes(+b.dataset.index)));}
@@ -114,6 +116,8 @@ function dopopDotHasMove(board,n){return board.some((v,i)=>(i%n<n-1&&v===board[i
  let merge=read('2048',null);if(!validMerge(merge))merge=freshMerge();let mergeHistory=read('2048undo',null);if(!validMerge(mergeHistory))mergeHistory=null;
  let best=Math.max(0,+read('2048best',0)||0),mergeBusy=false,mergeEpoch=0,mergeQueued=null;let mergeColor=read('2048color','blue'),mergeShape=read('2048shape','round');if(!SNAKE_COLORS[mergeColor])mergeColor='blue';if(!['round','square'].includes(mergeShape))mergeShape='round';
  const mb=$('mergeBoard');
+ globalThis.DoPopSaveSafety?.register('pocketpause.v1.new.2048',v=>validMerge(v));
+ globalThis.DoPopSaveSafety?.register('pocketpause.v1.new.2048undo',v=>v===null||validMerge(v));
  function saveMerge(){best=Math.max(best,merge.score);write('2048',merge);write('2048undo',mergeHistory);write('2048best',best);}
  function tileStyle(b,value){const power=Math.log2(value),pal=SNAKE_COLORS[mergeColor];b.style.background=power>=7?pal.head:`color-mix(in srgb,${pal.body} ${Math.min(75,8+power*9)}%,white)`;b.style.color=power>=6?'#fff':pal.head;b.dataset.long=String(value>=1024);}
  function tileAt(value,index,spawn=false){const b=document.createElement('div');b.className='merge-tile'+(spawn?' spawn':'');b.dataset.cell=index;b.textContent=value;b.style.left=3+(index%4)*24+'%';b.style.top=3+Math.floor(index/4)*24+'%';b.setAttribute('aria-label',`${value}, row ${Math.floor(index/4)+1}, column ${index%4+1}`);tileStyle(b,value);mb.insertBefore(b,$('mergeOverlay'));return b;}

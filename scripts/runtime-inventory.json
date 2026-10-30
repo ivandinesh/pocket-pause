@@ -1,0 +1,18 @@
+{
+  "runtime": [
+    {
+      "name": "@grafana/faro-web-sdk",
+      "version": "2.13.0",
+      "ecosystem": "npm",
+      "url": "https://unpkg.com/@grafana/faro-web-sdk@2.13.0/dist/bundle/faro-web-sdk.iife.js",
+      "integrity": "sha384-bjae8Oy0Fku2zDeCzCQLszzUFKofMfaN2Cz/K/j7zQFoUK/omScLytTOsbtQ+ZW0",
+      "source": "https://github.com/grafana/faro-web-sdk",
+      "coverage": "Top-level package advisory checks; upstream bundled dependency versions are not independently established by this inventory."
+    }
+  ],
+  "vendored": {
+    "source": "games/vendor/2048/README.md",
+    "checksum_gate": "scripts/test_credits.py",
+    "notices": "THIRD_PARTY.md"
+  }
+}

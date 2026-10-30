@@ -38,3 +38,6 @@ s=s.replace("$('pacNote').textContent=", "$('pacPlay').textContent=run?'Pause':'
 s=s.replace('</head>', '<style>#snakeOverlay,#tetrisOverlay{pointer-events:none}#snakeOverlay button,#tetrisOverlay button{pointer-events:auto}</style></head>')
 
 p.write_text(s)
+
+s=Path("index.html").read_text().replace('<script type="module">','<script type="module">await DoPopSaveSafety.ready;\n',1)
+Path("index.html").write_text(s)

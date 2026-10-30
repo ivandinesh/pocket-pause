@@ -20,7 +20,7 @@
  // Controllers call this only after accepting gameplay input; never send that input.
  function play(id){if(!allowed()||id!==view||!games.has(id)||!visit||document.hidden||document.querySelector('dialog[open]'))return false;if(!visit.played){visit.played=true;signal('game_start',{game:id});}return true;}
  function select(next){if(!views.has(next)||next===view)return;finish();view=next;foreground=0;started=null;if(allowed()&&sdk)try{sdk.api.setView({name:view});}catch{}if(games.has(view))begin();}
- function cleanURL(value){try{const url=new URL(value,location.origin);return url.origin===location.origin?location.origin+(paths.has(url.pathname.replace(/\/$/,'')||'/')?(url.pathname.replace(/\/$/,'')||'/'):'/'):url.origin;}catch{return location.origin+'/';}}
+ function cleanURL(value){try{const url=new URL(value,location.origin);return url.origin===location.origin?location.origin+((paths.has(url.pathname.replace(/\/$/,'')||'/')||/^\/assets\/[a-f0-9]{64}\.js$/.test(url.pathname))?(url.pathname.replace(/\/$/,'')||'/'):'/'):url.origin;}catch{return location.origin+'/';}}
  function filter(item){if(!allowed())return null;
   function scrub(value,depth=0){if(depth>12)return undefined;if(typeof value==='string')return value.replace(/https?:\/\/[^\s"'<>]+/g,url=>cleanURL(url));if(Array.isArray(value))return value.map(v=>scrub(v,depth+1));if(value&&typeof value==='object'){const out={};for(const [key,item]of Object.entries(value))out[key]=scrub(item,depth+1);return out;}return value;}
   const safe=scrub(item);

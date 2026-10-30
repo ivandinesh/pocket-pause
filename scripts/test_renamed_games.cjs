@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const html=fs.readFileSync('dist/index.html','utf8');
+const html=require('./release_source.cjs').html();
 const zctx={localStorage:{getItem:()=>null},$:()=>({}),clearTimeout(){}};vm.createContext(zctx);
 const start=html.indexOf("const zipSaveKey="),end=html.indexOf('\nfunction zipSave',start);
 vm.runInContext(html.slice(start,end)+`;this.level=n=>{zipLevel=n;makeZip();return {path:zipSolution,walls:zipWalls,anchors:zipAnchorsByCell,cols:zipCols,rows:zipRows}}`,zctx);

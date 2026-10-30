@@ -1,5 +1,5 @@
 const fs = require('fs');
-const html = fs.readFileSync('dist/index.html', 'utf8');
+const html = require('./release_source.cjs').html();
 
 function must(text, message) {
   if (!html.includes(text)) throw new Error(message);

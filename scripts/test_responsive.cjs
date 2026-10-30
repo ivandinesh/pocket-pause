@@ -1,6 +1,6 @@
 // Release integration gates for the responsive layer and its theme compilation.
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
-const html=fs.readFileSync('dist/index.html','utf8'),source=fs.readFileSync('app/responsive.js','utf8');
+const html=require('./release_source.cjs').html(),source=fs.readFileSync('app/responsive.js','utf8');
 const css=html.match(/<style id="responsiveStyles">([\s\S]*?)<\/style>/)?.[1];assert(css,'responsive presentation is bundled offline');
 // Descendant whitespace before :is() is significant: removing it silently
 // collapses nested boards even though the CSS and JS remain syntactically valid.

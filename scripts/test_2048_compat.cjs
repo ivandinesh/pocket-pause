@@ -1,7 +1,7 @@
 // Golden behavior captured from main 81ecb11 before the licensed-engine replacement.
 // Compare outputs rather than retaining the unverified legacy implementation.
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),crypto=require('node:crypto');
-const html=fs.readFileSync('dist/index.html','utf8');
+const html=require('./release_source.cjs').html();
 const src=html.slice(html.indexOf('function dopopMerge('),html.indexOf('function dopopDotConfig('));
 const context={};vm.createContext(context);vm.runInContext(src,context);
 const hash=crypto.createHash('sha256');let count=0;

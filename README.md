@@ -79,11 +79,11 @@ Word Guess answer IDs and the answer manifest must stay fixed. Its Daily uses th
 
 ## Offline architecture
 
-All games, styles and dictionaries are bundled into dist/index.html. No runtime dictionary download is needed. scripts/build_offline.py creates icons, the web manifest, the release descriptor and a versioned service worker. Release assets are checked with SHA-256 before installation succeeds. The complete release is cached together; failed downloads do not replace a usable older release.
+All games, styles and dictionaries are packaged locally in dist/index.html and content-addressed scripts under dist/assets/. No remote dictionary download is needed. scripts/build_security.py externalizes executable scripts after assembly, preserving execution order, and regenerates the final offline hashes. scripts/build_offline.py creates icons, the web manifest, the release descriptor and a versioned service worker. Release assets are checked with SHA-256 before installation succeeds. The complete release is cached together; failed downloads do not replace a usable older release.
 
 The client displays Ready for offline play only after a worker cache check. Updates install in the background; the Update ready action requires open clients to be safely at home before activation. Keep this protocol intact to avoid interrupting active play. The worker also supports cache checking/repair.
 
-Install: open online, wait for readiness, use Safari Add to Home Screen or Android Install app, and open the installed app online once before disconnecting. HTTPS is required (a normal HTTP preview cannot verify service-worker installation). New releases regenerate hashes automatically, including CSS-only changes.
+Install: open online, wait for readiness, use Safari Add to Home Screen or Android Install app, and open the installed app online once before disconnecting. HTTPS is required, with the browser’s localhost exception available for development previews. New releases regenerate hashes automatically, including CSS-only changes.
 
 ## Source map
 
@@ -341,3 +341,79 @@ node scripts/test_responsive_state.cjs
 Run a built local preview first. These optional suites need Playwright installed in the development environment. `PLAYWRIGHT_MODULE` can point to an external Playwright installation, `BROWSER_EXECUTABLE` can select Chrome, and `DOPOP_PREVIEW_URL` defaults to `http://localhost:8765/`. The state suite only permits localhost URLs and adds temporary read-only controller probes to its isolated browser response; they are never written into the release. Viewport checks do not replace physical-device or Safari/Firefox QA.
 
 Home Appearance is a labeled icon button beside the points in the top bar. Privacy & analytics and Credits & licenses share one legal row beneath Feedback on compact screens. Footer groups use layout spacing rather than separator text, with install/save actions kept together.
+
+
+## Security checks and release controls
+
+Backups are validated against supported game/preference keys and bounded schemas.
+Existing pure puzzle validators also check restored attempts and undo state.
+A failed initial snapshot never deletes progress. Failed writes report successful
+rollback or incomplete recovery accurately. Other current app tabs hold shared
+Web Locks leases, so restoring requires closing them; the worker also checks for
+other clients, including older tabs. On browsers without Web Locks, the worker
+check provides a fallback, with weaker protection against a tab opening during
+that check. A browser-restored page reloads if a backup changed while it was away.
+No game save format, scoring rule or theme setting is migrated by this hardening.
+
+Executable scripts are same-origin assets. CSP blocks inline JavaScript, inline
+event attributes and eval; existing inline styles remain supported for themes.
+The optional Faro SDK retains its pinned URL and SRI check. Its asset identity is
+recorded in scripts/runtime-inventory.json. OSV checks cover that exact package and
+the locked browser tooling; this does not establish every transitive component
+inside the upstream CDN bundle.
+
+```sh
+python3 scripts/build.py
+python3 scripts/check_secrets.py
+python3 scripts/check_dependencies.py
+npm ci --ignore-scripts --prefix tooling
+npx --prefix tooling playwright install chromium
+python3 scripts/preview.py
+```
+
+With the preview running in another terminal:
+
+```sh
+PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_home_footer_browser.cjs
+PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_responsive_state.cjs
+PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_security_browser.cjs
+PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_responsive_browser.cjs
+```
+
+Use an absolute PLAYWRIGHT_MODULE path (for example, the workspace path followed
+by /tooling/node_modules/playwright); relative require paths resolve from scripts/.
+BROWSER_EXECUTABLE optionally selects an installed browser. Security browser
+checks intercept telemetry locally; they send no events to Grafana. The dedicated
+security suite applies production headers while regular layout tests use the
+local preview. Test-only source readers inspect packaged JS without changing the
+served release or weakening CSP.
+
+The new GitHub workflows run release/browser checks and CodeQL with SHA-pinned
+actions and minimal permissions. After these workflows are published and pass on
+remote main, review `.github/main-ruleset.json` and run:
+
+```sh
+python3 scripts/configure_repository_security.py
+python3 scripts/configure_repository_security.py --apply
+```
+
+The script refuses activation until both real GitHub Actions checks pass on the
+current remote main commit. It binds checks to the reporting app and rechecks the
+head before enabling PR/check requirements, high-severity CodeQL merge protection,
+and force-push/deletion protection. No extra reviewer is required for the current
+solo-maintainer setup. Do not enable this before publishing the workflows.
+
+After an authorized deployment, verify the actual artifact and headers:
+
+```sh
+python3 scripts/check_deployment.py --commit FULL_DEPLOYED_COMMIT_SHA
+```
+
+For rollback, select a previously verified Vercel deployment. Keep the canonical
+origin and save keys. Open clients complete their safe-update handshake before
+using a replacement worker; existing offline clients can continue using a cached
+release until they reconnect. Verify the rolled-back deployment with its commit
+and keep exported progress backups before any data-format migration.
+
+See docs/SECURITY_REVIEW.md for evidence, account-setting changes and remaining
+Vercel/Grafana/DNS checks. Monitoring exports and local design files remain ignored.

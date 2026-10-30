@@ -4,7 +4,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),fs=require
 (async()=>{
  const browser=await chromium.launch({...(process.env.BROWSER_EXECUTABLE?{executablePath:process.env.BROWSER_EXECUTABLE}:{}),headless:true});
  const context=await browser.newContext({serviceWorkers:'block',viewport:{width:1440,height:900}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
- let html=fs.readFileSync(path.join(__dirname,'../dist/index.html'),'utf8');
+ let html=require('./release_source.cjs').html();
  const marker=' reset();restoreAttempt();resize();stop();';assert.equal(html.split(marker).length,2);
  html=html.replace(marker,' globalThis.__layoutAnt={snapshot,running:()=>running};'+marker);
  const end=html.indexOf('</script>',html.indexOf('<script type="module">'));assert(end>0);
@@ -31,6 +31,6 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),fs=require
  for(const [w,h]of [[390,844],[1440,900]]){await resize(w,h);assert.equal(await falling(),t,'Falling Blocks piece and board survive paused reflow');}
  await page.keyboard.press('ArrowRight');assert.notEqual(await falling(),t,'Falling Blocks arrow resumes and moves without resetting');await back('tetris');
  await open('zipLine');const anchor=page.locator('.zip-cell.anchor').filter({hasText:/^1$/}),r=await anchor.boundingBox();await page.mouse.move(r.x+r.width/2,r.y+r.height/2);await page.mouse.down();const zip=await page.evaluate(()=>__layoutTest.zip());await resize(390,844);await page.mouse.up();assert.equal(await page.evaluate(()=>__layoutTest.zip()),zip,'resize cancels the gesture without erasing the Number Path');await back('zipLine');
- for(const id of ['privacyAnalyticsButton','appearanceButton','creditsLicensesButton','offlineManage']){assert.equal(await page.locator('#'+id).count(),1);await page.locator('#'+id).click();assert.equal(await page.locator('dialog[open]').count(),1,id+' remains reachable');await page.keyboard.press('Escape');}
+ await page.locator('#aboutDopopButton').click();for(const id of ['privacyAnalyticsButton','aboutAppearance','creditsLicensesButton','offlineManage']){assert.equal(await page.locator('#'+id).count(),1);await page.locator('#'+id).click();assert.equal(await page.locator('dialog[open]').count(),1,id+' remains reachable');await page.keyboard.press('Escape');await page.locator('#aboutDopop[open]').waitFor();}
  assert.deepEqual(errors,[]);console.log('PASS: live/paused board state, Sudoku dock/undock including digit 9, Ants trails/hearts/RNG/dialog ownership, Snake/Falling Blocks continuation, Number Path gesture cancellation and all home utilities.');await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});

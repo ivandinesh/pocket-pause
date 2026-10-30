@@ -1,6 +1,6 @@
 // Run after python3 scripts/build.py. Tests the rules emitted in the actual build.
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const html=fs.readFileSync('dist/index.html','utf8');
+const html=require('./release_source.cjs').html();
 const core=html.slice(html.indexOf('function dopopMerge('),html.indexOf('(()=>{',html.indexOf('function dopopMerge(')));
 const generator=html.slice(html.indexOf(' function random(state)'),html.indexOf(' let dots=read(',html.indexOf(' function random(state)')));
 const spawn=html.slice(html.indexOf(' function spawnMerge(state)'),html.indexOf(' let merge=read(',html.indexOf(' function spawnMerge(state)')));

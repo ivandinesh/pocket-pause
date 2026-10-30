@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const html=fs.readFileSync('dist/index.html','utf8');
+const html=require('./release_source.cjs').html();
 const declaration=html.match(/const CALM_FLOW_LEVELS=(.*);\n/)[1];
 const levels=JSON.parse(declaration),pure=fs.readFileSync('games/calm-trio.js','utf8').split('(()=>{')[0];
 const ctx={};vm.createContext(ctx);vm.runInContext(pure,ctx);

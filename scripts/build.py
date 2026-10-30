@@ -41,6 +41,7 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     subprocess.run(['node','scripts/test_puzzle_set.cjs'],check=True)
     subprocess.run(['node','scripts/test_theme.cjs'],check=True)
     subprocess.run(['node','scripts/test_telemetry.cjs'],check=True)
+    subprocess.run(['node','scripts/test_save_safety.cjs'],check=True)
     subprocess.run(['node','scripts/test_guide_client.cjs'],check=True)
     for step in steps:
         subprocess.run(['python3',step],check=True)
@@ -56,6 +57,8 @@ with tempfile.TemporaryDirectory(prefix='dopop-build-') as temp:
     subprocess.run(['python3','scripts/test_ip_release.py'],check=True)
     subprocess.run(['python3','scripts/test_credits.py'],check=True)
     subprocess.run(['python3','scripts/test_seo.py'],check=True)
+    subprocess.run(['python3','scripts/build_security.py'],check=True)
+    subprocess.run(['python3','scripts/test_security_release.py'],check=True)
     output=root/'dist'
     if output.exists(): shutil.rmtree(output)
     shutil.copytree(stage/'dist',output)
