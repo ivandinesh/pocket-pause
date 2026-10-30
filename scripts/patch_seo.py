@@ -3,8 +3,13 @@ from pathlib import Path
 from html import escape
 import json,re,os
 p=Path('index.html');s=p.read_text();catalogue=json.loads(Path('seo/games.json').read_text())
-title='DoPop — Free Puzzle & Browser Games, Online & Offline'
-description=f'Play {len(catalogue)} free word, logic and arcade games in your browser. No ads, accounts or purchases. Install DoPop for offline play and keep your progress on this device.'
+title='DoPop — Free Puzzle Games, No Ads, No Login'
+description=f'Play {len(catalogue)} free puzzle and browser games: Sudoku, word search, 2048 and more. No ads or login. Open once online to prepare offline play.'
+# Preserve the search title after the existing home initialization runs.
+# No visible heading, tagline or game copy changes.
+old_title="document.title='dopop — little games, good moments';"
+assert s.count(old_title)==1
+s=s.replace(old_title,'',1)
 s=re.sub(r'<title>.*?</title>','<title>'+escape(title)+'</title>',s,count=1,flags=re.S)
 s=re.sub(r'<meta name="description"[^>]*>','<meta name="description" content="'+escape(description,quote=True)+'">',s,count=1)
 metadata='''<link rel="canonical" href="https://www.dopop.fun/">
