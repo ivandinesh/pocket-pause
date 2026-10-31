@@ -17,6 +17,9 @@ markup='''
 <h3>Imported code: 2048 movement engine</h3>
 <p>Based on <a href="https://github.com/gabrielecirulli/2048/tree/478b6ec346e3787f589e4af751378d06ded4cbbc" target="_blank" rel="noopener noreferrer">2048 by Gabriele Cirulli</a>, under the MIT License. DoPop supplies the interface, saved-game format and deterministic tile spawning.</p>
 <details><summary>2048 — MIT notice</summary><pre>'''+escape(Path('licenses/2048-MIT.txt').read_text())+'''</pre></details>
+<h3>Adapted code: Hidden Rays beam tracing</h3>
+<p>The beam tracing rule order is adapted from Black Box in Simon Tatham's Portable Puzzle Collection, revision 616da16f25da428ccda805536209095bd062676e. The new game interfaces, generators and level packs are DoPop-authored. Other new puzzles reference the collection's documented rules.</p>
+<details><summary>Portable Puzzle Collection — MIT notice</summary><pre>'''+escape(Path('licenses/portable-puzzles-MIT.txt').read_text())+'''</pre></details>
 <h3>Puzzle-rule acknowledgments</h3>
 <p>Binary Grid draws on the rules popularized by 0hh1; Sightline draws on 0hn0, both from Q42. These are rule references, separate from imported code attribution. DoPop provides its own generators and interface. The existing upstream notices are retained below.</p>
 <p><a href="https://github.com/florisluiten/0hh1" target="_blank" rel="noopener noreferrer">0hh1 source reference</a> · <a href="https://github.com/Techdojo/0hn0" target="_blank" rel="noopener noreferrer">0hn0 source reference</a></p>

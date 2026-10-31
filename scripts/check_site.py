@@ -21,7 +21,7 @@ try:urls=[e.text for e in ET.fromstring(sitemap).iter('{http://www.sitemaps.org/
 except ET.ParseError:urls=[];errors.append('Invalid sitemap XML')
 games=json.loads((Path(__file__).resolve().parent.parent/'seo/games.json').read_text())
 expected=['/','/games']+['/games/'+g['slug']for g in games]
-if set(urls)!={'https://www.dopop.fun'+p for p in expected}:errors.append('Sitemap URLs differ from the 24-game catalogue')
+if set(urls)!={'https://www.dopop.fun'+p for p in expected}:errors.append('Sitemap URLs differ from the shipped game catalogue')
 for path in expected:
  body=html if path=='/'else read(path)
  if 'rel="canonical" href="https://www.dopop.fun'+path+'"'not in body:errors.append(path+': canonical URL missing')
@@ -33,4 +33,4 @@ except urllib.error.HTTPError as error:
 except Exception as error:errors.append('Unknown-route check: '+str(error))
 if errors:
  print('\n'.join('FAIL '+error for error in errors));sys.exit(1)
-print('PASS: production root, directory, 24 guides, canonical metadata, robots/sitemap and real 404 behavior.')
+print('PASS: production root, directory, 40 guides, canonical metadata, robots/sitemap and real 404 behavior.')

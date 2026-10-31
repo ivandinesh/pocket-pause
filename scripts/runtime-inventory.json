@@ -14,5 +14,17 @@
     "source": "games/vendor/2048/README.md",
     "checksum_gate": "scripts/test_credits.py",
     "notices": "THIRD_PARTY.md"
-  }
+  },
+  "local_adaptations": [
+    {
+      "component": "Hidden Rays beam tracing",
+      "source": "https://git.tartarus.org/simon/puzzles.git",
+      "revision": "616da16f25da428ccda805536209095bd062676e",
+      "file": "blackbox.c:fire_laser_internal",
+      "license": "MIT",
+      "notice": "licenses/portable-puzzles-MIT.txt",
+      "notice_sha256": "eb18a1d915cb923b2da9fb1e79bcdf677b17ebfaada9ce5d5252e384266029c6",
+      "integration": "games/quiet-core.js:ray; no upstream runtime package, frontend or puzzle pack bundled"
+    }
+  ]
 }

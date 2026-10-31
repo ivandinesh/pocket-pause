@@ -20,8 +20,8 @@ class Page(HTMLParser):
    if tag=='script':self.scripts.append((attrs,text))
    self.current=None
 paths={'/':root/'index.html','/games':root/'games.html',**{'/games/'+g['slug']:root/'games'/(g['slug']+'.html')for g in games}}
-assert len(games)==24 and len({g['id']for g in games})==24 and len({g['slug']for g in games})==24
-assert len({g['summary']for g in games})==24
+assert len(games)==40 and len({g['id']for g in games})==40 and len({g['slug']for g in games})==40
+assert len({g['summary']for g in games})==40
 index=Page(paths['/'].read_text());assert index.title.startswith('DoPop — Free')
 assert any(attrs.get('href')=='/games'for tag,attrs in index.links if tag=='a')
 directory=Page(paths['/games'].read_text());targets={a.get('href')for tag,a in directory.links if tag=='a'}
@@ -58,4 +58,4 @@ assert 'Disallow: /'not in(root/'robots.txt').read_text()
 png=(root/'social-card.png').read_bytes();assert png.startswith(b'\x89PNG');assert struct.unpack('!2I',png[16:24])==(1200,630)
 for name in ('guide.css','guide-client.js','theme.js','theme-colors.js'):assert(root/name).is_file()
 assert 'cleanUrls'in json.loads(Path('vercel.json').read_text())
-print('PASS: 26 indexable routes, unique metadata, raw-HTML guide links/content, valid JSON-LD, no invented ratings, sitemap/robots, lightweight pages and social card.')
+print('PASS: 42 indexable routes, unique metadata, raw-HTML guide links/content, valid JSON-LD, no invented ratings, sitemap/robots, lightweight pages and social card.')

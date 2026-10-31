@@ -23,10 +23,10 @@ def page(title,description,path,content,schema):
     return head+'<body><header>'+brand+'<a href="/">Play all games</a></header><main id="homePage">'+content+'</main><footer class="guide-footer"><p class="home-foot"><a href="/">Play all games</a><a href="/games">Game guides</a><a href="/?privacy=1">Privacy &amp; analytics</a></p><p>No ads, accounts or purchases. Saves stay on this device.</p></footer></body></html>'
 items=[{'@type':'ListItem','position':i+1,'name':g['name'],'url':origin+'/games/'+g['slug']}for i,g in enumerate(catalogue)]
 links=''.join('<li><a href="/games/'+g['slug']+'">'+escape(g['name'])+'</a><p>'+escape(g['summary'])+'</p></li>'for g in catalogue)
-directory='<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li>Game guides</li></ol></nav><section class="directory"><p class="eyebrow">24 little games</p><h1>Free browser games, with room to pause.</h1><p>Choose a word, logic, number, color or arcade game. Read its rules, then open the game in DoPop. Touch controls work on phones; keyboard controls are available where described.</p><ul class="game-list">'+links+'</ul><h2>Play online, then keep DoPop offline</h2><p>Open the games while connected and wait for Ready for offline play. You can then install DoPop or reopen it without a connection. Progress stays in this browser; Offline &amp; saves can export a backup.</p></section>'
+directory='<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li>Game guides</li></ol></nav><section class="directory"><p class="eyebrow">'+str(len(catalogue))+' little games</p><h1>Free browser games, with room to pause.</h1><p>Choose a word, logic, number, color or arcade game. Read its rules, then open the game in DoPop. Touch controls work on phones; keyboard controls are available where described.</p><ul class="game-list">'+links+'</ul><h2>Play online, then keep DoPop offline</h2><p>Open the games while connected and wait for Ready for offline play. You can then install DoPop or reopen it without a connection. Progress stays in this browser; Offline &amp; saves can export a backup.</p></section>'
 schema={'@context':'https://schema.org','@type':'CollectionPage','name':'DoPop game guides','url':origin+'/games','mainEntity':{'@type':'ItemList','itemListElement':items}}
 (root/'games').mkdir(exist_ok=True)
-(root/'games.html').write_text(page('Free Puzzle & Browser Games — No Ads, No Login | DoPop','Explore 24 free games with no ads or login: word games, logic puzzles, Sudoku, 2048 and arcade games. Read the rules, then play online or prepare offline play.','/games',directory,schema))
+(root/'games.html').write_text(page('Free Puzzle & Browser Games — No Ads, No Login | DoPop','Explore '+str(len(catalogue))+' free games with no ads or login: word games, logic puzzles, Sudoku, 2048 and arcade games. Read the rules, then play online or prepare offline play.','/games',directory,schema))
 for game in catalogue:
     name=escape(game['name']);path='/games/'+game['slug'];play='/?game='+quote(game['id'])
     related=[g for g in catalogue if g['category']==game['category'] and g['id']!=game['id']][:3]
@@ -49,4 +49,4 @@ for y in range(h):
 def chunk(t,d):return struct.pack('!I',len(d))+t+d+struct.pack('!I',zlib.crc32(t+d)&0xffffffff)
 png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('!2I5B',w,h,8,6,0,0,0))+chunk(b'IDAT',zlib.compress(b''.join(rows),9))+chunk(b'IEND',b'')
 (root/'social-card.png').write_bytes(png)
-print('SEO: 24 static game guides, directory, canonical metadata, sitemap, robots and original social card.')
+print('SEO: '+str(len(catalogue))+' static game guides, directory, canonical metadata, sitemap, robots and original social card.')

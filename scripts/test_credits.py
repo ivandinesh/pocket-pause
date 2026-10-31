@@ -19,8 +19,10 @@ assert s.count('id="creditsDialog"')==1
 assert "button.textContent='Credits & licenses'" in s
 assert 'aria-labelledby="creditsTitle"' in s and '<form method="dialog">' in s
 assert "dialog.addEventListener('close',()=>button.focus())" in s
-# No unconfirmed attribution is presented as an included component.
-assert 'Tatham' not in notice
+# The new beam adaptation is identified separately from rule-only references.
+assert 'Adapted code: Hidden Rays beam tracing' in notice
+assert Path('licenses/portable-puzzles-MIT.txt').read_text() in notice
+assert hashlib.sha256(Path('licenses/portable-puzzles-MIT.txt').read_bytes()).hexdigest()=='eb18a1d915cb923b2da9fb1e79bcdf677b17ebfaada9ce5d5252e384266029c6'
 assert 'Rule references for new puzzles' in notice
 assert 'No reference code, puzzle packs or artwork are bundled for these four games.' in notice
 assert 'Derived word data: Words and Word Search' in notice

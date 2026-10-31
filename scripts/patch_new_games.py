@@ -125,6 +125,14 @@ if any(word not in lexicon_set for group in search_sets for word in group):
 if len(search_sets)!=8 or any(not group or len(group)>8 or len(group)!=len(set(group)) for group in search_sets):
     raise SystemExit('Word Search theme data has an invalid shape')
 s=s.replace('const SEARCH_WORD_SETS=[];', 'const SEARCH_WORD_SETS='+json.dumps(search_sets,separators=(',',':'))+';', 1)
-s=s.replace('rng=mulberry32(3907+searchPuzzle*97)', 'rng=wordRng(3907+searchPuzzle*97)', 1)
+start=s.index('function makeSearch(){')
+end=s.index('\nfunction renderSearch()',start)
+policy=json.loads(Path('games/word-safety-policy.json').read_text())
+core='const SEARCH_BLOCKED_SEQUENCES='+json.dumps(policy['grid_sequences'])+';\n'+Path('games/word-search-core.js').read_text()
+s=s[:start]+core+'''\nfunction makeSearch(){
+ const theme=searchPuzzle%SEARCH_WORD_SETS.length;
+ const puzzle=makeSafeSearch(SEARCH_WORD_SETS[theme],searchPuzzle,theme);
+ searchGrid=puzzle.grid;searchPlaced=puzzle.placed;searchFoundSet=new Set();
+}'''+s[end:]
 p.write_text(s)
 print('Added Word Search, Number Path and Fidget games')
