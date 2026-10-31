@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const KEY='pocketpause.v1.wordguess.v1', C=WGCore;
-  const defaultSave=()=>({version:1,mode:'daily',level:1,date:C.localDate(),rounds:{},prefs:{hard:false,color:'blue',shape:'round',symbols:false,sound:false}});
+  const defaultSave=()=>({version:1,vocabularyVersion:1,mode:'daily',level:1,date:C.localDate(),rounds:{},prefs:{hard:false,color:'blue',shape:'round',symbols:false,sound:false}});
   let storageProblem=false,recovered=false;
   function read(){
     const clean=defaultSave();
@@ -14,12 +14,15 @@
       if(Number.isFinite(C.dayNumber(saved.date)))clean.date=saved.date;
       for(const [id,round] of Object.entries(saved.rounds)){
         const i=C.answerIndex(id);
-        if(i>=0&&C.validRound(round,WG_ANSWERS[i],WG_DICTIONARY))clean.rounds[id]=round;
+        // A changed answer restarts once; other levels and daily rounds keep their identities.
+        const revised=saved.vocabularyVersion===1||!WG_UPDATED_ANSWER_INDICES.has(i);
+        if(i>=0&&revised&&C.validRound(round,WG_ANSWERS[i],WG_DICTIONARY))clean.rounds[id]=round;
         else recovered=true;
       }
       const p=saved.prefs||{};
       clean.prefs={hard:p.hard===true,color:Object.hasOwn(SNAKE_COLORS,p.color)?p.color:'blue',shape:p.shape==='square'?'square':'round',symbols:p.symbols===true,sound:p.sound===true};
     }catch{recovered=true;}
+    clean.vocabularyVersion=1;
     return clean;
   }
   let data=read(),note='',audio=null,animationTimer=null;

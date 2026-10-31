@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "authoring": "DoPop-authored deterministic generators and packs. Puzzle rules referenced separately; beam tracing adaptation credited in licenses/portable-puzzles-MIT.txt.",
+  "levels": {
+    "memoryPairs": {
+      "count": 30,
+      "sha256": "682a9a282bc1f72b5eb0c90ebc6069045dbfcfac9442bf2cba15657276d31c8d"
+    },
+    "flipLights": {
+      "count": 30,
+      "sha256": "f9ec8194cc633174a9b19964a6631a7a733c7f557aa9e54d97b679758e829068"
+    },
+    "pegSolitaire": {
+      "count": 30,
+      "sha256": "3152497c98636b837e13a582d5ce5c891955516c91b19d65d9a78f4388c5a5e9"
+    },
+    "dominoPairs": {
+      "count": 30,
+      "sha256": "651e7da8a947f18f29d78ef4980dcb6d4dc6f685cae567515b19069019176213"
+    },
+    "rectangles": {
+      "count": 30,
+      "sha256": "5c0da5e2f4d18ea5aa52ba2539f31f96ad66ec1f64d4f4dd60616adcc3f57463"
+    },
+    "tents": {
+      "count": 30,
+      "sha256": "6866625ca37e177d200ab03600eb2f822d440990f6bb224002aae2e977360c9a"
+    },
+    "slant": {
+      "count": 30,
+      "sha256": "9e0bdcaf239e1869c5b18a556dec8b5fdd9c64859e2ddcc915f0bda6437a0b55"
+    },
+    "dotSweep": {
+      "count": 30,
+      "sha256": "68d73a458f402c1d4af7bb9d3b17e47f988d1d362d36c02f8cd38d6c24faa174"
+    },
+    "greaterGrid": {
+      "count": 30,
+      "sha256": "7362571b3ffa15480890029c57c9eada21f5ea106023ff68f01c91b48fdd75d8"
+    },
+    "skyline": {
+      "count": 30,
+      "sha256": "d54428ed34855b659bc8058dd5ed64dab8d38c85de5111dc423edab0dc25e472"
+    },
+    "symmetryIslands": {
+      "count": 30,
+      "sha256": "65987f123e4bad7c49f2b9429d1f32f9be8d5322b9ba255dd6e08aaefaa7bed2"
+    },
+    "magnets": {
+      "count": 30,
+      "sha256": "4b1dbb304efe5ab8554ca3030446b39c5aec68987fb4af0c78e243af0b63c99c"
+    },
+    "fourRegions": {
+      "count": 30,
+      "sha256": "9245ce7aba2e3ccc01f867cd68ca691c05ae4e1d3fdf155a6f0ade52409bbb17"
+    },
+    "cageSums": {
+      "count": 30,
+      "sha256": "79f0808a50764e5da8b5691fb949c9f3b8ab17347ccf9b7f15659cdd29f57290"
+    },
+    "tracks": {
+      "count": 30,
+      "sha256": "86d4ce2b178525d99a5a9acecf601a4e0cad627f3970287c7b816e9b8b4047bc"
+    },
+    "hiddenRays": {
+      "count": 30,
+      "sha256": "aad609613b380c81b272306bd487c3dcc1270ed86a75602b26ba4e59299abbc0"
+    }
+  }
+}

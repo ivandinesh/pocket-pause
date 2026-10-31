@@ -1,7 +1,7 @@
 # dopop offline release plan
 
 ## Decision
-Use an installable PWA with an explicitly verified, cache-first app shell. All 24 games, levels, styles and synthesized sounds are already packaged as a local HTML shell and content-addressed scripts; no game needs a server. A custom small service worker is sufficient here; adding a runtime caching framework or native wrapper would add dependencies without improving this static bundle.
+Use an installable PWA with an explicitly verified, cache-first app shell. All 40 games, levels, styles and synthesized sounds are packaged as a local HTML shell and content-addressed scripts, JSON packs and stylesheets; no game needs a server. A custom small service worker is sufficient here; adding a runtime caching framework or native wrapper would add dependencies without improving this static bundle.
 
 References: https://web.dev/articles/service-worker-lifecycle, https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Caching, https://webkit.org/blog/14403/updates-to-storage-policy/.
 
@@ -23,13 +23,13 @@ Back up only dopop save keys, never other localStorage data. Export as versioned
 Rotate Network, Loop, Color Code and Picture Grid each bundle 30 fixed levels in the same verified offline release. Their independent saves and undo history fit the existing backup allowlist. System/Light/Dark appearance uses `pocketpause.v1.appearance`, follows the device by default and is included in backups. Theme scripts, CSS tokens and canvas presentation support are bundled offline. The browser theme color follows the selected palette through a single meta tag.
 
 ## Verification
-Automated worker tests use actual generated assets with a simulated offline network: navigation, cache-only requests, all 24 game implementations bundled, failed/mismatched installs, readiness, repair, activation/cache isolation, safe/blocked multi-tab updates and icon/manifest validation. Existing puzzle and 2048 regression suites also run. Chrome checks cover the 24 game pages, 46 dark-mode settings/help/level dialogs, saved appearance choices, device-theme changes, offline reopening, Ants Apart board restoration, successful backup import and rollback after a simulated storage failure. Production deployment readiness must be checked after publishing.
+Automated worker tests use actual generated assets with a simulated offline network: navigation, cache-only requests, all 40 game implementations and deferred packs cached, failed/mismatched installs, readiness, repair, activation/cache isolation, safe/blocked multi-tab updates and icon/manifest validation. Existing puzzle and 2048 regression suites also run. Chrome checks cover the 40 game pages, 46 dark-mode settings/help/level dialogs, saved appearance choices, device-theme changes, offline reopening, Ants Apart board restoration, successful backup import and rollback after a simulated storage failure. Production deployment readiness must be checked after publishing.
 
 Physical Android and iPhone Home Screen installation, airplane-mode cold launch, OS eviction, and device file-picker backup round trips require device testing; do not claim these are verified by desktop browser tests.
 
 ## Search guide integration
 
-The search build adds a directory and 24 lightweight static game guides outside the verified game-shell cache. Known guide URLs use network-first navigation; if fetching fails, the worker returns the cached app, which can open the requested game. Unknown paths remain real 404s. Static guide tabs acknowledge safe-update requests, defer while a dialog is open and release temporary locks on cancellation, activation or timeout. They do not register workers or initiate updates themselves.
+The search build adds a directory and 40 lightweight static game guides outside the verified game-shell cache. Known guide URLs use network-first navigation; if fetching fails, the worker returns the cached app, which can open the requested game. Unknown paths remain real 404s. Static guide tabs acknowledge safe-update requests, defer while a dialog is open and release temporary locks on cancellation, activation or timeout. They do not register workers or initiate updates themselves.
 
 Faro now receives bounded offline readiness, installation/repair, update and backup outcomes in eligible production sessions. It does not persist an offline telemetry history or record save contents. Events use fixed names and enumerated outcomes; local previews and analytics-disabled sessions are excluded.
 
@@ -52,3 +52,5 @@ clients too. Browsers without Web Locks retain a worker-check fallback with a
 smaller race guarantee. A local restore-generation marker prevents a page revived
 from the back/forward cache from writing state loaded before a restore. This
 marker stays on-device and is excluded from progress backups and telemetry.
+
+New-game backup imports prepare their semantic validators and level data on demand before the existing strict validation/restore flow. See [the expansion notes](docs/SIXTEEN_GAMES_IMPLEMENTATION.md). No new engine or pack is needed to paint a fresh home page.

@@ -32,6 +32,22 @@ A mobile-first collection of calm puzzles, arcade games and tactile fidgets. No 
 | Loop | 30 unique-solution levels; draw one loop to satisfy numbered edge clues |
 | Color Code | 30 fixed codes; four colors with shape symbols, eight guesses, duplicate-aware feedback |
 | Picture Grid | 30 unique-solution levels; row/column run clues reveal original abstract patterns |
+| Memory Pairs | 30 fixed levels/layouts; Tap two cards. Find every matching shape. |
+| Flip Lights | 30 fixed levels/layouts; Tap a dot to toggle it and its neighbors. Clear every filled dot. |
+| Peg Solitaire | 30 fixed levels/layouts; Select a dot, then jump over a neighbor into an empty ring. |
+| Domino Pairs | 30 fixed levels/layouts; Choose two neighboring cells to place a domino. Use each pair once. |
+| Rectangles | 30 fixed levels/layouts; Draw a rectangle containing one clue and exactly that many squares. |
+| Tents | 30 fixed levels/layouts; Place tents beside trees. Match the counts; keep tents apart. |
+| Slant | 30 fixed levels/layouts; Choose a diagonal in every square. Meet the vertex counts without a loop. |
+| Dot Sweep | 30 fixed levels/layouts; Reveal safe squares. Numbers count nearby hidden dots. |
+| Greater Grid | 30 fixed levels/layouts; Fill each row and column once. Follow the greater-than clues. |
+| Skyline | 30 fixed levels/layouts; Place each height once per row and column. Match the views from every side. |
+| Symmetry Islands | 30 fixed levels/layouts; Choose a numbered center, then assign squares to its symmetric island. |
+| Magnets | 30 fixed levels/layouts; Turn each domino into a magnet or a neutral pair. Match the pole counts. |
+| Four Regions | 30 fixed levels/layouts; Choose a symbol, then color regions. Neighbors sharing an edge must differ. |
+| Cage Sums | 30 fixed levels/layouts; Fill each row and column once. Meet every outlined cage’s arithmetic clue. |
+| Tracks | 30 fixed levels/layouts; Connect A to B. The counts say how many squares your route visits. |
+| Hidden Rays | 30 fixed levels/layouts; Probe the edges. Infer the hidden dots, then check your arrangement. |
 
 New Light Up, Bridges and Slide games include independent saves, undo (last 30 moves), reset confirmation, level selection, appearance controls and automatic advancement after completion. These are original generated puzzles; a known solution is checked, but uniqueness of every solution and human difficulty have not been proven. Bridges uses nearest-neighbor rectilinear island grids, so legal bridge segments cannot cross. Future expansions should improve puzzle variety after playtesting.
 
@@ -75,7 +91,7 @@ Progress lives in localStorage on the current browser and origin. Existing keys 
 - Clearing site data removes saves. Browser storage can be evicted or refused. Exported backups are recommended; installation is not a permanent backup.
 - No accounts or cloud sync. Saves are not shared across devices. Arcade resume behavior follows each game's implementation.
 
-Word Guess answer IDs and the answer manifest must stay fixed. Its Daily uses the device's local date and a deterministic 1,000-day permutation; it is not the NYT schedule. Older unfinished daily rounds remain saved when choosing Today. Hard mode locks after the first submitted guess. Completed rounds are not counted twice. The bundled accepted-guess list is broader than the curated answer list.
+Word Guess answer IDs must stay fixed. Reviewed vocabulary replacements are recorded by slot in the word-content manifest; affected older rounds restart once, while other rounds and preferences remain saved. Its Daily uses the device's local date and a deterministic 1,000-day permutation; it is not the NYT schedule. Older unfinished daily rounds remain saved when choosing Today. Hard mode locks after the first submitted guess. Completed rounds are not counted twice. The bundled accepted-guess list is broader than the curated answer list. Words targets, bonus words and Word Guess guesses use the same editorial exclusions; Word Search also screens accidental severe terms in every direction. See [word content review](docs/WORD_CONTENT_REVIEW.md) for coverage and save compatibility.
 
 ## Offline architecture
 
@@ -263,7 +279,7 @@ or that any name has trademark clearance.
 See [the risk and license inventory](docs/IP_REVIEW.md) for source evidence and
 remaining provenance/trademark questions. Falling Blocks, Maze Chase, Number Path
 and Color Paths are descriptive display names; legacy internal IDs and save keys
-remain unchanged. Generated levels and Word Guess answer IDs are unchanged.
+remain unchanged. Word Guess answer IDs remain fixed; reviewed word-content replacements are documented separately.
 Maze Chase now uses a diamond navigator, ring drones and ring beacons, with its
 existing seeded maze generator. No external character art or audio was added.
 
@@ -323,7 +339,7 @@ Each level attempt has three hearts shown beside the ant count. Only direct cont
 
 Hearts are saved per level in the existing version 2 attempt payload. Older attempts without a heart count start with three; exhausted attempts stay exhausted after reload. Touching a completed blue line remains safe.
 
-Game usage monitoring separates game opens from the first accepted gameplay input, and reports observed visits ending without a start. All 24 game controllers are covered. Counts represent visits, not unique people or completed rounds; foreground duration includes reading and paused time. The existing Faro collector is reused; localhost does not send analytics.
+Game usage monitoring separates game opens from the first accepted gameplay input, and reports observed visits ending without a start. All 40 game controllers are covered. Counts represent visits, not unique people or completed rounds; foreground duration includes reading and paused time. The existing Faro collector is reused; localhost does not send analytics.
 
 ### Desktop and mobile layouts
 
@@ -331,7 +347,7 @@ DoPop now uses a continuous dotted background and responsive game workspaces. At
 
 Sudoku docks its existing number pad on desktop and restores the mobile popover, including all nine digits. Canvas games repaint when their containers resize. Existing levels, engines, pause rules, hearts, undo and offline behavior are retained. The theme compiler preserves selector whitespace so responsive descendant rules remain valid.
 
-The implementation is in `app/responsive.css`, `app/responsive.js` and `scripts/patch_responsive.py`. The normal `python3 scripts/build.py` remains the release check. Optional Playwright suites exercise all 24 games in eight window sizes and both themes, plus state preservation during reflow:
+The implementation is in `app/responsive.css`, `app/responsive.js` and `scripts/patch_responsive.py`. The normal `python3 scripts/build.py` remains the release check. Optional Playwright suites exercise all 40 games in eight window sizes and both themes, plus state preservation during reflow:
 
 ```sh
 node scripts/test_responsive_browser.cjs
@@ -376,6 +392,8 @@ With the preview running in another terminal:
 ```sh
 PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_home_footer_browser.cjs
 PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_responsive_state.cjs
+PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_quiet_browser.cjs
+PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_quiet_offline_browser.cjs
 PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_security_browser.cjs
 PLAYWRIGHT_MODULE="$PWD/tooling/node_modules/playwright" node scripts/test_responsive_browser.cjs
 ```
@@ -417,3 +435,7 @@ and keep exported progress backups before any data-format migration.
 
 See docs/SECURITY_REVIEW.md for evidence, account-setting changes and remaining
 Vercel/Grafana/DNS checks. Monitoring exports and local design files remain ignored.
+
+## Sixteen deferred puzzle additions
+
+The catalogue now contains 40 games. The [implementation and validation notes](docs/SIXTEEN_GAMES_IMPLEMENTATION.md) explain the 480 new levels, independent saves, deferred engines, optional free hints, bounded undo, source notices and preview checks. New engines and packs load only when opened and remain covered by the verified complete offline cache. Preview review comes before commit/push.

@@ -1,10 +1,10 @@
 # Word Guess release
 
-New, isolated game: five-letter words, six tries, local-date Daily and 1,000 selectable levels. Fixed answer manifest is immutable: never reorder existing IDs in future updates. Broader accepted-guess dictionary is bundled locally. All answers are curated from everyday vocabulary before the later challenge section; familiarity and repeated-letter complexity increase broadly, not strictly for each individual word.
+New, isolated game: five-letter words, six tries, local-date Daily and 1,000 selectable levels. Never reorder existing IDs. Reviewed vocabulary replacements are allowed in the same slots, with migration of affected rounds recorded in games/word-content-manifest.json. Broader accepted-guess dictionary is bundled locally and filtered by the shared editorial exclusions. All answers are curated from everyday vocabulary before the later challenge section; familiarity and repeated-letter complexity increase broadly, not strictly for each individual word.
 
 Daily v1 uses a fixed permutation of the answer manifest, repeating after 1,000 days. The device's local calendar date determines the puzzle. An unfinished older daily stays open; Today switches without deleting that round. Date/clock manipulation is not prevented offline.
 
-Save key: pocketpause.v1.wordguess.v1. Each level/date stores guesses, unfinished input and hard-mode setting. Statistics are derived from rounds to prevent double-counting. Level changes preserve attempts. Hard mode is locked after first submission. No reset of scored daily rounds. Existing export/import prefix includes this save unchanged.
+Save key: pocketpause.v1.wordguess.v1. Each level/date stores guesses, unfinished input and hard-mode setting. Statistics are derived from rounds to prevent double-counting. Level changes preserve attempts. Hard mode is locked after first submission. The 2026-10-31 vocabulary review restarts rounds for 14 changed answer slots once and ignores rounds containing removed guesses, so their results no longer contribute to statistics. Other rounds, current level and preferences remain saved. The vocabularyVersion marker prevents repeated resets. Export/import keeps the same save namespace.
 
 Dictionary source: https://github.com/tabatkins/wordle-list (words).
 MIT license retained in games/word-guess-LICENSE.txt and embedded in the browser bundle.

@@ -22,3 +22,7 @@ Separate versioned localStorage records for each board, score, level, random see
 
 ## Verification
 Build and syntax validation; rule tests in scripts/test_new_games.cjs; browser checks for entry, interaction, undo, level selection, reload and responsive layout. Desktop Chrome phone-size preview is not a substitute for physical iPhone Safari testing.
+
+## Further game additions
+
+The [new-games research and implementation plan](docs/NEW_GAMES_RESEARCH_AND_PLAN.md) reviews the full 40-game reference collection against DoPop's original catalogue and proposes 16 additions, including 10 prioritized games. It records source/license evidence, mobile controls, solver and hint requirements, performance/offline constraints, save integration and staged release gates. All 16 were subsequently implemented with 30 levels each; see the [implementation and validation record](docs/SIXTEEN_GAMES_IMPLEMENTATION.md).

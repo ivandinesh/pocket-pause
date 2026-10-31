@@ -13,6 +13,14 @@ for key,item in json.loads(Path('scripts/ip-compatibility.json').read_text()).it
     if key=='keys':
         # The backup registry repeats existing keys; preserve key identities, not occurrence counts.
         assert set(item['values']) <= set(found), 'Legacy save key removed'
+    elif key=='word_answers':
+        # Only the reviewed vocabulary replacements may differ from the original slots.
+        current=json.loads(found[0].split('=',1)[1].rstrip(';\n'))
+        for change in json.loads(Path('games/word-content-manifest.json').read_text())['word_guess']['replacements']:
+            assert current[change['level']-1]==change['after']
+            current[change['level']-1]=change['before']
+        original='const WG_ANSWERS='+json.dumps(current)+';\n'
+        assert hashlib.sha256(original.encode()).hexdigest()==item['sha256'], 'Unreviewed Word Guess slot changed'
     else:
         assert hashlib.sha256('\n'.join(found).encode()).hexdigest()==item['sha256'], key+' compatibility changed'
 for name in ('Falling Blocks','Maze Chase','Number Path','Color Paths','Binary Grid','Sightline','Ants Apart'):

@@ -9,18 +9,210 @@
     "release_url": "https://wordlist.aspell.net/12dicts/",
     "archive_url": "https://sourceforge.net/projects/wordlist/files/12Dicts/6.0/12dicts-6.0.2.zip/download",
     "archive_sha256": "64ac1d35acb66b550c7ebc56e080b62e0bad8f5984d72059dc2e05ac48780e52",
-    "rights": "The compiler explicitly released 12dicts to the public domain and requests acknowledgment. The 2of12inf and 2+2+3 lists have separate antecedent terms; DoPop uses neither."
+    "rights": "The compiler explicitly released 12dicts to the public domain and requests acknowledgment. The 2of12inf and 2+2+3 lists have separate antecedent terms; DoPop uses neither.",
+    "normalized_lexicon_sha256": "0aa1e6d83fd6373abc57de2f6d54fc6d042bf1585da2a2c4801cf57b062f44cf"
   },
-  "normalization": "Keep only unannotated ASCII alphabetic entries of 3 to 7 letters from International/3of6game.txt; uppercase, deduplicate, and sort alphabetically.",
-  "lexicon_entries": 24148,
-  "lexicon_sha256": "0aa1e6d83fd6373abc57de2f6d54fc6d042bf1585da2a2c4801cf57b062f44cf",
+  "normalization": "Keep only unannotated ASCII alphabetic entries of 3 to 7 letters from International/3of6game.txt; uppercase, deduplicate, and sort alphabetically. Apply the whole-word editorial exclusions in games/word-safety-policy.json.",
+  "lexicon_entries": 23609,
+  "lexicon_sha256": "bbad38a767823fc6ed166a110b78fc2ff5c2ed28ad7b533869ce96f7a61fba0f",
   "word_search_themes": "games/word-search-themes.json",
-  "word_search_themes_sha256": "77527677a3acfc029ab4ff30a6f9611fab49599c0dfd39c81b9b753ce87b24f3",
+  "word_search_themes_sha256": "43dee8413b5625a34a57a6a8f5768db48d4efaa29357bab61539301e0aac9b51",
   "word_search_grid_seed": "wordRng(3907 + puzzleIndex * 97), using the versioned deterministic xorshift32 helper",
   "word_levels": {
     "count": 1000,
-    "rack_source": "Distinct 4 to 7 letter racks from the normalized lexicon that can form at least six words.",
-    "rack_order": "Group by rack length in counts 100/300/350/250 for lengths 4/5/6/7; rank rack signatures by SHA-256 of dopop-words-v2:<sorted-rack>.",
-    "targets": "Generated deterministically from the rack and lexicon; target count rises from 3 to 6 in four 250-level bands."
+    "rack_source": "Pinned in games/word-levels.json. Existing version-2 slots retained; only affected racks/targets replaced using child-friendly words of matching length where available.",
+    "rack_order": "Existing 1,000 level identities and 100/300/350/250 rack-length bands retained.",
+    "targets": "Pinned targets retain safe entries in their original slots. Counts remain 3 to 6 in four 250-level bands. Bonus words come from the filtered lexicon."
+  },
+  "word_levels_sha256": "4c05f9619a609f78c1464d81859a2529f2b103a2d1ae8f9078b9d97eb2fa55b4",
+  "word_safety_policy_sha256": "c97a463fd7fc2b95e7df2cf18df0efdf8b50f549b0b328b0034939ce5358d1e4",
+  "word_guess": {
+    "dictionary_entries": 14613,
+    "dictionary_sha256": "b9693849bb066211659912d35cd0a767d4f547170ebafdda99335b8e53e2e123",
+    "answers_sha256": "e27b993a601de86c19c7b0d3bb0cbc63858ce127fb07604985ab9246009fc09e",
+    "replacements": [
+      {
+        "level": 152,
+        "before": "BLOOD",
+        "after": "OTTER"
+      },
+      {
+        "level": 202,
+        "before": "DRUNK",
+        "after": "KOALA"
+      },
+      {
+        "level": 282,
+        "before": "DROWN",
+        "after": "LLAMA"
+      },
+      {
+        "level": 348,
+        "before": "FREAK",
+        "after": "PANDA"
+      },
+      {
+        "level": 405,
+        "before": "LOSER",
+        "after": "PRAWN"
+      },
+      {
+        "level": 552,
+        "before": "RIFLE",
+        "after": "FINCH"
+      },
+      {
+        "level": 553,
+        "before": "SCREW",
+        "after": "ROBIN"
+      },
+      {
+        "level": 646,
+        "before": "SMOKE",
+        "after": "CRUMB"
+      },
+      {
+        "level": 648,
+        "before": "STRIP",
+        "after": "CUMIN"
+      },
+      {
+        "level": 679,
+        "before": "SLAIN",
+        "after": "DATES"
+      },
+      {
+        "level": 852,
+        "before": "ARSON",
+        "after": "GUAVA"
+      },
+      {
+        "level": 871,
+        "before": "WOUND",
+        "after": "PECAN"
+      },
+      {
+        "level": 893,
+        "before": "BLEED",
+        "after": "BAGEL"
+      },
+      {
+        "level": 988,
+        "before": "CIGAR",
+        "after": "SUSHI"
+      }
+    ]
+  },
+  "review": {
+    "date": "2026-10-31",
+    "policy": "games/word-safety-policy.json",
+    "words_changed_levels": [
+      1,
+      18,
+      21,
+      74,
+      105,
+      113,
+      139,
+      142,
+      146,
+      169,
+      179,
+      181,
+      192,
+      200,
+      230,
+      232,
+      240,
+      243,
+      267,
+      281,
+      290,
+      292,
+      297,
+      324,
+      329,
+      331,
+      360,
+      370,
+      373,
+      381,
+      405,
+      410,
+      431,
+      447,
+      449,
+      455,
+      462,
+      476,
+      505,
+      511,
+      513,
+      525,
+      531,
+      532,
+      535,
+      541,
+      549,
+      552,
+      555,
+      566,
+      567,
+      570,
+      586,
+      597,
+      615,
+      626,
+      651,
+      662,
+      673,
+      699,
+      705,
+      710,
+      712,
+      742,
+      750,
+      758,
+      761,
+      773,
+      779,
+      786,
+      808,
+      815,
+      817,
+      818,
+      820,
+      829,
+      834,
+      850,
+      853,
+      857,
+      860,
+      862,
+      863,
+      864,
+      868,
+      869,
+      871,
+      873,
+      881,
+      883,
+      884,
+      888,
+      896,
+      901,
+      902,
+      903,
+      910,
+      911,
+      919,
+      921,
+      974,
+      975,
+      990,
+      995
+    ],
+    "notes": "Vocabulary screening is editorial, not a certification. Sensitive words have benign senses; neutral words containing an excluded fragment remain allowed. Existing version-2 saves retain level and score; removed found words/hints are discarded. Changed Word Guess slots restart their affected rounds.",
+    "unchanged_words_levels_sha256": "698010f37f1ff5e403981f186f0db45f030a8524ef4543c766d90ec6e82a1486"
   }
 }

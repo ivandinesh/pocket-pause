@@ -16,6 +16,7 @@
  add('sudoku.progress',v=>object(v)&&matrix(v.puzzle)&&matrix(v.solution)&&matrix(v.board)&&Array.isArray(v.notes)&&v.notes.length===81&&v.notes.every(a=>Array.isArray(a)&&a.length<=9&&a.every(n=>integer(n,9)))&&(v.selected==null||integer(v.selected,80,0))&&Array.isArray(v.history)&&v.history.every(h=>object(h)&&integer(h.i,80,0)&&integer(h.prev,9,0)&&Array.isArray(h.prevNotes)&&h.prevNotes.length<=9&&h.prevNotes.every(n=>integer(n,9)))&&Number.isFinite(v.elapsed)&&v.elapsed>=0);
  add('words.progress',v=>object(v)&&integer(v.levelIndex,999,0)&&Number.isFinite(v.score)&&v.score>=0&&Array.isArray(v.found)&&v.found.every(w=>typeof w==='string'&&/^[A-Z]{3,20}$/.test(w)));
  add('pac.progress',v=>object(v)&&integer(v.level)&&Array.isArray(v.dots)&&Array.isArray(v.player)&&v.player.length===2&&integer(v.player[0],14,0)&&integer(v.player[1],18,0)&&v.dots.every(n=>integer(n,284,0))&&Number.isFinite(v.score)&&integer(v.lives,3,0));
+ for(const id of ["memoryPairs", "flipLights", "pegSolitaire", "dominoPairs", "rectangles", "tents", "slant", "dotSweep", "greaterGrid", "skyline", "symmetryIslands", "magnets", "fourRegions", "cageSums", "tracks", "hiddenRays"])add(id,v=>globalThis.DoPopQuietBackupValidators?.[id]?.(v)===true);
  add('wordguess.v1',v=>object(v)&&v.version===1&&integer(v.level)&&object(v.rounds));
  add('antsApartPrototype',v=>object(v)&&integer(v.level,36)&&(!v.attempts||object(v.attempts)));
  for(const id of ['rotateNetwork','loop','colorCode','pictureGrid'])add(id,v=>object(v)&&integer(v.level,30)&&(!v.attempts||object(v.attempts)));

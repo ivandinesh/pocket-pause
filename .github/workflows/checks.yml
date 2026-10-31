@@ -41,5 +41,7 @@ jobs:
           done
           node scripts/test_home_footer_browser.cjs
           node scripts/test_responsive_state.cjs
+          node scripts/test_quiet_browser.cjs
+          node scripts/test_quiet_offline_browser.cjs
           node scripts/test_security_browser.cjs
           node scripts/test_responsive_browser.cjs

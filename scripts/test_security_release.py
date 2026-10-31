@@ -18,6 +18,10 @@ for a in release['assets']:assert hashlib.sha256((root/('index.html'if a['url']=
 for file in (root/'assets').glob('*.js'):
     assert '/assets/'+file.name in cached
     assert hashlib.sha256(file.read_bytes()).hexdigest()==file.stem
+quiet=json.loads((root/'quiet-assets.json').read_text())
+for path in [quiet[k]for k in ('core','ui','css','specs')]+list(quiet['levels'].values()):
+    file=root/path[1:]
+    assert path in cached and hashlib.sha256(file.read_bytes()).hexdigest()==file.stem
 print('PASS: strict script CSP, no executable inline scripts/event attributes, all scripts and offline digests verified.')
 
 inventory=json.loads(Path('scripts/runtime-inventory.json').read_text())['runtime'][0]

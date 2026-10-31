@@ -3,5 +3,6 @@ The Words and Word Search game lexicon is derived from the International/3of6gam
 The 12dicts compiler explicitly released the lists to the public domain and requested acknowledgment. DoPop uses a filtered subset of unannotated ASCII words from 3 to 7 letters, then generates its own puzzle levels and thematic selections. This notice does not claim that the original 12dicts list was created by DoPop or relicense its source data.
 
 Source release: https://wordlist.aspell.net/12dicts/
+Editorial exclusions for child-friendly puzzle vocabulary: games/word-safety-policy.json. These exclusions are DoPop's selection, not an assessment or endorsement by the original compiler.
 Archive: https://sourceforge.net/projects/wordlist/files/12Dicts/6.0/12dicts-6.0.2.zip/download
 Archive SHA-256: 64ac1d35acb66b550c7ebc56e080b62e0bad8f5984d72059dc2e05ac48780e52

@@ -1,0 +1,226 @@
+[
+  {
+    "id": "memoryPairs",
+    "name": "Memory Pairs",
+    "slug": "memory-pairs",
+    "subtitle": "A pair at a time.",
+    "instruction": "Tap two cards. Find every matching shape.",
+    "help": [
+      "Turn over two cards. A matching pair stays visible; a mismatch turns back over.",
+      "Match every pair to complete the board. The early levels use fewer, simpler symbols.",
+      "Arrow keys move focus; Enter or Space flips a card. Hints briefly reveal a pair and mark the attempt assisted."
+    ],
+    "icon": "<rect x=\"9\" y=\"13\" width=\"24\" height=\"34\" rx=\"5\"/><rect x=\"31\" y=\"9\" width=\"24\" height=\"34\" rx=\"5\"/><circle cx=\"43\" cy=\"26\" r=\"6\"/>",
+    "category": "Memory games"
+  },
+  {
+    "id": "flipLights",
+    "name": "Flip Lights",
+    "slug": "flip-lights",
+    "subtitle": "One quiet change.",
+    "instruction": "Tap a dot to toggle it and its neighbors. Clear every filled dot.",
+    "help": [
+      "Each tap flips that dot and its horizontal and vertical neighbors. Diagonal neighbors stay the same.",
+      "Turn every filled dot into an empty ring. Every starting board is verified solvable.",
+      "Use Undo freely. A hint applies one step in a solution from your current board; it is not a promise of the shortest solution."
+    ],
+    "icon": "<circle cx=\"32\" cy=\"15\" r=\"6\"/><circle cx=\"15\" cy=\"32\" r=\"6\"/><circle cx=\"32\" cy=\"32\" r=\"6\"/><circle cx=\"49\" cy=\"32\" r=\"6\"/><circle cx=\"32\" cy=\"49\" r=\"6\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "pegSolitaire",
+    "name": "Peg Solitaire",
+    "slug": "peg-solitaire",
+    "subtitle": "Leave one dot.",
+    "instruction": "Select a dot, then jump over a neighbor into an empty ring.",
+    "help": [
+      "Jump horizontally or vertically over one neighboring dot into the empty ring beyond it. The jumped dot disappears.",
+      "Finish with exactly one dot. It can be anywhere on this board. A board with no legal moves and several dots is a dead end.",
+      "Tap a dot then its destination, or navigate with arrows and Enter. Undo and retries are free. A hint searches for a completion from your current position."
+    ],
+    "icon": "<circle cx=\"14\" cy=\"39\" r=\"6\"/><circle cx=\"32\" cy=\"39\" r=\"6\"/><circle cx=\"50\" cy=\"39\" r=\"6\"/><path d=\"M15 24Q32 5 49 24M43 17L49 24L42 26\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "dominoPairs",
+    "name": "Domino Pairs",
+    "slug": "domino-pairs",
+    "subtitle": "Every pair, once.",
+    "instruction": "Choose two neighboring cells to place a domino. Use each pair once.",
+    "help": [
+      "Cover every cell with a domino joining two horizontal or vertical neighbors. The pips give that domino’s numbers; a ring means zero.",
+      "Use each unordered pair in the set exactly once. For example, 1–2 and 2–1 are the same pair. Each board has one verified tiling.",
+      "Tap the two cells or drag between them. Select an existing pair again to remove it. Undo and hints stay within this game."
+    ],
+    "icon": "<rect x=\"16\" y=\"7\" width=\"32\" height=\"50\" rx=\"7\"/><path d=\"M16 32H48\"/><circle cx=\"32\" cy=\"20\" r=\"3\"/><circle cx=\"26\" cy=\"41\" r=\"3\"/><circle cx=\"38\" cy=\"49\" r=\"3\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "rectangles",
+    "name": "Rectangles",
+    "slug": "rectangles",
+    "subtitle": "Give each number room.",
+    "instruction": "Draw a rectangle containing one clue and exactly that many squares.",
+    "help": [
+      "Divide the whole board into rectangles. Each rectangle contains exactly one number, and its area equals that number.",
+      "Tap opposite corners or drag from one corner to another. Overlapping selections replace the affected rectangles.",
+      "Every board has one verified partition. Undo, retry and hints are free; a hint fills one correct rectangle."
+    ],
+    "icon": "<rect x=\"9\" y=\"9\" width=\"46\" height=\"46\" rx=\"4\"/><path d=\"M9 31H55M34 9V31M24 31V55\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "tents",
+    "name": "Tents",
+    "slug": "tents",
+    "subtitle": "A quiet place to camp.",
+    "instruction": "Place tents beside trees. Match the counts; keep tents apart.",
+    "help": [
+      "Place one tent for every tree. Tents must be matchable one-to-one with horizontally or vertically neighboring trees; a tent may touch more than one tree.",
+      "Tents cannot touch each other, even diagonally. The top and right clues give the number of tents in each column and row.",
+      "Tap cycles unknown, tent, grass, then unknown. Trees stay fixed. Every board has one verified tent arrangement."
+    ],
+    "icon": "<circle cx=\"16\" cy=\"18\" r=\"8\"/><path d=\"M16 26V47M26 49L41 20L56 49ZM41 20V49\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "slant",
+    "name": "Slant",
+    "slug": "slant",
+    "subtitle": "Find the right angle.",
+    "instruction": "Choose a diagonal in every square. Meet the vertex counts without a loop.",
+    "help": [
+      "Each square needs one diagonal. A number at a vertex tells you exactly how many diagonal lines must meet there.",
+      "The complete network of diagonals must contain no closed loop. This differs from the separate Loop game.",
+      "Tap cycles backslash, slash and unknown. You can also type slash or backslash on a focused cell; Delete clears it."
+    ],
+    "icon": "<path d=\"M12 50L50 12M12 12L31 31M33 50L51 32\"/><circle cx=\"12\" cy=\"50\" r=\"4\"/><circle cx=\"50\" cy=\"12\" r=\"4\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "dotSweep",
+    "name": "Dot Sweep",
+    "slug": "dot-sweep",
+    "subtitle": "A little discovery.",
+    "instruction": "Reveal safe squares. Numbers count nearby hidden dots.",
+    "help": [
+      "Find the safe squares without uncovering a hidden dot. A revealed number counts hidden dots in its eight neighboring cells.",
+      "Choose Reveal or Mark to change the tap action. Marks protect covered squares from accidental reveals; tap them in Mark mode to clear them.",
+      "Each board opens with a safe area and has a verified deduction route without guessing. A mistaken reveal can be undone or retried for free."
+    ],
+    "icon": "<rect x=\"8\" y=\"8\" width=\"31\" height=\"31\" rx=\"5\"/><path d=\"M8 23H39M23 8V39\"/><circle cx=\"40\" cy=\"40\" r=\"12\"/><path d=\"M49 49L57 57\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "greaterGrid",
+    "name": "Greater Grid",
+    "slug": "greater-grid",
+    "subtitle": "A little more. A little less.",
+    "instruction": "Fill each row and column once. Follow the greater-than clues.",
+    "help": [
+      "Fill the grid with the numbers 1 through its width. Every row and column must contain each number once. There are no Sudoku boxes.",
+      "A greater-than sign points its narrow end toward the smaller value. Vertical signs compare the cells above and below.",
+      "Select a cell, then tap a number or type it. Delete clears an editable value. Fixed values stay in place; each puzzle has one solution."
+    ],
+    "icon": "<path d=\"M10 16L25 26L10 36M39 28L54 38L39 48\"/><circle cx=\"43\" cy=\"13\" r=\"4\"/><circle cx=\"21\" cy=\"50\" r=\"4\"/>",
+    "category": "Number puzzles"
+  },
+  {
+    "id": "skyline",
+    "name": "Skyline",
+    "slug": "skyline",
+    "subtitle": "See a little further.",
+    "instruction": "Place each height once per row and column. Match the views from every side.",
+    "help": [
+      "Fill each row and column with heights 1 through the grid width, once each. Taller towers hide shorter towers behind them.",
+      "Each outside clue counts the towers visible when looking inward from that side. A view of one means the tallest tower is first.",
+      "Select a cell and enter its height. Read the clues on all four sides. Every board is verified to have exactly one solution."
+    ],
+    "icon": "<path d=\"M8 53H56M13 53V36H21V53M28 53V13H36V53M44 53V25H52V53\"/>",
+    "category": "Number puzzles"
+  },
+  {
+    "id": "symmetryIslands",
+    "name": "Symmetry Islands",
+    "slug": "symmetry-islands",
+    "subtitle": "A home for every dot.",
+    "instruction": "Choose a numbered center, then assign squares to its symmetric island.",
+    "help": [
+      "Give every square to one numbered center. Each region must be connected and look the same after a half turn around its center.",
+      "A region contains exactly one center. Centers may lie in a square, on an edge, or at the corner of four squares.",
+      "Choose a center below the board, then tap squares to assign them; Clear removes assignments. Small numbers identify regions without relying on color."
+    ],
+    "icon": "<circle cx=\"32\" cy=\"32\" r=\"5\"/><path d=\"M17 9H41V23H55V47H31V55H9V31H17ZM9 31H31V55M41 9V32H55\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "magnets",
+    "name": "Magnets",
+    "slug": "magnets",
+    "subtitle": "A little balance.",
+    "instruction": "Turn each domino into a magnet or a neutral pair. Match the pole counts.",
+    "help": [
+      "Each outlined domino is either positive/negative, negative/positive or a confirmed neutral pair. Unknown dots are not confirmed neutral.",
+      "The top and right clues show the positive and negative counts in each column and row. Identical non-neutral poles cannot touch horizontally or vertically.",
+      "Tap a domino to cycle its states: positive first, negative first, neutral, then unknown. Symbols make every state readable without color."
+    ],
+    "icon": "<rect x=\"9\" y=\"15\" width=\"46\" height=\"34\" rx=\"8\"/><path d=\"M32 15V49M15 32H25M20 27V37M39 32H49\"/>",
+    "category": "Logic puzzles"
+  },
+  {
+    "id": "fourRegions",
+    "name": "Four Regions",
+    "slug": "four-regions",
+    "subtitle": "Neighbors, with room.",
+    "instruction": "Choose a symbol, then color regions. Neighbors sharing an edge must differ.",
+    "help": [
+      "Use four symbol-coded colors so neighboring regions have different symbols. Only shared edges count; touching at a corner is allowed.",
+      "Some regions are fixed clues. Their colors anchor the labels, and the remaining assignments have one verified solution.",
+      "Choose a symbol below the board, then tap a region. Use Clear to remove an editable assignment. The symbols remain visible in both themes."
+    ],
+    "icon": "<path d=\"M9 9H36V26H55V55H26V37H9ZM36 9V26H26V37M26 37V55\"/><circle cx=\"21\" cy=\"21\" r=\"3\"/><path d=\"M38 42L44 33L50 42Z\"/>",
+    "category": "Color puzzles"
+  },
+  {
+    "id": "cageSums",
+    "name": "Cage Sums",
+    "slug": "cage-sums",
+    "subtitle": "Small sums. Good thinking.",
+    "instruction": "Fill each row and column once. Meet every outlined cage’s arithmetic clue.",
+    "help": [
+      "Use each number 1 through the grid width once per row and column. Each outlined cage has a target and an operation.",
+      "Addition cages add to the target; multiplication cages multiply. Later two-cell cages use the absolute difference or an exact whole-number ratio.",
+      "A value may repeat within a cage if it is in a different row and column. Select a cell and enter a number; each puzzle has one verified solution."
+    ],
+    "icon": "<rect x=\"9\" y=\"9\" width=\"46\" height=\"46\" rx=\"5\"/><path d=\"M9 31H55M32 9V55M17 20H25M21 16V24M39 43H47\"/>",
+    "category": "Number puzzles"
+  },
+  {
+    "id": "tracks",
+    "name": "Tracks",
+    "slug": "tracks",
+    "subtitle": "One path through.",
+    "instruction": "Connect A to B. The counts say how many squares your route visits.",
+    "help": [
+      "Draw one non-branching route from A to B using horizontal and vertical connections. It must not cross itself or leave separate loops.",
+      "The row and column counts give the number of squares used, not the number of connecting lines. Dotted fixed segments must stay in the route.",
+      "Tap two neighboring cells to toggle a segment, or drag between neighbors. Undo and hints help you revise the route."
+    ],
+    "icon": "<path d=\"M10 48H25Q34 48 34 39V25Q34 15 44 15H54\"/><circle cx=\"10\" cy=\"48\" r=\"4\"/><circle cx=\"54\" cy=\"15\" r=\"4\"/>",
+    "category": "Path puzzles"
+  },
+  {
+    "id": "hiddenRays",
+    "name": "Hidden Rays",
+    "slug": "hidden-rays",
+    "subtitle": "Follow a quiet clue.",
+    "instruction": "Probe the edges. Infer the hidden dots, then check your arrangement.",
+    "help": [
+      "Tap an edge point to send a ray into the grid. A filled dot means it was absorbed; a returning arrow means reflection; paired numbers identify an entry and exit.",
+      "A direct dot absorbs a ray. A diagonal dot bends it away. Rays can turn several times; immediate diagonal contact at the entry reflects the ray.",
+      "Tap inside the grid to guess dot positions. Mark the stated number of dots, then choose Check. Equivalent arrangements with the same full set of edge observations are accepted. Hints reveal another edge observation."
+    ],
+    "icon": "<rect x=\"14\" y=\"14\" width=\"36\" height=\"36\" rx=\"5\"/><path d=\"M4 25H27V45H59\"/><circle cx=\"37\" cy=\"27\" r=\"4\"/>",
+    "category": "Logic puzzles"
+  }
+]
