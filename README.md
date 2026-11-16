@@ -438,4 +438,8 @@ Vercel/Grafana/DNS checks. Monitoring exports and local design files remain igno
 
 ## Sixteen deferred puzzle additions
 
-The catalogue now contains 40 games. The [implementation and validation notes](docs/SIXTEEN_GAMES_IMPLEMENTATION.md) explain the 480 new levels, independent saves, deferred engines, optional free hints, bounded undo, source notices and preview checks. New engines and packs load only when opened and remain covered by the verified complete offline cache. Preview review comes before commit/push.
+These additions brought the catalogue to 40 games. The [implementation and validation notes](docs/SIXTEEN_GAMES_IMPLEMENTATION.md) explain the 480 new levels, independent saves, deferred engines, optional free hints, bounded undo, source notices and preview checks. New engines and packs load only when opened and remain covered by the verified complete offline cache. Preview review comes before commit/push.
+
+## Ant Tap
+
+Ant Tap is a 30-second, full-viewport game. Tap or click the moving ants to score, or use Enter or Space on a focused ant. The round pauses when you leave the game or hide the tab. Reduced-motion mode keeps ants still until tapped. Ant Tap is included in the offline release.
