@@ -25,6 +25,7 @@ steps=[
  'scripts/patch_faro.py',
  'scripts/patch_play_metrics.py',
  'scripts/patch_theme.py',
+ 'scripts/patch_ant_tap.py',
  'scripts/patch_seo.py',
 ]
 # All patch scripts operate on a disposable copy, never tracked source.

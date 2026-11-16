@@ -22,7 +22,7 @@ function fixture(id,c){const s=C.fresh(id,c);let a;
    const c=pack[level-1],f=fixture(id,c),key='pocketpause.v1.'+id,saved={version:1,contentVersion:1,level,attempts:{[level]:{state:f.state,history:[],best:null}}};
    const context=await browser.newContext({viewport:{width:level===1?390:1440,height:900},colorScheme:level===1?'light':'dark',serviceWorkers:'block'});
    await context.addInitScript(({key,saved})=>{if(!sessionStorage.seeded){localStorage.setItem(key,JSON.stringify(saved));localStorage.setItem('pocketpause.v1.snake.color','amber');localStorage.setItem('pocketpause.v1.new.2048best','4096');sessionStorage.seeded='yes';}},{key,saved});
-   const p=await context.newPage();p.on('pageerror',e=>errors.push(id+': '+e.message));await p.goto(url,{waitUntil:'networkidle'});await p.waitForFunction(()=>document.querySelectorAll('.game-card').length===40);
+   const p=await context.newPage();p.on('pageerror',e=>errors.push(id+': '+e.message));await p.goto(url,{waitUntil:'networkidle'});await p.waitForFunction(()=>document.querySelectorAll('.game-card').length===41);
    assert.equal(await p.evaluate(()=>typeof DoPopQuietCore),'undefined','new engines must stay deferred on home');
    const prior=await p.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([key])=>!DoPopGameCatalogue.some(g=>document.querySelector('[data-quiet-game="'+g.id+'"]')&&key==='pocketpause.v1.'+g.id))));
    await p.locator('[data-quiet-game="'+id+'"]').click();const page=p.locator('#'+id+'Page');await page.locator('.quiet-cell:visible').first().waitFor();
